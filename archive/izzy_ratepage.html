@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Izzy — Rate Card</title>
+<link rel="icon" type="image/png" href="Please%20(3).png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --beige: #F2EDE4;
+    --beige-dark: #E8E1D5;
+    --beige-mid: #EAE4D8;
+    --ink: #111111;
+    --ink-mid: #444444;
+    --ink-light: #888888;
+    --ink-faint: #BBBBBB;
+    --dark-card: #1A1A1A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--beige);
+    color: var(--ink);
+    font-family: 'DM Sans', 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: 300;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    background: var(--beige);
+    z-index: 100;
+  }
+  .nav-name {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* HERO */
+  .hero {
+    padding: 5rem 3rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-size: clamp(42px, 7vw, 72px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .hero-title em {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    color: var(--ink-mid);
+    font-size: 1.05em;
+    letter-spacing: -0.02em;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: var(--ink-light);
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    letter-spacing: -0.02em;
+  }
+  .tags { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border: 0.5px solid rgba(0,0,0,0.2);
+    border-radius: 30px;
+    color: var(--ink-light);
+  }
+
+  /* SECTION */
+  section { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: rgba(0,0,0,0.1);
+  }
+
+  /* NOTE BOX */
+  .note-box {
+    background: var(--beige-mid);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 3rem;
+    border: 0.5px solid rgba(0,0,0,0.06);
+  }
+  .note-box-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+  .note-box-title {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .note-box p {
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.8;
+    letter-spacing: -0.02em;
+  }
+  .note-box p + p { margin-top: 8px; }
+
+  /* PRICING CARDS */
+  .pricing-grid { display: grid; gap: 14px; }
+
+  .price-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 0.5px solid rgba(0,0,0,0.07);
+  }
+  .price-card.dark { background: var(--dark-card); border-color: transparent; }
+
+  .price-card-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .price-card-left {
+    padding: 2.5rem;
+    border-right: 0.5px solid rgba(0,0,0,0.06);
+  }
+  .price-card.dark .price-card-left { border-right-color: rgba(255,255,255,0.06); }
+
+  .price-card-right {
+    padding: 2.5rem;
+  }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 30px;
+    border: 0.5px solid rgba(0,0,0,0.18);
+    color: var(--ink-mid);
+    margin-bottom: 1.5rem;
+  }
+  .price-card.dark .card-badge { border-color: rgba(255,255,255,0.15); color: #888; }
+
+  .card-price-num {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .price-card.dark .card-price-num { color: #fff; }
+
+  .card-price-sub {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-faint);
+    margin-bottom: 1rem;
+  }
+  .price-card.dark .card-price-sub { color: #555; }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--ink-light);
+    line-height: 1.75;
+    margin-bottom: 1.75rem;
+    letter-spacing: -0.02em;
+  }
+  .price-card.dark .card-desc { color: #777; }
+
+  .card-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 40px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .card-btn-dark { background: var(--ink); color: #fff; }
+  .card-btn-light { background: #fff; color: var(--ink); }
+
+  .inc-title {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .price-card.dark .inc-title { color: #ccc; }
+
+  .inc-list { list-style: none; }
+  .inc-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 0.5px solid rgba(0,0,0,0.05);
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+  .price-card.dark .inc-list li {
+    border-bottom-color: rgba(255,255,255,0.05);
+    color: #999;
+  }
+  .inc-list li:last-child { border-bottom: none; }
+  .inc-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .price-card.dark .inc-dot { background: #444; }
+  .inc-list li em {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-light);
+  }
+  .price-card.dark .inc-list li em { color: #666; }
+
+  /* FULL-WIDTH DARK STRIP for add-ons */
+  .addon-strip {
+    background: var(--dark-card);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-top: 14px;
+  }
+  .addon-strip-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  }
+  .addon-strip-title {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: #ccc;
+  }
+  .addon-strip-sub {
+    font-size: 12px;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: -0.02em;
+  }
+  .addon-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .addon-item {
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 0.5px solid rgba(255,255,255,0.06);
+  }
+  .addon-price {
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.04em;
+    margin-bottom: 4px;
+  }
+  .addon-name {
+    font-size: 11px;
+    color: #888;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+
+  /* TIMELINE */
+  .timeline-section { padding: 4rem 3rem; max-width: 900px; margin: 0 auto; }
+  .timeline-hero {
+    margin-bottom: 3rem;
+  }
+  .timeline-hero-title {
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .timeline-hero-title em {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    color: var(--ink-mid);
+  }
+  .timeline-hero-sub {
+    font-size: 13px;
+    color: var(--ink-light);
+    letter-spacing: -0.02em;
+    line-height: 1.7;
+    max-width: 440px;
+  }
+
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 52px;
+    top: 0;
+    bottom: 0;
+    width: 0.5px;
+    background: rgba(0,0,0,0.1);
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 0;
+    padding-bottom: 2.5rem;
+    position: relative;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-date {
+    width: 105px;
+    flex-shrink: 0;
+    text-align: right;
+    padding-right: 28px;
+    padding-top: 2px;
+  }
+  .step-num {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-faint);
+    display: block;
+  }
+  .step-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ink);
+    flex-shrink: 0;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-content {
+    padding-left: 24px;
+    flex: 1;
+  }
+  .timeline-content h3 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .timeline-content p {
+    font-size: 13px;
+    color: var(--ink-light);
+    line-height: 1.75;
+    letter-spacing: -0.02em;
+  }
+  .timeline-content p em {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-mid);
+  }
+  .timeline-pill {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 0.5px solid rgba(0,0,0,0.15);
+    color: var(--ink-mid);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid rgba(0,0,0,0.1);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+  }
+  .footer-left {
+    font-family: 'DM Serif Display', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-mid);
+  }
+  .footer-right {
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: -0.02em;
+    text-align: right;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { gap: 1rem; }
+    section, .timeline-section { padding: 3rem 1.5rem; }
+    .hero { padding: 3rem 1.5rem 2rem; }
+    .price-card-inner { grid-template-columns: 1fr; }
+    .price-card-left { border-right: none; border-bottom: 0.5px solid rgba(0,0,0,0.06); }
+    .addon-grid { grid-template-columns: repeat(2, 1fr); }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+    .footer-right { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-name">izzy &lt;3</span>
+  <div class="nav-links">
+    <a href="#pricing">Pricing</a>
+    <a href="#process">Process</a>
+    <a href="mailto:izzermcglizzer@gmail.com">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">UGC Rate Card · International Brands · 2025</p>
+  <h1 class="hero-title">Let's make<br><em>something real.</em></h1>
+  <p class="hero-sub">Authentic content for brands I genuinely love — tech, lifestyle, beauty & travel. Based in Bali, creating for the world.</p>
+  <div class="tags">
+    <span class="tag">Tech & Gaming</span>
+    <span class="tag">Lifestyle</span>
+    <span class="tag">Beauty & Fashion</span>
+    <span class="tag">Travel</span>
+  </div>
+</div>
+
+<!-- PRICING SECTION -->
+<section id="pricing">
+  <div class="section-label">Pricing</div>
+
+  <div class="note-box">
+    <p class="note-box-label">A note on these rates</p>
+    <p class="note-box-title">These numbers aren't made up — they're based on what I've actually been paid.</p>
+    <p>Every price listed here comes from real past collaborations with brands across tech, beauty, lifestyle, and travel. I don't believe in arbitrary pricing — what you see is what the market has fairly valued this work at.</p>
+    <p>That said, none of this is set in stone. What I care about most is the work itself — creating content I'm genuinely proud of, for brands I actually believe in. If the fit is right, we can always find a number that works. Reach out and let's talk.</p>
+  </div>
+
+  <div class="pricing-grid">
+
+    <!-- MAIN BUNDLE -->
+    <div class="price-card">
+      <div class="price-card-inner">
+        <div class="price-card-left">
+          <span class="card-badge">Standard Bundle</span>
+          <p class="card-price-num">$300</p>
+          <p class="card-price-sub">USD · per bundle</p>
+          <p class="card-desc">One video, cross-posted on both TikTok and Instagram for maximum reach — plus Stories if you need them. Three months of ad usage included, on us.</p>
+          <a href="mailto:izzermcglizzer@gmail.com" class="card-btn card-btn-dark">Book: DM me ↗</a>
+        </div>
+        <div class="price-card-right">
+          <p class="inc-title">What's included:</p>
+          <ul class="inc-list">
+            <li><span class="inc-dot"></span>1 video or carousel posted on <em>TikTok & Instagram</em></li>
+            <li><span class="inc-dot"></span>3 Stories on Instagram <em>(if needed)</em></li>
+            <li><span class="inc-dot"></span>3 months ad usage rights — <em>included free</em></li>
+            <li><span class="inc-dot"></span>Unlimited revisions</li>
+            <li><span class="inc-dot"></span>5–7 business day turnaround</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOM / DARK CARD -->
+    <div class="price-card dark">
+      <div class="price-card-inner">
+        <div class="price-card-left">
+          <span class="card-badge">Single Platform</span>
+          <p class="card-price-num">$200</p>
+          <p class="card-price-sub">USD · per video</p>
+          <p class="card-desc">One video or carousel posted on a single platform of your choice — TikTok or Instagram. Perfect for brands testing the waters.</p>
+          <a href="mailto:izzermcglizzer@gmail.com" class="card-btn card-btn-light">Book: DM me ↗</a>
+        </div>
+        <div class="price-card-right">
+          <p class="inc-title">What's included:</p>
+          <ul class="inc-list">
+            <li><span class="inc-dot"></span>1 video or carousel on <em>1 platform</em></li>
+            <li><span class="inc-dot"></span>Unlimited revisions</li>
+            <li><span class="inc-dot"></span>5–7 business day turnaround</li>
+            <li><span class="inc-dot"></span>Ad usage & Stories available as <em>add-ons</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADD-ONS -->
+  <div class="addon-strip">
+    <div class="addon-strip-top">
+      <div>
+        <p class="addon-strip-title">Add-ons</p>
+        <p class="addon-strip-sub">Mix and match to build the package you actually need.</p>
+      </div>
+    </div>
+    <div class="addon-grid">
+      <div class="addon-item">
+        <p class="addon-price">$15</p>
+        <p class="addon-name">1 Instagram Story</p>
+      </div>
+      <div class="addon-item">
+        <p class="addon-price">$50<span style="font-size:14px;color:#555;">/mo</span></p>
+        <p class="addon-name">Ad usage rights per month</p>
+      </div>
+      <div class="addon-item">
+        <p class="addon-price">$150</p>
+        <p class="addon-name">Forever usage rights — one flat fee</p>
+      </div>
+      <div class="addon-item">
+        <p class="addon-price">open</p>
+        <p class="addon-name">Gifting & barter collabs — let's talk</p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- PROCESS / TIMELINE -->
+<section id="process" style="padding-top: 2rem;">
+  <div class="section-label">How we work together</div>
+
+  <div class="timeline-hero">
+    <h2 class="timeline-hero-title">Wanna work<br><em>together?</em></h2>
+    <p class="timeline-hero-sub">Here's exactly how we go from "interested" to live content on your feed — simple, transparent, no surprises.</p>
+  </div>
+
+  <div class="timeline">
+
+    <div class="timeline-item">
+      <div class="timeline-date">
+        <span class="step-num">01</span>
+        <span class="step-label">Rate card</span>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h3>Check my rates & reach out</h3>
+        <p>You're already here — great start. Browse the packages above and get a feel for what works for your brand. Remember: <em>all prices are negotiable.</em> If you love the idea but the budget's tight, just say so. I'd rather make it work than miss a great collab.</p>
+        <span class="timeline-pill">You are here</span>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-date">
+        <span class="step-num">02</span>
+        <span class="step-label">Deliverables</span>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h3>Deal on deliverables via email</h3>
+        <p>Once we're aligned on vibe and budget, we lock in the deliverables over email — what I'm making, where it's posted, any specific briefs or brand guidelines. I keep this part simple: <em>clear expectations on both sides.</em></p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-date">
+        <span class="step-num">03</span>
+        <span class="step-label">Payment</span>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h3>50% upfront via PayPal</h3>
+        <p>Once deliverables are agreed, I'll send over a PayPal request for <em>50% of the total.</em> This secures your spot and lets me start working. The remaining 50% is due before final files are delivered.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-date">
+        <span class="step-num">04</span>
+        <span class="step-label">First draft</span>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h3>First draft in 3–5 days</h3>
+        <p>Once payment clears, I get to work. Expect your <em>first draft within 3–5 business days.</em> You'll have unlimited rounds of revisions — we keep going until you're genuinely happy with it.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-date">
+        <span class="step-num">05</span>
+        <span class="step-label">Go live</span>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h3>Approved → posted on my socials</h3>
+        <p>Once you've signed off on the final version, <em>I post it across my platforms</em> as agreed. You'll receive all raw files, and any usage rights you've purchased are yours from that moment.</p>
+        <span class="timeline-pill">That's a wrap ✦</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-left">izzy &lt;3 · @izzermcglizzer</span>
+  <div class="footer-right">
+    Bali, Indonesia<br>
+    Open to international collabs · 2025
+  </div>
+</footer>
+
+</body>
+</html>

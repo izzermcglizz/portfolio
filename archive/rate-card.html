@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>izzy - rate card</title>
+  <link rel="icon" type="image/png" href="Please%20(3).png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #EEEAE3;
+      --white: #FAFAF8;
+      --black: #0D0C0B;
+      --lime: #C3FF4A;
+      --muted: #8C897F;
+      --border: rgba(13,12,11,0.1);
+      --dark: #1A1916;
+      --r-lg: 28px;
+    }
+    body {
+      background: var(--bg);
+      color: var(--black);
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      word-spacing: -0.04em;
+    }
+    a { color: inherit; text-decoration: none; }
+    .max-w {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 24px 56px;
+    }
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+    .back-link {
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--black); }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--black);
+      color: var(--lime);
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.86; transform: translateY(-1px); }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      font-size: clamp(2rem, 4.3vw, 3.9rem);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .header h1 span { color: var(--muted); font-style: italic; font-weight: 400; text-transform: none; }
+    .header p {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 0.9rem;
+      color: #4a4740;
+      line-height: 1.65;
+    }
+    .pricing-note {
+      margin-top: 16px;
+      background: rgba(195,255,74,0.16);
+      border: 1px solid rgba(157,217,50,0.45);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 0.8rem;
+      line-height: 1.65;
+      color: #33302b;
+      text-align: left;
+    }
+    .pricing-note b { color: var(--black); }
+    .rates-stack { display: grid; gap: 16px; }
+    .plan-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 30px 28px;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 30px;
+      background: var(--white);
+    }
+    .plan-card.dark {
+      background: var(--dark);
+      border-color: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .plan-chip {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 7px 15px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+      width: fit-content;
+    }
+    .plan-card.dark .plan-chip {
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.72);
+      background: rgba(255,255,255,0.04);
+    }
+    .plan-price {
+      font-size: clamp(2.3rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 8px;
+    }
+    .plan-price small {
+      font-size: 0.48em;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-left: 4px;
+    }
+    .plan-sub {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 12px;
+    }
+    .plan-card.dark .plan-sub { color: rgba(255,255,255,0.58); }
+    .plan-desc {
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: #3d3933;
+      max-width: 470px;
+      margin-bottom: 24px;
+    }
+    .plan-card.dark .plan-desc { color: rgba(255,255,255,0.75); }
+    .book-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 290px;
+      border-radius: 999px;
+      padding: 12px 20px;
+      background: var(--black);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.94rem;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .book-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .plan-card.dark .book-btn {
+      background: var(--white);
+      color: var(--black);
+    }
+    .inc-title {
+      font-size: 1.26rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .inc-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .inc-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: #312e28;
+    }
+    .inc-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .plan-card.dark .inc-list li { color: rgba(255,255,255,0.86); }
+    .plan-card.dark .inc-num {
+      border-color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.04);
+    }
+    .mix-title {
+      font-size: 1.26rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .mix-board {
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+    }
+    .mix-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .mix-row:last-child { border-bottom: none; }
+    .mix-price {
+      font-size: clamp(1.9rem, 3.8vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: #fff;
+      flex-shrink: 0;
+      min-width: 120px;
+    }
+    .mix-label {
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.82);
+      text-align: right;
+      max-width: 310px;
+    }
+    .mix-foot {
+      margin-top: 12px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.62);
+    }
+    .foot-note {
+      margin-top: 14px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    @media (max-width: 900px) {
+      .plan-card { grid-template-columns: 1fr; gap: 22px; }
+    }
+    @media (max-width: 640px) {
+      .max-w { padding: 22px 16px 38px; }
+      .book-btn { min-width: 100%; }
+      .cta-btn { width: 100%; }
+      .header h1 { font-size: clamp(1.8rem, 10vw, 2.5rem); }
+      .header p { font-size: 0.84rem; }
+      .mix-row { align-items: flex-start; }
+      .mix-label { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="max-w">
+    <div class="top-row">
+      <a class="back-link" href="index.html#contact">← back to portfolio</a>
+      <a class="cta-btn" href="mailto:izzyxmcglizzy@gmail.com">book now</a>
+    </div>
+    <header class="header">
+      <h1>Rate Card <span>&amp; collab pricing</span></h1>
+      <p>
+        Below are my current rates based on past paid collaborations and current market value with
+        other brands I've worked with. These are not random prices. <b>They are negotiable</b> -
+        I care most about creating good work and finding a setup that makes sense for both sides.
+      </p>
+      <div class="pricing-note">
+        <b>Friendly note:</b> Everything here is negotiable. I'm flexible and happy to work
+        around your budget while still creating content that feels strong and on-brand.
+        If you need to adjust scope or pricing, just tell me and we'll work it out together.
+      </div>
+    </header>
+
+    <section class="rates-stack">
+      <article class="plan-card">
+        <div>
+          <span class="plan-chip">Main Bundle</span>
+          <div class="plan-price">$300<small>USD / video</small></div>
+          <p class="plan-sub">Posted on both Instagram + TikTok</p>
+          <p class="plan-desc">
+            Best for brands that want one strong piece of content distributed on both platforms
+            for better reach and conversion.
+          </p>
+          <a class="book-btn" href="mailto:izzyxmcglizzy@gmail.com">Schedule a collab: email me</a>
+        </div>
+        <div>
+          <h2 class="inc-title">What's included:</h2>
+          <ul class="inc-list">
+            <li><span class="inc-num">1</span><span>1 UGC video or carousel</span></li>
+            <li><span class="inc-num">2</span><span>Posted on Instagram and TikTok</span></li>
+            <li><span class="inc-num">3</span><span>+ 3 Instagram stories (if needed)</span></li>
+            <li><span class="inc-num">4</span><span>+ 3 months ad usage included for free</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="plan-card dark">
+        <div>
+          <span class="plan-chip">Other Options</span>
+          <div class="plan-price">custom mix</div>
+          <p class="plan-sub">For smaller or modular campaigns</p>
+          <p class="plan-desc">
+            If you only need specific deliverables, you can build your own package from the rates below.
+          </p>
+          <a class="book-btn" href="mailto:izzyxmcglizzy@gmail.com">Schedule a collab: email me</a>
+        </div>
+        <div>
+          <h2 class="mix-title">A la carte pricing</h2>
+          <div class="mix-board">
+            <div class="mix-row">
+              <span class="mix-price">$200</span>
+              <span class="mix-label">1 video / carousel posted on 1 platform only</span>
+            </div>
+            <div class="mix-row">
+              <span class="mix-price">$15</span>
+              <span class="mix-label">1 story</span>
+            </div>
+            <div class="mix-row">
+              <span class="mix-price">$50/mo</span>
+              <span class="mix-label">ad usage per month</span>
+            </div>
+            <div class="mix-row">
+              <span class="mix-price">+$60</span>
+              <span class="mix-label">rush delivery (48h)</span>
+            </div>
+          </div>
+          <p class="mix-foot">Need another setup? We can build a custom package together.</p>
+        </div>
+      </article>
+    </section>
+
+    <p class="foot-note">
+      * Final pricing is confirmed after scope, timeline, and usage terms are agreed in writing.
+    </p>
+  </main>
+</body>
+</html>

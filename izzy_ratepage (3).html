@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>izzy — rate card</title>
+  <link rel="icon" type="image/png" href="Please%20(3).png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Base (identical to portfolio) ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #EEEAE3;
+      --white:    #FAFAF8;
+      --black:    #0D0C0B;
+      --lime:     #C3FF4A;
+      --lime-dim: #9DD932;
+      --muted:    #8C897F;
+      --border:   rgba(13,12,11,0.1);
+      --dark:     #1A1916;
+      --r-sm:     12px;
+      --r:        20px;
+      --r-lg:     28px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--black);
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      word-spacing: -0.05em;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav (identical) ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 44px;
+      background: rgba(238,234,227,0.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1.1rem; letter-spacing: -0.04em;
+      font-style: italic;
+    }
+    .nav-logo span { color: var(--lime-dim); }
+    .nav-links { display: flex; gap: 32px; list-style: none; font-size: 0.85rem; color: var(--muted); }
+    .nav-links a { transition: color 0.2s; }
+    .nav-links a:hover { color: var(--black); }
+    .nav-links a::after {
+      content: ''; display: block; height: 1.5px;
+      background: var(--black); width: 0;
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--black); color: var(--lime);
+      padding: 9px 22px; border-radius: 999px;
+      font-size: 0.82rem; font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.8; }
+
+    /* ── Shared helpers ── */
+    .max-w { max-width: 1050px; margin: 0 auto; }
+    .pad { padding: 48px 44px; }
+    .eyebrow {
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .sec-title {
+      font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.8rem);
+      letter-spacing: -0.04em; line-height: 1.05;
+      margin-bottom: 32px;
+    }
+    .sec-title em { font-style: italic; font-weight: 400; color: var(--muted); }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s, transform 0.65s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 120px 44px 60px;
+      max-width: 1050px; margin: 0 auto;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--lime); color: var(--black);
+      padding: 5px 14px; border-radius: 999px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 18px; width: fit-content;
+    }
+    .hero-tag::before { content: '✦'; }
+    .hero-h1 {
+      font-weight: 700;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      line-height: 0.95; letter-spacing: -0.04em;
+      margin-bottom: 20px;
+    }
+    .hero-h1 .dim { color: var(--muted); font-weight: 400; font-style: italic; }
+    .hero-bio {
+      font-size: 0.82rem; color: var(--muted);
+      max-width: 480px; line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      padding: 5px 14px; border-radius: 999px;
+      border: 1.5px solid var(--border);
+      font-size: 0.72rem; font-weight: 500; color: var(--muted);
+      transition: all 0.2s; cursor: default;
+    }
+    .tag:hover { border-color: var(--black); color: var(--black); }
+
+    /* ── Marquee ── */
+    .marquee {
+      background: var(--black);
+      padding: 14px 0; overflow: hidden;
+    }
+    .marquee-track {
+      display: flex; white-space: nowrap;
+      animation: ticker 28s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      font-weight: 700; font-size: 0.7rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--lime); padding: 0 30px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .marquee-item::after { content: '✦'; color: rgba(195,255,74,0.3); font-size: 0.6rem; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Note card (stat-row style) ── */
+    .note-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .note-card-head {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .note-card-label {
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      font-weight: 700; color: var(--black);
+    }
+    .note-card-sub { font-size: 0.75rem; color: var(--muted); line-height: 1.55; max-width: 760px; }
+    .note-list { list-style: none; }
+    .note-list li {
+      display: flex; gap: 18px; align-items: flex-start;
+      padding: 18px 28px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem; color: var(--muted); line-height: 1.65;
+      transition: background 0.2s;
+    }
+    .note-list li:last-child { border-bottom: none; }
+    .note-list li:hover { background: rgba(13,12,11,0.02); }
+    .note-num {
+      font-weight: 700; font-style: italic;
+      font-size: 1.2rem; color: var(--black);
+      letter-spacing: -0.04em; line-height: 1;
+      flex-shrink: 0; padding-top: 2px;
+    }
+    .note-list li strong { color: var(--black); font-weight: 600; }
+
+    /* ── Bundle (dark card) ── */
+    .bundle-section {
+      background: var(--dark); color: #fff;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .bundle-best {
+      position: absolute; top: 0; right: 0;
+      background: var(--lime); color: var(--black);
+      font-size: 0.65rem; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 7px 20px;
+      border-bottom-left-radius: var(--r-sm);
+    }
+    .bundle-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .bundle-left {
+      padding: 44px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+    .bundle-right { padding: 44px; }
+    .bundle-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 1.5px solid rgba(195,255,74,0.3);
+      color: var(--lime); border-radius: 999px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 4px 14px;
+      margin-bottom: 20px;
+    }
+    .bundle-price {
+      font-weight: 700; font-size: clamp(3.5rem, 7vw, 5rem);
+      letter-spacing: -0.05em; line-height: 1;
+      color: #fff; margin-bottom: 4px;
+    }
+    .bundle-price-sub {
+      font-size: 0.78rem; color: rgba(255,255,255,0.28);
+      font-style: italic; margin-bottom: 20px;
+    }
+    .bundle-desc {
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+      line-height: 1.7; margin-bottom: 26px;
+    }
+    .bundle-desc strong { color: rgba(255,255,255,0.85); }
+    .bundle-desc .hl { color: var(--lime); }
+    .btn-lime {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--lime); color: var(--black);
+      padding: 12px 26px; border-radius: 999px;
+      font-size: 0.875rem; font-weight: 700;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-lime:hover { opacity: 0.85; transform: translateY(-2px); }
+    .bundle-inc-label {
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.22); margin-bottom: 14px;
+    }
+    .bundle-inc-list { list-style: none; }
+    .bundle-inc-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.5;
+    }
+    .bundle-inc-list li:last-child { border-bottom: none; }
+    .bundle-inc-list li .hl { color: var(--lime); font-style: normal; font-weight: 500; }
+    .bundle-inc-list li .dim { color: rgba(255,255,255,0.28); font-style: italic; }
+    .inc-dot-lime {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--lime); flex-shrink: 0; margin-top: 6px;
+    }
+    .bundle-callout {
+      margin-top: 22px;
+      background: rgba(195,255,74,0.06);
+      border: 1px solid rgba(195,255,74,0.15);
+      border-radius: var(--r-sm);
+      padding: 14px 18px;
+      font-size: 0.76rem; color: rgba(195,255,74,0.7); line-height: 1.65;
+    }
+    .bundle-callout strong { color: var(--lime); }
+
+    /* ── Menu section ── */
+    .menu-section {
+      background: var(--dark);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .menu-head {
+      padding: 32px 40px 26px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .menu-head-title {
+      font-weight: 700; font-size: 1.55rem;
+      letter-spacing: -0.04em; color: #fff; line-height: 1.1;
+    }
+    .menu-head-title span {
+      display: block; font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.22); margin-bottom: 6px;
+    }
+    .menu-head-sub {
+      font-size: 0.76rem; color: rgba(255,255,255,0.28);
+      line-height: 1.55; text-align: right; max-width: 200px;
+    }
+    .menu-body { padding: 0 40px; }
+    .menu-cat-label {
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--lime); font-weight: 700;
+      padding: 20px 0 10px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .menu-cat-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: rgba(255,255,255,0.05);
+    }
+    .menu-row {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 20px; padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.2s;
+      border-radius: 0;
+    }
+    .menu-row:last-child { border-bottom: none; }
+    .menu-row:hover { background: rgba(255,255,255,0.025); margin: 0 -8px; padding: 14px 8px; border-radius: var(--r-sm); }
+    .menu-row-name {
+      font-size: 0.88rem; font-weight: 500;
+      color: rgba(255,255,255,0.78); letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .menu-row-desc {
+      font-size: 0.74rem; color: rgba(255,255,255,0.27); line-height: 1.5;
+    }
+    .menu-row-price {
+      font-weight: 700; font-size: 1.25rem;
+      color: #fff; letter-spacing: -0.04em;
+      white-space: nowrap; flex-shrink: 0; padding-top: 2px;
+    }
+    .unit { font-size: 0.72rem; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; }
+    .badge-free {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.35); padding: 2px 8px; border-radius: 999px;
+    }
+    .menu-talk {
+      font-size: 0.82rem; font-weight: 500;
+      color: rgba(255,255,255,0.28); padding-top: 4px; flex-shrink: 0;
+    }
+    .menu-footer {
+      padding: 22px 40px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.74rem; color: rgba(255,255,255,0.22);
+      line-height: 1.6; text-align: center;
+    }
+    .menu-footer strong { color: rgba(255,255,255,0.45); }
+
+    /* ── Timeline card ── */
+    .timeline-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .timeline-row {
+      display: flex; align-items: stretch;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .timeline-row:last-child { border-bottom: none; }
+    .timeline-row:hover { background: rgba(13,12,11,0.02); }
+    .tl-step {
+      width: 100px; flex-shrink: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px 12px;
+      border-right: 1px solid var(--border);
+      gap: 6px; text-align: center;
+    }
+    .tl-num {
+      font-weight: 700; font-style: italic;
+      font-size: 1.8rem; letter-spacing: -0.05em;
+      color: var(--black); line-height: 1;
+    }
+    .tl-icon { font-size: 1.1rem; }
+    .tl-label {
+      font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .tl-body { flex: 1; padding: 24px 28px; }
+    .tl-title {
+      font-weight: 600; font-size: 0.92rem;
+      letter-spacing: -0.02em; margin-bottom: 6px; color: var(--black);
+    }
+    .tl-desc {
+      font-size: 0.78rem; color: var(--muted); line-height: 1.7;
+    }
+    .tl-desc em { font-style: italic; color: var(--black); }
+    .tl-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 12px;
+      background: var(--black); color: var(--lime);
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 999px;
+    }
+    .tl-pill.done {
+      background: rgba(100,200,120,0.1);
+      color: #3a8a4a;
+    }
+
+    /* ── Footer (identical) ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px 44px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: rgba(255,255,255,0.25);
+      flex-wrap: wrap; gap: 10px;
+    }
+    footer a { color: var(--lime); }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .pad { padding: 40px 20px; }
+      .hero { padding: 90px 20px 40px; }
+      .bundle-inner { grid-template-columns: 1fr; }
+      .bundle-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 32px 24px; }
+      .bundle-right { padding: 32px 24px; }
+      .menu-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .menu-head-sub { text-align: left; }
+      .menu-body { padding: 0 20px; }
+      .menu-head { padding: 24px 20px; }
+      .menu-footer { padding: 18px 20px; }
+      footer { padding: 20px; }
+    }
+    @media (max-width: 640px) {
+      nav { height: 60px; padding: 0 14px; }
+      .nav-logo { font-size: 1rem; }
+      .nav-cta { padding: 7px 14px; font-size: 0.72rem; }
+      .hero { padding: 74px 14px 24px; }
+      .hero-h1 { font-size: clamp(2rem, 11vw, 2.8rem); }
+      .hero-bio { font-size: 0.8rem; max-width: 100%; }
+      .tags { gap: 6px; }
+      .tag { font-size: 0.62rem; padding: 4px 10px; }
+      .pad { padding: 30px 14px; }
+      .note-card-head { padding: 14px 16px; gap: 6px; }
+      .note-card-label { font-size: 0.62rem; letter-spacing: 0.13em; }
+      .note-card-sub { font-size: 0.71rem; }
+      .note-list li { padding: 14px 16px; gap: 10px; font-size: 0.78rem; }
+      .note-num { font-size: 1rem; min-width: 28px; }
+      .bundle-best { padding: 6px 12px; font-size: 0.56rem; letter-spacing: 0.08em; }
+      .bundle-price { font-size: clamp(2rem, 12vw, 2.8rem); }
+      .bundle-right .inc-list li { font-size: 0.76rem; }
+      .menu-head { padding: 16px 14px; }
+      .menu-head-title { font-size: 1.05rem; }
+      .menu-head-sub { font-size: 0.74rem; max-width: 100%; }
+      .menu-body { padding: 0 14px; }
+      .menu-row { gap: 10px; }
+      .menu-item { font-size: 0.76rem; max-width: 60%; }
+      .menu-price { font-size: 1.15rem; }
+      .menu-footer { padding: 14px; font-size: 0.68rem; text-align: left; }
+      .timeline-row { flex-direction: column; }
+      .tl-step {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+        text-align: left;
+      }
+      .tl-num { font-size: 1.2rem; }
+      .tl-label { font-size: 0.55rem; }
+      .tl-body { padding: 14px; }
+      .tl-title { font-size: 0.85rem; }
+      .tl-desc { font-size: 0.74rem; line-height: 1.6; }
+      .tl-pill { font-size: 0.58rem; padding: 4px 10px; }
+      footer { font-size: 0.7rem; justify-content: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-logo">izzy<span>.</span></span>
+    <ul class="nav-links">
+      <li><a href="index.html">home</a></li>
+      <li><a href="index.html#work">work</a></li>
+      <li><a href="index.html#brand-carousel">brands</a></li>
+      <li><a href="index.html#contact">contact</a></li>
+    </ul>
+    <a href="mailto:izzyxmcglizzy@gmail.com" class="nav-cta">let's work →</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">ugc rate card · 2025</div>
+    <h1 class="hero-h1">
+      let's work<br>
+      <span class="dim">together.</span>
+    </h1>
+    <p class="hero-bio">
+      authentic content for brands i genuinely love — tech & apps, lifestyle, beauty & travel. based in bali, creating for the world.
+    </p>
+    <div class="tags">
+      <span class="tag">Tech & Apps</span>
+      <span class="tag">Lifestyle</span>
+      <span class="tag">Beauty & Fashion</span>
+      <span class="tag">Travel</span>
+    </div>
+  </div>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span class="marquee-item">ugc creator</span>
+      <span class="marquee-item">tiktok & instagram</span>
+      <span class="marquee-item">bali, indonesia</span>
+      <span class="marquee-item">80k tiktok</span>
+      <span class="marquee-item">authentic content</span>
+      <span class="marquee-item">brand collabs</span>
+      <span class="marquee-item">short-form video</span>
+      <span class="marquee-item">unlimited revisions</span>
+      <span class="marquee-item">ugc creator</span>
+      <span class="marquee-item">tiktok & instagram</span>
+      <span class="marquee-item">bali, indonesia</span>
+      <span class="marquee-item">80k tiktok</span>
+      <span class="marquee-item">authentic content</span>
+      <span class="marquee-item">brand collabs</span>
+      <span class="marquee-item">short-form video</span>
+      <span class="marquee-item">unlimited revisions</span>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="max-w pad">
+
+      <p class="eyebrow reveal">pricing</p>
+      <h2 class="sec-title reveal">packages &amp; <em>rates</em></h2>
+
+      <!-- NOTE CARD -->
+      <div class="note-card reveal">
+        <div class="note-card-head">
+          <span class="note-card-label">a note on these rates</span>
+          <span class="note-card-sub">✨ <strong>These rates</strong> are based on my <strong>previous collaborations</strong> and what brands have typically invested for similar work. I’m always happy to adjust depending on the <strong>scope</strong>, <strong>deliverables</strong>, and <strong>budget</strong>.</span>
+        </div>
+        <ul class="note-list">
+          <li>
+            <span class="note-num">1 ✦</span>
+            <span><strong>every price comes from real past collabs</strong> — brands across tech, beauty, lifestyle, and travel. what you see is what i've genuinely been paid.</span>
+          </li>
+          <li>
+            <span class="note-num">2 ♡</span>
+            <span><strong>nothing is set in stone.</strong> the work matters more than the number. if i love your brand and the vibe is right, we'll figure it out together.</span>
+          </li>
+          <li>
+            <span class="note-num">3 ✨</span>
+            <span><strong>budget's tight? just say so.</strong> i'd honestly rather find a way to make it work than miss out on a collab that feels right. reach out — no pressure at all.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- BUNDLE -->
+      <div class="bundle-section reveal">
+        <div class="bundle-best">⭐ best value</div>
+        <div class="bundle-inner">
+          <div class="bundle-left">
+            <div class="bundle-badge">✨ standard bundle</div>
+            <p class="bundle-price">$300</p>
+            <p class="bundle-price-sub">USD · per bundle</p>
+            <p class="bundle-desc">
+              everything you need in one go — cross-posted on <strong>both TikTok & Instagram</strong>, stories included, and <span class="hl">3 months of ad rights on us.</span> maximum reach, minimum effort on your end. 🎯
+            </p>
+            <a href="mailto:izzyxmcglizzy@gmail.com" class="btn-lime">book now ↗</a>
+          </div>
+          <div class="bundle-right">
+            <p class="bundle-inc-label">what you're getting</p>
+            <ul class="bundle-inc-list">
+              <li><span class="inc-dot-lime"></span>🎬 1 video or carousel on <span class="hl">TikTok & Instagram</span></li>
+              <li><span class="inc-dot-lime"></span>📖 3 Stories on Instagram <span class="dim">(if needed)</span></li>
+              <li><span class="inc-dot-lime"></span>📣 3 months ad usage rights — <span class="hl">FREE ($150 value!)</span></li>
+              <li><span class="inc-dot-lime"></span>♾️ unlimited revisions <span class="dim">— until you love it</span></li>
+              <li><span class="inc-dot-lime"></span>⚡ 3–5 business day turnaround</li>
+            </ul>
+            <div class="bundle-callout">
+              💡 <strong>that's 2 platforms + 3 stories + 3 months of ad rights</strong> — all for one flat price. 
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- À LA CARTE MENU -->
+      <div class="menu-section reveal">
+        <div class="menu-head">
+          <div class="menu-head-title">
+            <span>à la carte & add-ons</span>
+            build your own package
+          </div>
+          <p class="menu-head-sub">mix and match to get exactly what your brand needs.</p>
+        </div>
+
+        <div class="menu-body">
+          <p class="menu-cat-label">Content</p>
+          <div class="menu-row">
+            <div>
+              <p class="menu-row-name">🎬 1 Video / Carousel — Single Platform</p>
+              <p class="menu-row-desc">one video or carousel reel, posted to TikTok or Instagram (your choice)</p>
+            </div>
+            <p class="menu-row-price">$200</p>
+          </div>
+          <div class="menu-row">
+            <div>
+              <p class="menu-row-name">📖 1 Instagram Story</p>
+              <p class="menu-row-desc">a single story slide — great for announcements, links, or product drops</p>
+            </div>
+            <p class="menu-row-price">$15</p>
+          </div>
+
+          <p class="menu-cat-label">Usage Rights</p>
+          <div class="menu-row">
+            <div>
+              <p class="menu-row-name">📣 Ad Usage Rights <span class="badge-free">incl. in bundle</span></p>
+              <p class="menu-row-desc">license to run content as paid ads on any platform — per calendar month</p>
+            </div>
+            <p class="menu-row-price">$50<span class="unit">/mo</span></p>
+          </div>
+          <div class="menu-row">
+            <div>
+              <p class="menu-row-name">♾️ Forever Usage Rights</p>
+              <p class="menu-row-desc">one flat fee, unlimited ad usage for life — best for evergreen content</p>
+            </div>
+            <p class="menu-row-price">$200</p>
+          </div>
+
+          <p class="menu-cat-label">Gifting & Collabs</p>
+          <div class="menu-row">
+            <div>
+              <p class="menu-row-name">🎁 Gifting / Barter Collabs</p>
+              <p class="menu-row-desc">open to gifting or product-swap arrangements — let's talk about what makes sense</p>
+            </div>
+            <p class="menu-talk">let's talk →</p>
+          </div>
+        </div>
+
+        <p class="menu-footer">all prices are starting points — <strong>negotiation is always welcome.</strong> the right collab matters more than the exact number.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="max-w pad">
+      <p class="eyebrow reveal">the process</p>
+      <h2 class="sec-title reveal">wanna work <em>together?</em></h2>
+      <p style="font-size:0.82rem; color:var(--muted); max-width:460px; line-height:1.65; margin-bottom:32px;" class="reveal">
+        here's exactly how we go from "interested" to live content on your feed — simple, transparent, no surprises.
+      </p>
+
+      <div class="timeline-card reveal">
+
+        <div class="timeline-row">
+          <div class="tl-step">
+            <span class="tl-num">01</span>
+            <span class="tl-icon">👀</span>
+            <span class="tl-label">rate card</span>
+          </div>
+          <div class="tl-body">
+            <p class="tl-title">check my rates & reach out</p>
+            <p class="tl-desc">you're already here — great start. browse the packages above and get a feel for what works for your brand. remember: <em>all prices are negotiable.</em> if you love the idea but the budget's tight, just say so.</p>
+            <span class="tl-pill">you are here ✦</span>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="tl-step">
+            <span class="tl-num">02</span>
+            <span class="tl-icon">📩</span>
+            <span class="tl-label">deliverables</span>
+          </div>
+          <div class="tl-body">
+            <p class="tl-title">lock in deliverables via email</p>
+            <p class="tl-desc">once we're aligned on vibe and budget, we lock in the deliverables over email — what i'm making, where it's posted, any specific briefs or brand guidelines. <em>clear expectations on both sides.</em></p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="tl-step">
+            <span class="tl-num">03</span>
+            <span class="tl-icon">💸</span>
+            <span class="tl-label">payment</span>
+          </div>
+          <div class="tl-body">
+            <p class="tl-title">50% upfront via PayPal</p>
+            <p class="tl-desc">once deliverables are agreed, i'll send over a PayPal request for <em>50% of the total.</em> this secures your spot and lets me start working. the remaining 50% is due before final files are delivered.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="tl-step">
+            <span class="tl-num">04</span>
+            <span class="tl-icon">✏️</span>
+            <span class="tl-label">first draft</span>
+          </div>
+          <div class="tl-body">
+            <p class="tl-title">first draft in 3–5 days</p>
+            <p class="tl-desc">once payment clears, i get to work. expect your <em>first draft within 3–5 business days.</em> you'll have unlimited rounds of revisions — we keep going until you're genuinely happy with it.</p>
+          </div>
+        </div>
+
+        <div class="timeline-row">
+          <div class="tl-step">
+            <span class="tl-num">05</span>
+            <span class="tl-icon">🚀</span>
+            <span class="tl-label">go live</span>
+          </div>
+          <div class="tl-body">
+            <p class="tl-title">approved → posted on my socials</p>
+            <p class="tl-desc">once you've signed off, <em>i post it across my platforms</em> as agreed. you'll receive all raw files, and any usage rights you've purchased are yours from that moment.</p>
+            <span class="tl-pill done">that's a wrap ✦</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2025 <a href="index.html">izzy</a> · all rights reserved</span>
+    <span>made with love from bali 🌴</span>
+  </footer>
+
+  <script>
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.08 }
+    );
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  </script>
+
+</body>
+</html>

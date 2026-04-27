@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>izzy — ugc creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:       #0e0e0e;
+      --surface:  #161616;
+      --card:     #1c1c1c;
+      --border:   #2a2a2a;
+      --accent:   #d4a882;
+      --accent2:  #c4917a;
+      --text:     #f0ebe3;
+      --muted:    #8a857e;
+      --radius:   18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      backdrop-filter: blur(20px);
+      background: rgba(14,14,14,0.75);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .nav-links a { transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent);
+      color: #1a1208;
+      padding: 9px 22px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 30%, rgba(212,168,130,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-handle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 28px;
+    }
+    .hero-bio {
+      max-width: 460px;
+      font-size: 1rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 44px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #1a1208;
+      padding: 13px 30px;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-ghost {
+      border: 1px solid var(--border);
+      padding: 13px 30px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--text); transform: translateY(-1px); }
+
+    /* ── Stats bar ── */
+    .stats {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 36px 48px;
+      display: flex;
+      justify-content: center;
+      gap: clamp(32px, 6vw, 80px);
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: center; }
+    .stat-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── Section commons ── */
+    section { padding: 100px 48px; }
+    .section-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 56px;
+    }
+    .max-w { max-width: 1120px; margin: 0 auto; }
+
+    /* ── Work / Videos ── */
+    #work { background: var(--bg); }
+    .work-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 8px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #1a1208;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Video grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 24px;
+    }
+    .video-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    /* TikTok embed wrapper */
+    .tiktok-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      background: #000;
+      min-height: 540px;
+    }
+    .tiktok-wrap blockquote.tiktok-embed {
+      margin: 0 !important;
+      min-width: 100% !important;
+    }
+    /* Instagram embed wrapper */
+    .ig-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 0;
+      background: #000;
+      min-height: 500px;
+    }
+    .ig-wrap .instagram-media {
+      min-width: 100% !important;
+      margin: 0 !important;
+    }
+    .video-label {
+      padding: 14px 18px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .platform-badge {
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+    .badge-tiktok { background: rgba(255,255,255,0.07); color: #fff; }
+    .badge-ig { background: rgba(212,168,130,0.15); color: var(--accent); }
+
+    /* ── Brands ── */
+    #brands { background: var(--surface); }
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .brand-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .brand-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
+    .brand-cat {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .brand-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+    }
+    .brand-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── Services ── */
+    #services { background: var(--bg); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      transition: border-color 0.2s;
+    }
+    .service-card:hover { border-color: var(--accent); }
+    .service-icon {
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+    }
+    .service-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+    }
+    .service-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .service-price {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── Contact ── */
+    #contact {
+      background: var(--surface);
+      text-align: center;
+    }
+    #contact .section-desc { margin: 0 auto 44px; }
+    .contact-box {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .contact-email {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      color: var(--accent);
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 4px;
+      transition: opacity 0.2s;
+    }
+    .contact-email:hover { opacity: 0.75; }
+    .social-row {
+      display: flex;
+      gap: 14px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .social-link:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ── Scroll fade-in ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      section { padding: 70px 20px; }
+      .stats { padding: 28px 20px; gap: 28px; }
+      footer { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="nav-logo">izzy</span>
+    <ul class="nav-links">
+      <li><a href="#work">work</a></li>
+      <li><a href="#brands">brands</a></li>
+      <li><a href="#services">services</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+    <a href="mailto:izzyxmcglizzy@gmail.com" class="nav-cta">let's work</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <p class="hero-eyebrow">ugc creator · bali</p>
+    <h1>creative<br><em>portfolio</em></h1>
+    <p class="hero-handle">@izzermcglizzer on instagram &amp; tiktok</p>
+    <p class="hero-bio">
+      i'm a content creator from Bali making authentic, aesthetic content
+      for brands i actually love — lifestyle, beauty, travel &amp; tech.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">view my work</a>
+      <a href="#contact" class="btn-ghost">get in touch</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-item">
+      <div class="stat-value">80k</div>
+      <div class="stat-label">TikTok Followers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">17k</div>
+      <div class="stat-label">Instagram Followers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">29.6%</div>
+      <div class="stat-label">Engagement Rate</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">491%</div>
+      <div class="stat-label">View Rate</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">86k</div>
+      <div class="stat-label">Avg. Reel Views</div>
+    </div>
+  </div>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="max-w">
+      <p class="section-eyebrow reveal">recent work</p>
+      <h2 class="section-title reveal">videos that convert</h2>
+      <p class="section-desc reveal">Click any video to watch it directly on TikTok or Instagram.</p>
+
+      <!-- Tabs -->
+      <div class="work-tabs reveal">
+        <button class="tab-btn active" onclick="switchTab('all')">all</button>
+        <button class="tab-btn" onclick="switchTab('tiktok')">tiktok</button>
+        <button class="tab-btn" onclick="switchTab('instagram')">instagram</button>
+      </div>
+
+      <!-- ALL / TIKTOK panel -->
+      <div class="tab-panel active" id="panel-all">
+        <div class="video-grid">
+
+          <!-- ═══════════════════════════════════════════
+               REPLACE the cite="" and data-video-id=""
+               values below with your actual TikTok video URLs.
+               Get the URL from TikTok: share → copy link.
+               ═══════════════════════════════════════════ -->
+
+          <!-- TikTok video 1 -->
+          <div class="video-card">
+            <div class="tiktok-wrap">
+              <blockquote
+                class="tiktok-embed"
+                cite="https://www.tiktok.com/@izzermcglizzer/video/REPLACE_VIDEO_ID_1"
+                data-video-id="REPLACE_VIDEO_ID_1"
+                style="max-width:605px; min-width:325px;">
+                <section></section>
+              </blockquote>
+            </div>
+            <div class="video-label">
+              <span class="platform-badge badge-tiktok">TikTok</span>
+              Alassari Sanctuary
+            </div>
+          </div>
+
+          <!-- TikTok video 2 -->
+          <div class="video-card">
+            <div class="tiktok-wrap">
+              <blockquote
+                class="tiktok-embed"
+                cite="https://www.tiktok.com/@izzermcglizzer/video/REPLACE_VIDEO_ID_2"
+                data-video-id="REPLACE_VIDEO_ID_2"
+                style="max-width:605px; min-width:325px;">
+                <section></section>
+              </blockquote>
+            </div>
+            <div class="video-label">
+              <span class="platform-badge badge-tiktok">TikTok</span>
+              Rose All Day · Beauty
+            </div>
+          </div>
+
+          <!-- TikTok video 3 -->
+          <div class="video-card">
+            <div class="tiktok-wrap">
+              <blockquote
+                class="tiktok-embed"
+                cite="https://www.tiktok.com/@izzermcglizzer/video/REPLACE_VIDEO_ID_3"
+                data-video-id="REPLACE_VIDEO_ID_3"
+                style="max-width:605px; min-width:325px;">
+                <section></section>
+              </blockquote>
+            </div>
+            <div class="video-label">
+              <span class="platform-badge badge-tiktok">TikTok</span>
+              Barrenbliss · Beauty
+            </div>
+          </div>
+
+          <!-- ═══════════════════════════════════════════
+               REPLACE data-instgrm-permalink with your
+               actual Instagram Reel/post URL.
+               ═══════════════════════════════════════════ -->
+
+          <!-- Instagram video 1 -->
+          <div class="video-card">
+            <div class="ig-wrap">
+              <blockquote
+                class="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/REPLACE_SHORTCODE_1/"
+                data-instgrm-version="14"
+                style="width:100%;">
+              </blockquote>
+            </div>
+            <div class="video-label">
+              <span class="platform-badge badge-ig">Instagram</span>
+              Kaze AI · Tech
+            </div>
+          </div>
+
+          <!-- Instagram video 2 -->
+          <div class="video-card">
+            <div class="ig-wrap">
+              <blockquote
+                class="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/REPLACE_SHORTCODE_2/"
+                data-instgrm-version="14"
+                style="width:100%;">
+              </blockquote>
+            </div>
+            <div class="video-label">
+              <span class="platform-badge badge-ig">Instagram</span>
+              Widgify · Tech
+            </div>
+          </div>
+
+          <!-- Instagram video 3 -->
+          <div class="video-card">
+            <div class="ig-wrap">
+              <blockquote
+                class="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/REPLACE_SHORTCODE_3/"
+                data-instgrm-version="14"
+                style="width:100%;">
+              </blockquote>
+            </div>
+            <div class="video-label">
+              <span class="platform-badge badge-ig">Instagram</span>
+              BUD · App
+            </div>
+          </div>
+
+        </div><!-- /video-grid -->
+      </div><!-- /panel-all -->
+
+      <!-- TIKTOK-only panel -->
+      <div class="tab-panel" id="panel-tiktok">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="tiktok-wrap">
+              <blockquote class="tiktok-embed"
+                cite="https://www.tiktok.com/@izzermcglizzer/video/REPLACE_VIDEO_ID_1"
+                data-video-id="REPLACE_VIDEO_ID_1"
+                style="max-width:605px; min-width:325px;">
+                <section></section>
+              </blockquote>
+            </div>
+            <div class="video-label"><span class="platform-badge badge-tiktok">TikTok</span> Alassari Sanctuary</div>
+          </div>
+          <div class="video-card">
+            <div class="tiktok-wrap">
+              <blockquote class="tiktok-embed"
+                cite="https://www.tiktok.com/@izzermcglizzer/video/REPLACE_VIDEO_ID_2"
+                data-video-id="REPLACE_VIDEO_ID_2"
+                style="max-width:605px; min-width:325px;">
+                <section></section>
+              </blockquote>
+            </div>
+            <div class="video-label"><span class="platform-badge badge-tiktok">TikTok</span> Rose All Day · Beauty</div>
+          </div>
+          <div class="video-card">
+            <div class="tiktok-wrap">
+              <blockquote class="tiktok-embed"
+                cite="https://www.tiktok.com/@izzermcglizzer/video/REPLACE_VIDEO_ID_3"
+                data-video-id="REPLACE_VIDEO_ID_3"
+                style="max-width:605px; min-width:325px;">
+                <section></section>
+              </blockquote>
+            </div>
+            <div class="video-label"><span class="platform-badge badge-tiktok">TikTok</span> Barrenbliss · Beauty</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INSTAGRAM-only panel -->
+      <div class="tab-panel" id="panel-instagram">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="ig-wrap">
+              <blockquote class="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/REPLACE_SHORTCODE_1/"
+                data-instgrm-version="14" style="width:100%;">
+              </blockquote>
+            </div>
+            <div class="video-label"><span class="platform-badge badge-ig">Instagram</span> Kaze AI · Tech</div>
+          </div>
+          <div class="video-card">
+            <div class="ig-wrap">
+              <blockquote class="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/REPLACE_SHORTCODE_2/"
+                data-instgrm-version="14" style="width:100%;">
+              </blockquote>
+            </div>
+            <div class="video-label"><span class="platform-badge badge-ig">Instagram</span> Widgify · Tech</div>
+          </div>
+          <div class="video-card">
+            <div class="ig-wrap">
+              <blockquote class="instagram-media"
+                data-instgrm-permalink="https://www.instagram.com/reel/REPLACE_SHORTCODE_3/"
+                data-instgrm-version="14" style="width:100%;">
+              </blockquote>
+            </div>
+            <div class="video-label"><span class="platform-badge badge-ig">Instagram</span> BUD · App</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BRANDS -->
+  <section id="brands">
+    <div class="max-w">
+      <p class="section-eyebrow reveal">collaborations</p>
+      <h2 class="section-title reveal">brands i've worked with</h2>
+      <p class="section-desc reveal">From beauty to tech — authentic content for brands I genuinely love.</p>
+
+      <div class="brands-grid reveal">
+        <div class="brand-card">
+          <div class="brand-cat">beauty</div>
+          <div class="brand-name">Rose All Day</div>
+          <div class="brand-desc">makeup · skin</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">beauty</div>
+          <div class="brand-name">Barrenbliss</div>
+          <div class="brand-desc">makeup · cosmetics</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">lifestyle</div>
+          <div class="brand-name">Alassari Sanctuary</div>
+          <div class="brand-desc">travel · hospitality</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">lifestyle</div>
+          <div class="brand-name">Amor Fati</div>
+          <div class="brand-desc">tattoo studio</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">tech</div>
+          <div class="brand-name">Kaze AI</div>
+          <div class="brand-desc">image recovery · AI tools</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">tech</div>
+          <div class="brand-name">Widgify</div>
+          <div class="brand-desc">widget app</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">tech</div>
+          <div class="brand-name">Brillic Media</div>
+          <div class="brand-desc">map app · ringtone app</div>
+        </div>
+        <div class="brand-card">
+          <div class="brand-cat">tech</div>
+          <div class="brand-name">BUD</div>
+          <div class="brand-desc">create, design &amp; play</div>
+        </div>
+        <div class="brand-card" style="border-style: dashed; border-color: var(--accent); opacity: 0.6;">
+          <div class="brand-cat">your brand</div>
+          <div class="brand-name">next? ✦</div>
+          <div class="brand-desc"><a href="#contact" style="color:var(--accent);">let's collab →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="max-w">
+      <p class="section-eyebrow reveal">what i offer</p>
+      <h2 class="section-title reveal">rates &amp; services</h2>
+      <p class="section-desc reveal">All content is shot, edited, and delivered ready to post. DM or email to discuss packages.</p>
+
+      <div class="services-grid reveal">
+        <div class="service-card">
+          <div class="service-icon">🎬</div>
+          <div class="service-name">UGC Video</div>
+          <div class="service-desc">Authentic short-form videos shot vertically, perfect for TikTok, Reels &amp; paid ads. Raw files included.</div>
+          <div class="service-price">starting from $150 / video</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📸</div>
+          <div class="service-name">Photo Content</div>
+          <div class="service-desc">Lifestyle and product photography with a clean, aesthetic edit. Great for feed posts and ads.</div>
+          <div class="service-price">starting from $80 / set</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">✨</div>
+          <div class="service-name">Content Package</div>
+          <div class="service-desc">Bundle of videos + photos for a full campaign — ideal for product launches and brand storytelling.</div>
+          <div class="service-price">custom pricing</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">📱</div>
+          <div class="service-name">Spark Ads / Licensing</div>
+          <div class="service-desc">License existing content for paid promotion, or create whitelisting-ready videos for your ad account.</div>
+          <div class="service-price">ask for quote</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 36px; font-size:0.82rem; color: var(--muted);">
+        * Prices are a guide. Final rate depends on usage rights, revisions, and deliverables. Let's talk!
+      </p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="max-w">
+      <p class="section-eyebrow reveal">let's create</p>
+      <h2 class="section-title reveal">work with me</h2>
+      <p class="section-desc reveal">
+        Got a brand, product, or service you want to bring to life through content? I'd love to hear from you.
+      </p>
+      <div class="contact-box reveal">
+        <a href="mailto:izzyxmcglizzy@gmail.com" class="contact-email">izzyxmcglizzy@gmail.com</a>
+        <div class="social-row">
+          <a class="social-link" href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">
+            <!-- TikTok icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.01a8.16 8.16 0 0 0 4.77 1.52V7.1a4.85 4.85 0 0 1-1-.41z"/></svg>
+            @izzermcglizzer
+          </a>
+          <a class="social-link" href="https://www.instagram.com/izzermcglizzer" target="_blank" rel="noopener">
+            <!-- Instagram icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            @izzermcglizzer
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2026 izzy · all rights reserved</span>
+    <span style="color:var(--accent);">made with love from bali 🌴</span>
+  </footer>
+
+  <!-- ── Embed scripts ── -->
+  <script async src="https://www.tiktok.com/embed.js"></script>
+  <script async src="//www.instagram.com/embed.js"></script>
+
+  <!-- ── Tabs ── -->
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById('panel-' + tab).classList.add('active');
+      // Re-process Instagram embeds when switching tabs
+      if (window.instgrm) window.instgrm.Embeds.process();
+    }
+  </script>
+
+  <!-- ── Scroll reveal ── -->
+  <script>
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1 }
+    );
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
