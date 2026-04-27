@@ -120,67 +120,56 @@
     }
     .tag:hover { border-color: var(--black); color: var(--black); }
 
-    /* ── Marquee ── */
-    .marquee {
-      background: var(--black);
-      padding: 14px 0; overflow: hidden;
-    }
-    .marquee-track {
-      display: flex; white-space: nowrap;
-      animation: ticker 28s linear infinite;
-    }
-    .marquee-track:hover { animation-play-state: paused; }
-    .marquee-item {
-      font-weight: 700; font-size: 0.7rem;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--lime); padding: 0 30px;
-      display: flex; align-items: center; gap: 14px;
-    }
-    .marquee-item::after { content: '✦'; color: rgba(195,255,74,0.3); font-size: 0.6rem; }
-    @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ── Note card (stat-row style) ── */
+    /* ── Rates note + 3 cards ── */
     .note-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     .note-card-head {
-      display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
-      padding: 20px 28px;
-      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 0;
+      margin-bottom: 16px;
+      text-align: center;
     }
     .note-card-label {
       font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
       font-weight: 700; color: var(--black);
     }
-    .note-card-sub { font-size: 0.75rem; color: var(--muted); line-height: 1.55; max-width: 760px; }
-    .note-list { list-style: none; }
-    .note-list li {
-      display: flex; gap: 18px; align-items: flex-start;
-      padding: 18px 28px;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.82rem; color: var(--muted); line-height: 1.65;
-      transition: background 0.2s;
+    .note-card-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.6; max-width: 760px; }
+    .note-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
-    .note-list li:last-child { border-bottom: none; }
-    .note-list li:hover { background: rgba(13,12,11,0.02); }
+    .note-list li {
+      display: flex; flex-direction: column; gap: 12px;
+      align-items: flex-start;
+      background: rgba(13,12,11,0.045);
+      border: 1px solid rgba(13,12,11,0.1);
+      border-radius: var(--r-lg);
+      padding: 22px 20px;
+      min-height: 170px;
+      font-size: 0.78rem; color: var(--muted); line-height: 1.55;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.4),
+        inset 0 -1px 0 rgba(13,12,11,0.08),
+        0 8px 20px rgba(13,12,11,0.05);
+      backdrop-filter: blur(4px);
+    }
     .note-num {
-      font-weight: 700; font-style: italic;
-      font-size: 1.2rem; color: var(--black);
-      letter-spacing: -0.04em; line-height: 1;
-      flex-shrink: 0; padding-top: 2px;
+      font-weight: 700;
+      font-size: 1.25rem; color: rgba(13,12,11,0.75);
+      letter-spacing: -0.02em; line-height: 1;
+      flex-shrink: 0;
+      width: 100%;
+      text-align: center;
     }
     .note-list li strong { color: var(--black); font-weight: 600; }
 
-    /* ── Bundle (dark card) ── */
+    /* ── Bundle (light card) ── */
     .bundle-section {
-      background: var(--dark); color: #fff;
+      background: var(--white); color: var(--black);
+      border: 1px solid var(--border);
       border-radius: var(--r-lg);
       overflow: hidden;
       margin-bottom: 16px;
@@ -199,13 +188,14 @@
     }
     .bundle-left {
       padding: 44px;
-      border-right: 1px solid rgba(255,255,255,0.06);
+      border-right: 1px solid var(--border);
     }
     .bundle-right { padding: 44px; }
     .bundle-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      border: 1.5px solid rgba(195,255,74,0.3);
-      color: var(--lime); border-radius: 999px;
+      border: 1.5px solid rgba(157,217,50,0.45);
+      color: #5f7a2b; border-radius: 999px;
+      background: rgba(195,255,74,0.1);
       font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
       text-transform: uppercase; padding: 4px 14px;
       margin-bottom: 20px;
@@ -213,18 +203,18 @@
     .bundle-price {
       font-weight: 700; font-size: clamp(3.5rem, 7vw, 5rem);
       letter-spacing: -0.05em; line-height: 1;
-      color: #fff; margin-bottom: 4px;
+      color: var(--black); margin-bottom: 4px;
     }
     .bundle-price-sub {
-      font-size: 0.78rem; color: rgba(255,255,255,0.28);
+      font-size: 0.78rem; color: var(--muted);
       font-style: italic; margin-bottom: 20px;
     }
     .bundle-desc {
-      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+      font-size: 0.82rem; color: var(--muted);
       line-height: 1.7; margin-bottom: 26px;
     }
-    .bundle-desc strong { color: rgba(255,255,255,0.85); }
-    .bundle-desc .hl { color: var(--lime); }
+    .bundle-desc strong { color: var(--black); }
+    .bundle-desc .hl { color: #5f7a2b; font-weight: 600; }
     .btn-lime {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--lime); color: var(--black);
@@ -235,31 +225,31 @@
     .btn-lime:hover { opacity: 0.85; transform: translateY(-2px); }
     .bundle-inc-label {
       font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: rgba(255,255,255,0.22); margin-bottom: 14px;
+      color: var(--muted); margin-bottom: 14px;
     }
     .bundle-inc-list { list-style: none; }
     .bundle-inc-list li {
       display: flex; align-items: flex-start; gap: 12px;
       padding: 11px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.5;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem; color: var(--muted); line-height: 1.5;
     }
     .bundle-inc-list li:last-child { border-bottom: none; }
-    .bundle-inc-list li .hl { color: var(--lime); font-style: normal; font-weight: 500; }
-    .bundle-inc-list li .dim { color: rgba(255,255,255,0.28); font-style: italic; }
+    .bundle-inc-list li .hl { color: #5f7a2b; font-style: normal; font-weight: 600; }
+    .bundle-inc-list li .dim { color: var(--muted); font-style: italic; }
     .inc-dot-lime {
       width: 5px; height: 5px; border-radius: 50%;
-      background: var(--lime); flex-shrink: 0; margin-top: 6px;
+      background: var(--lime-dim); flex-shrink: 0; margin-top: 6px;
     }
     .bundle-callout {
       margin-top: 22px;
-      background: rgba(195,255,74,0.06);
-      border: 1px solid rgba(195,255,74,0.15);
+      background: rgba(195,255,74,0.12);
+      border: 1px solid rgba(157,217,50,0.35);
       border-radius: var(--r-sm);
       padding: 14px 18px;
-      font-size: 0.76rem; color: rgba(195,255,74,0.7); line-height: 1.65;
+      font-size: 0.76rem; color: #5f7a2b; line-height: 1.65;
     }
-    .bundle-callout strong { color: var(--lime); }
+    .bundle-callout strong { color: #425a17; }
 
     /* ── Menu section ── */
     .menu-section {
@@ -408,10 +398,11 @@
       .pad { padding: 40px 20px; }
       .hero { padding: 90px 20px 40px; }
       .bundle-inner { grid-template-columns: 1fr; }
-      .bundle-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); padding: 32px 24px; }
+      .bundle-left { border-right: none; border-bottom: 1px solid var(--border); padding: 32px 24px; }
       .bundle-right { padding: 32px 24px; }
       .menu-head { flex-direction: column; align-items: flex-start; gap: 8px; }
       .menu-head-sub { text-align: left; }
+      .note-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .menu-body { padding: 0 20px; }
       .menu-head { padding: 24px 20px; }
       .menu-footer { padding: 18px 20px; }
@@ -427,11 +418,12 @@
       .tags { gap: 6px; }
       .tag { font-size: 0.62rem; padding: 4px 10px; }
       .pad { padding: 30px 14px; }
-      .note-card-head { padding: 14px 16px; gap: 6px; }
+      .note-card-head { gap: 6px; margin-bottom: 10px; }
       .note-card-label { font-size: 0.62rem; letter-spacing: 0.13em; }
       .note-card-sub { font-size: 0.71rem; }
-      .note-list li { padding: 14px 16px; gap: 10px; font-size: 0.78rem; }
-      .note-num { font-size: 1rem; min-width: 28px; }
+      .note-list { grid-template-columns: 1fr; gap: 10px; }
+      .note-list li { gap: 8px; font-size: 0.74rem; line-height: 1.5; min-height: 0; padding: 16px 14px; }
+      .note-num { font-size: 1.05rem; }
       .bundle-best { padding: 6px 12px; font-size: 0.56rem; letter-spacing: 0.08em; }
       .bundle-price { font-size: clamp(2rem, 12vw, 2.8rem); }
       .bundle-right .inc-list li { font-size: 0.76rem; }
@@ -496,28 +488,6 @@
     </div>
   </div>
 
-  <!-- MARQUEE -->
-  <div class="marquee">
-    <div class="marquee-track">
-      <span class="marquee-item">ugc creator</span>
-      <span class="marquee-item">tiktok & instagram</span>
-      <span class="marquee-item">bali, indonesia</span>
-      <span class="marquee-item">80k tiktok</span>
-      <span class="marquee-item">authentic content</span>
-      <span class="marquee-item">brand collabs</span>
-      <span class="marquee-item">short-form video</span>
-      <span class="marquee-item">unlimited revisions</span>
-      <span class="marquee-item">ugc creator</span>
-      <span class="marquee-item">tiktok & instagram</span>
-      <span class="marquee-item">bali, indonesia</span>
-      <span class="marquee-item">80k tiktok</span>
-      <span class="marquee-item">authentic content</span>
-      <span class="marquee-item">brand collabs</span>
-      <span class="marquee-item">short-form video</span>
-      <span class="marquee-item">unlimited revisions</span>
-    </div>
-  </div>
-
   <!-- PRICING -->
   <section id="pricing">
     <div class="max-w pad">
@@ -529,20 +499,20 @@
       <div class="note-card reveal">
         <div class="note-card-head">
           <span class="note-card-label">a note on these rates</span>
-          <span class="note-card-sub">✨ <strong>These rates</strong> are based on my <strong>previous collaborations</strong> and what brands have typically invested for similar work. I’m always happy to adjust depending on the <strong>scope</strong>, <strong>deliverables</strong>, and <strong>budget</strong>.</span>
+          <span class="note-card-sub"><strong>These rates</strong> are based on my <strong>previous collaborations</strong> and what brands have typically invested for similar work. I’m always happy to adjust depending on the <strong>scope</strong>, <strong>deliverables</strong>, and <strong>budget</strong>.</span>
         </div>
         <ul class="note-list">
           <li>
-            <span class="note-num">1 ✦</span>
+            <span class="note-num">1</span>
             <span><strong>every price comes from real past collabs</strong> — brands across tech, beauty, lifestyle, and travel. what you see is what i've genuinely been paid.</span>
           </li>
           <li>
-            <span class="note-num">2 ♡</span>
-            <span><strong>nothing is set in stone.</strong> the work matters more than the number. if i love your brand and the vibe is right, we'll figure it out together.</span>
+            <span class="note-num">2</span>
+            <span><strong>the listed rates are negotiable.</strong> if your scope or budget is different, we can adjust the numbers and deliverables to find the best fit.</span>
           </li>
           <li>
-            <span class="note-num">3 ✨</span>
-            <span><strong>budget's tight? just say so.</strong> i'd honestly rather find a way to make it work than miss out on a collab that feels right. reach out — no pressure at all.</span>
+            <span class="note-num">3</span>
+            <span><strong>if you have a specific budget, i'm happy to work with it.</strong> we can shape the deliverables together so it still feels right for your brand and goals.</span>
           </li>
         </ul>
       </div>

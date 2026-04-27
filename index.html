@@ -232,62 +232,6 @@
     .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s, transform 0.65s; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ── About section ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 56px;
-      align-items: stretch;
-    }
-    .about-photo {
-      border-radius: var(--r-lg); overflow: hidden;
-      aspect-ratio: 3/4;
-    }
-    .about-photo img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
-      display: block;
-      transition: transform 0.5s ease;
-    }
-    .about-photo:hover img { transform: scale(1.03); }
-    .about-right {
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .about-bio {
-      font-size: 0.84rem; color: var(--muted);
-      line-height: 1.7; margin-bottom: 36px;
-      max-width: 440px;
-    }
-    .about-stats {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
-    .stat-row {
-      display: flex; align-items: center;
-      justify-content: space-between;
-      padding: 20px 28px;
-      min-height: 96px;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-    .stat-row:last-child { border-bottom: none; }
-    .stat-row:hover { background: rgba(13,12,11,0.03); }
-    .stat-num {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700; font-style: italic;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      letter-spacing: -0.04em; line-height: 1;
-      color: var(--black);
-    }
-    .stat-name {
-      font-size: 0.78rem; color: var(--muted);
-      letter-spacing: 0.01em; text-align: right;
-    }
-
     /* ── Work (horizontal scroll) ── */
     #work { overflow: hidden; }
     .work-head {
@@ -401,14 +345,47 @@
       font-style: italic;
       font-weight: 400;
     }
-    .brands-circles-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 150px);
-      gap: 20px;
-      justify-content: center;
+    .brands-slider {
+      overflow: hidden;
+      position: relative;
+      padding: 6px 0;
+    }
+    .brands-slider::before,
+    .brands-slider::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 64px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .brands-slider::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--bg), rgba(238,234,227,0));
+    }
+    .brands-slider::after {
+      right: 0;
+      background: linear-gradient(270deg, var(--bg), rgba(238,234,227,0));
+    }
+    .brands-track {
+      display: flex;
+      width: max-content;
+      animation: brands-scroll 32s linear infinite;
+      will-change: transform;
+    }
+    .brands-group {
+      display: flex;
+      gap: 14px;
+      padding-right: 14px;
+    }
+    @keyframes brands-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
     .brand-circle {
-      width: 150px; height: 150px;
+      flex: 0 0 132px;
+      width: 132px; height: 132px;
       border-radius: 50%;
       background: var(--white);
       border: 1.5px solid var(--border);
@@ -433,6 +410,26 @@
       overflow: visible;
     }
     .brand-circle.cta-circle:hover { transform: scale(1.06); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
+    .brand-circle.cta-circle {
+      animation: cta-pulse 2.8s ease-in-out infinite;
+    }
+    .brand-circle.cta-circle::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(195,255,74,0.32);
+      animation: cta-orbit 8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes cta-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    @keyframes cta-orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
     /* confetti particles */
     .cta-particle {
       position: absolute;
@@ -530,6 +527,7 @@
       background: #1a1916; aspect-ratio: 9/16; overflow: hidden; cursor: pointer;
     }
     .work-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .work-video-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .work-video-overlay {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
@@ -678,9 +676,6 @@
       .hero-stats-side { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; }
       .hero-photo  { grid-column: span 2; height: 380px; }
       .pad { padding: 70px 20px; }
-      .about-grid { grid-template-columns: 1fr; }
-      .about-photo { aspect-ratio: 4/3; }
-      .about-bio { max-width: 100%; }
       .work-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
       .scroll-row { padding-left: 20px; padding-right: 20px; }
       .contact-grid { grid-template-columns: 1fr; }
@@ -707,11 +702,11 @@
       .hero-photo-badge { left: 10px; bottom: 10px; font-size: 0.68rem; padding: 7px 12px; }
       .pad { padding: 46px 14px; }
       .sec-title { margin-bottom: 20px; }
-      .stat-row { min-height: 84px; padding: 14px 16px; }
-      .stat-num { font-size: clamp(1.5rem, 7vw, 2rem); }
       #brand-carousel { padding: 28px 14px; }
-      .brands-circles-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-      .brand-circle { width: 100%; height: auto; aspect-ratio: 1 / 1; }
+      .brands-slider::before, .brands-slider::after { width: 20px; }
+      .brands-group { gap: 10px; padding-right: 10px; }
+      .brands-track { animation-duration: 24s; }
+      .brand-circle { flex-basis: 98px; width: 98px; height: 98px; }
       .work-subsection { padding: 30px 14px; }
       .work-grid { grid-template-columns: 1fr; gap: 16px; }
       .showcase-title { font-size: 1.45rem; }
@@ -813,85 +808,82 @@
     </div>
   </div>
 
-  <!-- ── ABOUT ── -->
-  <section id="about">
-    <div class="max-w pad">
-      <p class="eyebrow reveal">about me</p>
-      <h2 class="sec-title reveal">the face behind<br><em>the content</em></h2>
-
-      <div class="about-grid reveal">
-        <div class="about-photo">
-          <img
-            src="pictures/literally%20love%20u%20canon%20wtfffffff%20%23canonm50markii%20(1).jpg"
-            alt="izzy"
-          />
-        </div>
-        <div class="about-right">
-          <div class="about-stats">
-            <div class="stat-row">
-              <span class="stat-num">80k</span>
-              <span class="stat-name">TikTok Followers</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-num">17k</span>
-              <span class="stat-name">Instagram Followers</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-num">29.6%</span>
-              <span class="stat-name">Engagement Rate</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-num">491%</span>
-              <span class="stat-name">View Rate</span>
-            </div>
-            <div class="stat-row">
-              <span class="stat-num">86k</span>
-              <span class="stat-name">Avg. Reel View</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ── BRANDS GRID ── -->
   <section id="brand-carousel">
     <div class="max-w">
       <div class="brands-section-head reveal">
         <h2><em>brands</em> collaborations</h2>
       </div>
-      <div class="brands-circles-grid reveal">
-        <div class="brand-circle" title="Kaze AI">
-          <img src="pictures/brands/images.png" alt="Kaze AI" />
-        </div>
-        <div class="brand-circle" title="Amor Fati">
-          <img src="pictures/brands/images%20(1).png" alt="Amor Fati" />
-        </div>
-        <div class="brand-circle" title="Alassari">
-          <img src="pictures/brands/images%20(2).png" alt="Alassari Sanctuary" />
-        </div>
-        <div class="brand-circle" title="Barrenbliss">
-          <img src="pictures/brands/unnamed%20(3).webp" alt="Barrenbliss" />
-        </div>
-        <div class="brand-circle" title="BUD">
-          <img src="pictures/brands/twitter-image.png" alt="BUD" />
-        </div>
-        <div class="brand-circle" title="Kaze AI">
-          <img src="pictures/brands/8c9b5d30-edbb-4290-a2c7-ff8c1d8b4a24-Logo%20(2)%20(18).png" alt="Kaze AI" />
-        </div>
-        <div class="brand-circle" title="Brillic Media">
-          <img src="pictures/brands/brilic_media_logo.jpeg" alt="Brillic Media" />
-        </div>
-        <div class="brand-circle cta-circle">
-          your brand next!
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
+      <div class="brands-slider reveal">
+        <div class="brands-track">
+          <div class="brands-group">
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/images.png" alt="Kaze AI" />
+            </div>
+            <div class="brand-circle" title="Amor Fati">
+              <img src="pictures/brands/images%20(1).png" alt="Amor Fati" />
+            </div>
+            <div class="brand-circle" title="Alassari">
+              <img src="pictures/brands/images%20(2).png" alt="Alassari Sanctuary" />
+            </div>
+            <div class="brand-circle" title="Barrenbliss">
+              <img src="pictures/brands/unnamed%20(3).webp" alt="Barrenbliss" />
+            </div>
+            <div class="brand-circle" title="BUD">
+              <img src="pictures/brands/twitter-image.png" alt="BUD" />
+            </div>
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/8c9b5d30-edbb-4290-a2c7-ff8c1d8b4a24-Logo%20(2)%20(18).png" alt="Kaze AI" />
+            </div>
+            <div class="brand-circle" title="Brillic Media">
+              <img src="pictures/brands/brilic_media_logo.jpeg" alt="Brillic Media" />
+            </div>
+            <div class="brand-circle cta-circle">
+              your brand next!
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+            </div>
+          </div>
+          <div class="brands-group" aria-hidden="true">
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/images.png" alt="" />
+            </div>
+            <div class="brand-circle" title="Amor Fati">
+              <img src="pictures/brands/images%20(1).png" alt="" />
+            </div>
+            <div class="brand-circle" title="Alassari">
+              <img src="pictures/brands/images%20(2).png" alt="" />
+            </div>
+            <div class="brand-circle" title="Barrenbliss">
+              <img src="pictures/brands/unnamed%20(3).webp" alt="" />
+            </div>
+            <div class="brand-circle" title="BUD">
+              <img src="pictures/brands/twitter-image.png" alt="" />
+            </div>
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/8c9b5d30-edbb-4290-a2c7-ff8c1d8b4a24-Logo%20(2)%20(18).png" alt="" />
+            </div>
+            <div class="brand-circle" title="Brillic Media">
+              <img src="pictures/brands/brilic_media_logo.jpeg" alt="" />
+            </div>
+            <div class="brand-circle cta-circle">
+              your brand next!
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1056,8 +1048,7 @@
             <p class="work-blurb">A real-time CCTV &amp; location discovery app. I crafted a travel-themed reel showing live feeds from around the world — turning a utility app into a wanderlust moment.</p>
           </div>
           <div class="work-video-wrap">
-            <video src="https://drive.google.com/uc?export=download&id=1HhfIKqBdtQUA1bPq6Agqcos7uYpUm6op" muted playsinline preload="metadata"></video>
-            <div class="work-video-overlay"><div class="wv-play-btn">▶</div></div>
+            <img src="videos/brillicmedia_map.gif" alt="Brillic Media map app preview" />
           </div>
           <div class="work-analytics">
             <a href="https://www.instagram.com/reel/DXYl5-uESfQ/" target="_blank" rel="noopener" class="view-post-btn">view post ↗</a>
@@ -1176,6 +1167,7 @@
       // Work video cards: click to play/pause
       document.querySelectorAll('.work-video-wrap').forEach(wrap => {
         const vid = wrap.querySelector('video');
+        if (!vid) return;
         wrap.addEventListener('mouseenter', () => { vid.play(); wrap.classList.add('playing'); });
         wrap.addEventListener('mouseleave', () => { vid.pause(); wrap.classList.remove('playing'); });
         wrap.addEventListener('click', () => {
