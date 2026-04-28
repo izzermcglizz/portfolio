@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>izzy — rate card</title>
-  <link rel="icon" type="image/png" href="Please%20(3).png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
   <style>
-    /* ── Base (identical to portfolio) ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg:       #EEEAE3;
@@ -35,430 +33,357 @@
     }
     a { color: inherit; text-decoration: none; }
 
-    /* ── Nav (identical) ── */
+    /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 64px;
+      height: 60px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 44px;
-      background: rgba(238,234,227,0.82);
+      background: rgba(238,234,227,0.88);
       backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo {
-      font-weight: 700; font-size: 1.1rem; letter-spacing: -0.04em;
-      font-style: italic;
-    }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.04em; font-style: italic; }
     .nav-logo span { color: var(--lime-dim); }
     .nav-links { display: flex; gap: 32px; list-style: none; font-size: 0.85rem; color: var(--muted); }
     .nav-links a { transition: color 0.2s; }
     .nav-links a:hover { color: var(--black); }
-    .nav-links a::after {
-      content: ''; display: block; height: 1.5px;
-      background: var(--black); width: 0;
-      transition: width 0.25s ease;
-    }
-    .nav-links a:hover::after { width: 100%; }
     .nav-cta {
       background: var(--black); color: var(--lime);
-      padding: 9px 22px; border-radius: 999px;
+      padding: 8px 20px; border-radius: 999px;
       font-size: 0.82rem; font-weight: 500;
       transition: opacity 0.2s;
     }
     .nav-cta:hover { opacity: 0.8; }
 
-    /* ── Shared helpers ── */
+    /* SHARED */
     .max-w { max-width: 1050px; margin: 0 auto; }
-    .pad { padding: 48px 44px; }
-    .eyebrow {
-      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 12px;
-    }
-    .sec-title {
-      font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.8rem);
-      letter-spacing: -0.04em; line-height: 1.05;
-      margin-bottom: 32px;
-    }
+    .pad { padding: 44px 44px; }
+    .eyebrow { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .sec-title { font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.6rem); letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 28px; }
     .sec-title em { font-style: italic; font-weight: 400; color: var(--muted); }
-
-    /* reveal */
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s, transform 0.65s; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s, transform 0.6s; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ── Hero ── */
+    /* HERO — tighter grid layout */
     .hero {
-      padding: 120px 44px 60px;
+      padding: 88px 44px 44px;
       max-width: 1050px; margin: 0 auto;
     }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 20px;
+    }
     .hero-tag {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 7px;
       background: var(--lime); color: var(--black);
-      padding: 5px 14px; border-radius: 999px;
-      font-size: 0.65rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 999px;
+      font-size: 0.62rem; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase;
-      margin-bottom: 18px; width: fit-content;
+      margin: 0 auto 14px; width: fit-content;
     }
     .hero-tag::before { content: '✦'; }
     .hero-h1 {
       font-weight: 700;
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-size: clamp(1.9rem, 6.6vw, 4.2rem);
       line-height: 0.95; letter-spacing: -0.04em;
-      margin-bottom: 20px;
+      white-space: nowrap;
     }
     .hero-h1 .dim { color: var(--muted); font-weight: 400; font-style: italic; }
-    .hero-bio {
-      font-size: 0.82rem; color: var(--muted);
-      max-width: 480px; line-height: 1.55;
-      margin-bottom: 24px;
-    }
-    .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-    .tag {
-      padding: 5px 14px; border-radius: 999px;
-      border: 1.5px solid var(--border);
-      font-size: 0.72rem; font-weight: 500; color: var(--muted);
-      transition: all 0.2s; cursor: default;
-    }
-    .tag:hover { border-color: var(--black); color: var(--black); }
+    /* NOTE BANNER */
+    .note-banner { display: flex; align-items: center; background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px 28px; margin-bottom: 20px; gap: 0; flex-wrap: wrap; }
+    .note-banner-item { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 180px; }
+    .note-banner-item:nth-child(1) { padding-right: 28px; }
+    .note-banner-item:nth-child(3) { padding: 0 28px; }
+    .note-banner-item:nth-child(5) { padding-left: 28px; }
+    .note-banner-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .note-banner-title { font-size: 0.82rem; font-weight: 600; color: var(--black); margin-bottom: 3px; letter-spacing: -0.02em; }
+    .note-banner-desc { font-size: 0.74rem; color: var(--muted); line-height: 1.5; }
+    .note-banner-divider { width: 1px; align-self: stretch; background: var(--border); flex-shrink: 0; }
 
-    /* ── Rates note + 3 cards ── */
-    .note-card {
-      margin-bottom: 20px;
-    }
-    .note-card-head {
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
-      padding: 0;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .note-card-label {
-      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
-      font-weight: 700; color: var(--black);
-    }
-    .note-card-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.6; max-width: 760px; }
-    .note-list {
-      list-style: none;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
+    /* NOTE CARD */
+    .note-card { margin-bottom: 20px; }
+    .note-card-head { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 16px; text-align: center; }
+    .note-card-label { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700; color: var(--black); }
+    .note-card-sub { font-size: 0.76rem; color: var(--muted); line-height: 1.6; max-width: 640px; }
+    .note-list { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .note-list li {
-      display: flex; flex-direction: column; gap: 12px;
-      align-items: flex-start;
-      background: rgba(13,12,11,0.045);
-      border: 1px solid rgba(13,12,11,0.1);
-      border-radius: var(--r-lg);
-      padding: 22px 20px;
-      min-height: 170px;
-      font-size: 0.78rem; color: var(--muted); line-height: 1.55;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.4),
-        inset 0 -1px 0 rgba(13,12,11,0.08),
-        0 8px 20px rgba(13,12,11,0.05);
-      backdrop-filter: blur(4px);
+      display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+      background: rgba(13,12,11,0.04); border: 1px solid rgba(13,12,11,0.1);
+      border-radius: var(--r-lg); padding: 20px 18px;
+      font-size: 0.76rem; color: var(--muted); line-height: 1.55;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 6px 16px rgba(13,12,11,0.04);
     }
-    .note-num {
-      font-weight: 700;
-      font-size: 1.25rem; color: rgba(13,12,11,0.75);
-      letter-spacing: -0.02em; line-height: 1;
-      flex-shrink: 0;
-      width: 100%;
-      text-align: center;
-    }
+    .note-num { font-weight: 700; font-size: 1.1rem; color: rgba(13,12,11,0.7); letter-spacing: -0.02em; width: 100%; text-align: center; }
     .note-list li strong { color: var(--black); font-weight: 600; }
 
-    /* ── Bundle (light card) ── */
-    .bundle-section {
-      background: var(--white); color: var(--black);
-      border: 1px solid var(--border);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    .bundle-best {
-      position: absolute; top: 0; right: 0;
-      background: var(--lime); color: var(--black);
-      font-size: 0.65rem; font-weight: 800;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 7px 20px;
-      border-bottom-left-radius: var(--r-sm);
-    }
-    .bundle-inner {
-      display: grid; grid-template-columns: 1fr 1fr;
-    }
-    .bundle-left {
-      padding: 44px;
-      border-right: 1px solid var(--border);
-    }
-    .bundle-right { padding: 44px; }
-    .bundle-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      border: 1.5px solid rgba(157,217,50,0.45);
-      color: #5f7a2b; border-radius: 999px;
-      background: rgba(195,255,74,0.1);
-      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; padding: 4px 14px;
-      margin-bottom: 20px;
-    }
-    .bundle-price {
-      font-weight: 700; font-size: clamp(3.5rem, 7vw, 5rem);
-      letter-spacing: -0.05em; line-height: 1;
-      color: var(--black); margin-bottom: 4px;
-    }
-    .bundle-price-sub {
-      font-size: 0.78rem; color: var(--muted);
-      font-style: italic; margin-bottom: 20px;
-    }
-    .bundle-desc {
-      font-size: 0.82rem; color: var(--muted);
-      line-height: 1.7; margin-bottom: 26px;
-    }
+    /* BUNDLE */
+    .bundle-section { background: var(--white); color: var(--black); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 16px; position: relative; }
+    .bundle-best { position: absolute; top: 0; right: 0; background: var(--lime); color: var(--black); font-size: 0.62rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 18px; border-bottom-left-radius: var(--r-sm); }
+    .bundle-inner { display: grid; grid-template-columns: 1fr 1fr; }
+    .bundle-left { padding: 40px; border-right: 1px solid var(--border); }
+    .bundle-right { padding: 40px; }
+    .bundle-badge { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid rgba(157,217,50,0.45); color: #5f7a2b; border-radius: 999px; background: rgba(195,255,74,0.1); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; margin-bottom: 18px; }
+    .bundle-price { font-weight: 700; font-size: clamp(3rem, 6vw, 4.5rem); letter-spacing: -0.05em; line-height: 1; color: var(--black); margin-bottom: 4px; }
+    .bundle-price-sub { font-size: 0.76rem; color: var(--muted); font-style: italic; margin-bottom: 18px; }
+    .bundle-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
     .bundle-desc strong { color: var(--black); }
     .bundle-desc .hl { color: #5f7a2b; font-weight: 600; }
-    .btn-lime {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--lime); color: var(--black);
-      padding: 12px 26px; border-radius: 999px;
-      font-size: 0.875rem; font-weight: 700;
-      transition: opacity 0.2s, transform 0.2s;
-    }
+    .btn-lime { display: inline-flex; align-items: center; gap: 8px; background: var(--lime); color: var(--black); padding: 11px 24px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; transition: opacity 0.2s, transform 0.2s; }
     .btn-lime:hover { opacity: 0.85; transform: translateY(-2px); }
-    .bundle-inc-label {
-      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 14px;
-    }
+    .bundle-inc-label { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
     .bundle-inc-list { list-style: none; }
-    .bundle-inc-list li {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.82rem; color: var(--muted); line-height: 1.5;
-    }
+    .bundle-inc-list li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
     .bundle-inc-list li:last-child { border-bottom: none; }
     .bundle-inc-list li .hl { color: #5f7a2b; font-style: normal; font-weight: 600; }
     .bundle-inc-list li .dim { color: var(--muted); font-style: italic; }
-    .inc-dot-lime {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: var(--lime-dim); flex-shrink: 0; margin-top: 6px;
-    }
-    .bundle-callout {
-      margin-top: 22px;
-      background: rgba(195,255,74,0.12);
-      border: 1px solid rgba(157,217,50,0.35);
-      border-radius: var(--r-sm);
-      padding: 14px 18px;
-      font-size: 0.76rem; color: #5f7a2b; line-height: 1.65;
-    }
+    .inc-dot-lime { width: 5px; height: 5px; border-radius: 50%; background: var(--lime-dim); flex-shrink: 0; margin-top: 6px; }
+    .bundle-callout { margin-top: 20px; background: rgba(195,255,74,0.12); border: 1px solid rgba(157,217,50,0.35); border-radius: var(--r-sm); padding: 12px 16px; font-size: 0.74rem; color: #5f7a2b; line-height: 1.65; }
     .bundle-callout strong { color: #425a17; }
 
-    /* ── Menu section ── */
-    .menu-section {
-      background: var(--dark);
-      border-radius: var(--r-lg);
-      overflow: hidden;
-    }
-    .menu-head {
-      padding: 32px 40px 26px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      display: flex; justify-content: space-between; align-items: flex-end;
-    }
-    .menu-head-title {
-      font-weight: 700; font-size: 1.55rem;
-      letter-spacing: -0.04em; color: #fff; line-height: 1.1;
-    }
-    .menu-head-title span {
-      display: block; font-size: 0.62rem; font-weight: 600;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      color: rgba(255,255,255,0.22); margin-bottom: 6px;
-    }
-    .menu-head-sub {
-      font-size: 0.76rem; color: rgba(255,255,255,0.28);
-      line-height: 1.55; text-align: right; max-width: 200px;
-    }
+    /* MENU */
+    .menu-section { background: var(--dark); border-radius: var(--r-lg); overflow: hidden; }
+    .menu-head { padding: 28px 40px 22px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: flex-end; }
+    .menu-head-title { font-weight: 700; font-size: 1.4rem; letter-spacing: -0.04em; color: #fff; line-height: 1.1; }
+    .menu-head-title span { display: block; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.22); margin-bottom: 5px; }
+    .menu-head-sub { font-size: 0.74rem; color: rgba(255,255,255,0.28); line-height: 1.55; text-align: right; max-width: 200px; }
     .menu-body { padding: 0 40px; }
-    .menu-cat-label {
-      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--lime); font-weight: 700;
-      padding: 20px 0 10px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .menu-cat-label::after {
-      content: ''; flex: 1; height: 1px;
-      background: rgba(255,255,255,0.05);
-    }
-    .menu-row {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      gap: 20px; padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      transition: all 0.2s;
-      border-radius: 0;
-    }
+    .menu-cat-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--lime); font-weight: 700; padding: 18px 0 8px; display: flex; align-items: center; gap: 12px; }
+    .menu-cat-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.05); }
+    .menu-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); transition: all 0.2s; }
     .menu-row:last-child { border-bottom: none; }
-    .menu-row:hover { background: rgba(255,255,255,0.025); margin: 0 -8px; padding: 14px 8px; border-radius: var(--r-sm); }
-    .menu-row-name {
-      font-size: 0.88rem; font-weight: 500;
-      color: rgba(255,255,255,0.78); letter-spacing: -0.02em;
-      margin-bottom: 4px;
-      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    }
-    .menu-row-desc {
-      font-size: 0.74rem; color: rgba(255,255,255,0.27); line-height: 1.5;
-    }
-    .menu-row-price {
-      font-weight: 700; font-size: 1.25rem;
-      color: #fff; letter-spacing: -0.04em;
-      white-space: nowrap; flex-shrink: 0; padding-top: 2px;
-    }
-    .unit { font-size: 0.72rem; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; }
-    .badge-free {
-      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; background: rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.35); padding: 2px 8px; border-radius: 999px;
-    }
-    .menu-talk {
-      font-size: 0.82rem; font-weight: 500;
-      color: rgba(255,255,255,0.28); padding-top: 4px; flex-shrink: 0;
-    }
-    .menu-footer {
-      padding: 22px 40px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.74rem; color: rgba(255,255,255,0.22);
-      line-height: 1.6; text-align: center;
-    }
+    .menu-row:hover { background: rgba(255,255,255,0.025); margin: 0 -8px; padding: 12px 8px; border-radius: var(--r-sm); }
+    .menu-row-name { font-size: 0.86rem; font-weight: 500; color: rgba(255,255,255,0.78); letter-spacing: -0.02em; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .menu-row-desc { font-size: 0.72rem; color: rgba(255,255,255,0.27); line-height: 1.5; }
+    .menu-row-price { font-weight: 700; font-size: 1.2rem; color: #fff; letter-spacing: -0.04em; white-space: nowrap; flex-shrink: 0; padding-top: 2px; }
+    .unit { font-size: 0.7rem; font-weight: 400; color: rgba(255,255,255,0.3); letter-spacing: 0; }
+    .badge-free { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35); padding: 2px 8px; border-radius: 999px; }
+    .menu-talk { font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.28); padding-top: 4px; flex-shrink: 0; }
+    .menu-footer { padding: 20px 40px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.72rem; color: rgba(255,255,255,0.22); line-height: 1.6; text-align: center; }
     .menu-footer strong { color: rgba(255,255,255,0.45); }
 
-    /* ── Timeline card ── */
-    .timeline-card {
+    /* ══════════════════════════════════════
+       VERTICAL SCROLL PROGRESS TIMELINE
+    ══════════════════════════════════════ */
+    .process-section { padding: 44px 44px; max-width: 1050px; margin: 0 auto; }
+
+    .timeline-wrapper {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 0 40px;
+    }
+
+    /* Left sticky rail */
+    .timeline-rail { position: relative; }
+    .timeline-rail-inner { position: sticky; top: 100px; }
+    .rail-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+
+    .rail-steps { display: flex; flex-direction: column; position: relative; padding-left: 4px; }
+
+    .rail-track {
+      position: absolute;
+      left: 19px; top: 8px; bottom: 8px;
+      width: 2px;
+      background: rgba(13,12,11,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .rail-track-fill {
+      width: 100%; background: linear-gradient(to bottom, var(--lime-dim), var(--lime));
+      border-radius: 999px;
+      height: 0%;
+      transition: height 0.35s ease;
+    }
+
+    .rail-step {
+      display: flex; align-items: center; gap: 14px;
+      padding: 9px 0;
+      position: relative; z-index: 1;
+      cursor: pointer;
+    }
+    .rail-dot {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 2px solid rgba(13,12,11,0.14);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.35s ease;
+    }
+    .rail-dot-inner {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(13,12,11,0.14);
+      transition: all 0.35s ease;
+    }
+    .rail-step-label { font-size: 0.76rem; font-weight: 500; color: var(--muted); transition: color 0.3s; line-height: 1.2; }
+    .rail-step-num { font-size: 0.58rem; color: var(--muted); opacity: 0.45; display: block; margin-top: 1px; }
+
+    /* active */
+    .rail-step.active .rail-dot { border-color: var(--lime-dim); background: var(--lime); box-shadow: 0 0 0 6px rgba(195,255,74,0.2); }
+    .rail-step.active .rail-dot-inner { background: var(--dark); width: 8px; height: 8px; }
+    .rail-step.active .rail-step-label { color: var(--black); font-weight: 600; }
+
+    /* done */
+    .rail-step.done .rail-dot { border-color: var(--lime-dim); background: rgba(157,217,50,0.2); }
+    .rail-step.done .rail-dot-inner { background: var(--lime-dim); width: 8px; height: 8px; }
+    .rail-step.done .rail-step-label { color: rgba(13,12,11,0.4); }
+
+    /* Right cards */
+    .timeline-cards { display: flex; flex-direction: column; gap: 14px; }
+
+    .tl-card {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: var(--r-lg);
+      padding: 26px 28px;
+      transition: box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
+      position: relative;
       overflow: hidden;
     }
-    .timeline-row {
-      display: flex; align-items: stretch;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
+    .tl-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: rgba(13,12,11,0.07);
+      transition: background 0.35s;
     }
-    .timeline-row:last-child { border-bottom: none; }
-    .timeline-row:hover { background: rgba(13,12,11,0.02); }
-    .tl-step {
-      width: 100px; flex-shrink: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 24px 12px;
-      border-right: 1px solid var(--border);
-      gap: 6px; text-align: center;
-    }
-    .tl-num {
-      font-weight: 700; font-style: italic;
-      font-size: 1.8rem; letter-spacing: -0.05em;
-      color: var(--black); line-height: 1;
-    }
-    .tl-icon { font-size: 1.1rem; }
-    .tl-label {
-      font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--muted);
-    }
-    .tl-body { flex: 1; padding: 24px 28px; }
-    .tl-title {
-      font-weight: 600; font-size: 0.92rem;
-      letter-spacing: -0.02em; margin-bottom: 6px; color: var(--black);
-    }
-    .tl-desc {
-      font-size: 0.78rem; color: var(--muted); line-height: 1.7;
-    }
-    .tl-desc em { font-style: italic; color: var(--black); }
-    .tl-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 12px;
-      background: var(--black); color: var(--lime);
-      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; padding: 5px 14px; border-radius: 999px;
-    }
-    .tl-pill.done {
-      background: rgba(100,200,120,0.1);
-      color: #3a8a4a;
-    }
+    .tl-card.active { border-color: rgba(157,217,50,0.5); box-shadow: 0 10px 40px rgba(13,12,11,0.08), 0 0 0 1px rgba(195,255,74,0.25); }
+    .tl-card.active::before { background: var(--lime-dim); }
+    .tl-card.done { opacity: 0.5; }
 
-    /* ── Footer (identical) ── */
-    footer {
-      background: var(--dark);
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 24px 44px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.75rem; color: rgba(255,255,255,0.25);
-      flex-wrap: wrap; gap: 10px;
+    .tl-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+    .tl-icon-bubble { width: 40px; height: 40px; border-radius: 50%; background: rgba(13,12,11,0.05); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; transition: background 0.35s; }
+    .tl-card.active .tl-icon-bubble { background: rgba(195,255,74,0.22); }
+    .tl-card-meta { flex: 1; }
+    .tl-card-step { font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; transition: color 0.35s; }
+    .tl-card.active .tl-card-step { color: #5f7a2b; }
+    .tl-card-title { font-weight: 600; font-size: 0.92rem; letter-spacing: -0.02em; color: var(--black); }
+
+    .tl-card-body { font-size: 0.78rem; color: var(--muted); line-height: 1.72; padding-left: 54px; }
+    .tl-card-body em { font-style: italic; color: var(--black); }
+
+    .tl-pill { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; background: var(--black); color: var(--lime); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; }
+    .tl-pill.done-pill { background: rgba(100,200,120,0.1); color: #3a8a4a; }
+
+    /* CONTACT */
+    .contact-strip-wrap {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 0 44px 36px;
     }
+    .contact-strip {
+      background: var(--dark);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--r-lg);
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .contact-strip-title {
+      font-size: 1.02rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .contact-strip-sub {
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.5;
+    }
+    .contact-strip-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .contact-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      transition: transform 0.2s, opacity 0.2s, border-color 0.2s;
+    }
+    .contact-chip:hover { transform: translateY(-1px); opacity: 0.9; }
+    .contact-chip.email {
+      background: var(--lime);
+      color: var(--black);
+      border: 1px solid transparent;
+    }
+    .contact-chip.telegram {
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .contact-chip.telegram:hover { border-color: rgba(195,255,74,0.5); color: var(--lime); }
+
+    /* FOOTER */
+    footer { background: var(--dark); border-top: 1px solid rgba(255,255,255,0.06); padding: 22px 44px; display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem; color: rgba(255,255,255,0.25); flex-wrap: wrap; gap: 10px; }
     footer a { color: var(--lime); }
 
-    /* ── Responsive ── */
+    /* RESPONSIVE */
     @media (max-width: 960px) {
       nav { padding: 0 20px; }
       .nav-links { display: none; }
-      .pad { padding: 40px 20px; }
-      .hero { padding: 90px 20px 40px; }
+      .pad { padding: 36px 20px; }
+      .process-section { padding: 36px 20px; }
+      .hero { padding: 80px 20px 36px; }
+      .hero-top { margin-bottom: 16px; }
       .bundle-inner { grid-template-columns: 1fr; }
-      .bundle-left { border-right: none; border-bottom: 1px solid var(--border); padding: 32px 24px; }
-      .bundle-right { padding: 32px 24px; }
-      .menu-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .bundle-left { border-right: none; border-bottom: 1px solid var(--border); padding: 28px 20px; }
+      .bundle-right { padding: 28px 20px; }
+      .menu-head { flex-direction: column; align-items: flex-start; gap: 6px; }
       .menu-head-sub { text-align: left; }
-      .note-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .note-list { grid-template-columns: repeat(2, 1fr); }
       .menu-body { padding: 0 20px; }
-      .menu-head { padding: 24px 20px; }
-      .menu-footer { padding: 18px 20px; }
-      footer { padding: 20px; }
+      .menu-head { padding: 20px; }
+      .menu-footer { padding: 16px 20px; }
+      .timeline-wrapper { grid-template-columns: 1fr; }
+      .timeline-rail { display: none; }
+      .contact-strip-wrap { padding: 0 20px 28px; }
+      footer { padding: 18px 20px; }
     }
     @media (max-width: 640px) {
-      nav { height: 60px; padding: 0 14px; }
+      nav { height: 56px; padding: 0 14px; }
       .nav-logo { font-size: 1rem; }
       .nav-cta { padding: 7px 14px; font-size: 0.72rem; }
-      .hero { padding: 74px 14px 24px; }
-      .hero-h1 { font-size: clamp(2rem, 11vw, 2.8rem); }
-      .hero-bio { font-size: 0.8rem; max-width: 100%; }
-      .tags { gap: 6px; }
-      .tag { font-size: 0.62rem; padding: 4px 10px; }
-      .pad { padding: 30px 14px; }
-      .note-card-head { gap: 6px; margin-bottom: 10px; }
-      .note-card-label { font-size: 0.62rem; letter-spacing: 0.13em; }
-      .note-card-sub { font-size: 0.71rem; }
-      .note-list { grid-template-columns: 1fr; gap: 10px; }
-      .note-list li { gap: 8px; font-size: 0.74rem; line-height: 1.5; min-height: 0; padding: 16px 14px; }
-      .note-num { font-size: 1.05rem; }
-      .bundle-best { padding: 6px 12px; font-size: 0.56rem; letter-spacing: 0.08em; }
-      .bundle-price { font-size: clamp(2rem, 12vw, 2.8rem); }
-      .bundle-right .inc-list li { font-size: 0.76rem; }
-      .menu-head { padding: 16px 14px; }
-      .menu-head-title { font-size: 1.05rem; }
-      .menu-head-sub { font-size: 0.74rem; max-width: 100%; }
-      .menu-body { padding: 0 14px; }
-      .menu-row { gap: 10px; }
-      .menu-item { font-size: 0.76rem; max-width: 60%; }
-      .menu-price { font-size: 1.15rem; }
-      .menu-footer { padding: 14px; font-size: 0.68rem; text-align: left; }
-      .timeline-row { flex-direction: column; }
-      .tl-step {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        flex-direction: row;
-        justify-content: flex-start;
-        gap: 10px;
-        padding: 12px 14px;
-        text-align: left;
+      .hero { padding: 70px 14px 24px; }
+      .hero-h1 { font-size: clamp(1.26rem, 7.2vw, 1.9rem); }
+      .pad { padding: 28px 14px; }
+      .process-section { padding: 28px 14px; }
+      .note-banner { padding: 14px; gap: 10px; }
+      .note-banner-item {
+        min-width: 100%;
+        padding: 0 !important;
       }
-      .tl-num { font-size: 1.2rem; }
-      .tl-label { font-size: 0.55rem; }
-      .tl-body { padding: 14px; }
-      .tl-title { font-size: 0.85rem; }
-      .tl-desc { font-size: 0.74rem; line-height: 1.6; }
-      .tl-pill { font-size: 0.58rem; padding: 4px 10px; }
-      footer { font-size: 0.7rem; justify-content: center; text-align: center; }
+      .note-banner-divider { display: none; }
+      .note-list { grid-template-columns: 1fr; }
+      .bundle-price { font-size: clamp(2rem, 10vw, 2.8rem); }
+      .menu-head { padding: 14px; }
+      .menu-head-title { font-size: 1rem; }
+      .menu-body { padding: 0 14px; }
+      .menu-row { flex-direction: column; gap: 6px; }
+      .menu-row-price, .menu-talk { padding-top: 0; }
+      .menu-footer { padding: 12px 14px; font-size: 0.66rem; }
+      .tl-card { padding: 18px; }
+      .tl-card-body { padding-left: 0; margin-top: 8px; }
+      .contact-strip-wrap { padding: 0 14px 22px; }
+      .contact-strip { padding: 16px 14px; }
+      .contact-strip-title { font-size: 0.9rem; }
+      .contact-chip { width: 100%; justify-content: center; }
+      footer { padding: 16px 14px; font-size: 0.68rem; justify-content: center; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <span class="nav-logo">izzy<span>.</span></span>
     <ul class="nav-links">
@@ -467,57 +392,51 @@
       <li><a href="index.html#brand-carousel">brands</a></li>
       <li><a href="index.html#contact">contact</a></li>
     </ul>
-    <a href="mailto:izzyxmcglizzy@gmail.com" class="nav-cta">let's work →</a>
+    <a href="#ready-to-collaborate" class="nav-cta">let's work →</a>
   </nav>
 
-  <!-- HERO -->
+  <!-- HERO — tighter, editorial layout -->
   <div class="hero">
-    <div class="hero-tag">ugc rate card · 2025</div>
-    <h1 class="hero-h1">
-      let's work<br>
-      <span class="dim">together.</span>
-    </h1>
-    <p class="hero-bio">
-      authentic content for brands i genuinely love — tech & apps, lifestyle, beauty & travel. based in bali, creating for the world.
-    </p>
-    <div class="tags">
-      <span class="tag">Tech & Apps</span>
-      <span class="tag">Lifestyle</span>
-      <span class="tag">Beauty & Fashion</span>
-      <span class="tag">Travel</span>
+    <div class="hero-top">
+      <div>
+        <div class="hero-tag">ugc rate card · 2025</div>
+        <h1 class="hero-h1">let's work <span class="dim">together.</span></h1>
+      </div>
     </div>
   </div>
 
   <!-- PRICING -->
   <section id="pricing">
     <div class="max-w pad">
-
       <p class="eyebrow reveal">pricing</p>
       <h2 class="sec-title reveal">packages &amp; <em>rates</em></h2>
 
-      <!-- NOTE CARD -->
-      <div class="note-card reveal">
-        <div class="note-card-head">
-          <span class="note-card-label">a note on these rates</span>
-          <span class="note-card-sub"><strong>These rates</strong> are based on my <strong>previous collaborations</strong> and what brands have typically invested for similar work. I’m always happy to adjust depending on the <strong>scope</strong>, <strong>deliverables</strong>, and <strong>budget</strong>.</span>
+      <div class="note-banner reveal">
+        <div class="note-banner-item">
+          <span class="note-banner-icon">💬</span>
+          <div>
+            <p class="note-banner-title">real rates</p>
+            <p class="note-banner-desc">based on what past brands have actually paid me for the same work.</p>
+          </div>
         </div>
-        <ul class="note-list">
-          <li>
-            <span class="note-num">1</span>
-            <span><strong>every price comes from real past collabs</strong> — brands across tech, beauty, lifestyle, and travel. what you see is what i've genuinely been paid.</span>
-          </li>
-          <li>
-            <span class="note-num">2</span>
-            <span><strong>the listed rates are negotiable.</strong> if your scope or budget is different, we can adjust the numbers and deliverables to find the best fit.</span>
-          </li>
-          <li>
-            <span class="note-num">3</span>
-            <span><strong>if you have a specific budget, i'm happy to work with it.</strong> we can shape the deliverables together so it still feels right for your brand and goals.</span>
-          </li>
-        </ul>
+        <div class="note-banner-divider"></div>
+        <div class="note-banner-item">
+          <span class="note-banner-icon">🤝</span>
+          <div>
+            <p class="note-banner-title">everything's negotiable</p>
+            <p class="note-banner-desc">i want to work with you — we'll make it work.</p>
+          </div>
+        </div>
+        <div class="note-banner-divider"></div>
+        <div class="note-banner-item">
+          <span class="note-banner-icon">💸</span>
+          <div>
+            <p class="note-banner-title">have a budget in mind?</p>
+            <p class="note-banner-desc">tell me and i'll shape the deliverables around it.</p>
+          </div>
+        </div>
       </div>
 
-      <!-- BUNDLE -->
       <div class="bundle-section reveal">
         <div class="bundle-best">⭐ best value</div>
         <div class="bundle-inner">
@@ -525,10 +444,8 @@
             <div class="bundle-badge">✨ standard bundle</div>
             <p class="bundle-price">$300</p>
             <p class="bundle-price-sub">USD · per bundle</p>
-            <p class="bundle-desc">
-              everything you need in one go — cross-posted on <strong>both TikTok & Instagram</strong>, stories included, and <span class="hl">3 months of ad rights on us.</span> maximum reach, minimum effort on your end. 🎯
-            </p>
-            <a href="mailto:izzyxmcglizzy@gmail.com" class="btn-lime">book now ↗</a>
+            <p class="bundle-desc">everything you need in one go — cross-posted on <strong>both TikTok & Instagram</strong>, stories included, and <span class="hl">3 months of ad rights on us.</span> maximum reach, minimum effort on your end. 🎯</p>
+            <a href="mailto:izzyxmcglizzy@gmail.com" class="btn-lime">Get in touch ↗</a>
           </div>
           <div class="bundle-right">
             <p class="bundle-inc-label">what you're getting</p>
@@ -539,161 +456,257 @@
               <li><span class="inc-dot-lime"></span>♾️ unlimited revisions <span class="dim">— until you love it</span></li>
               <li><span class="inc-dot-lime"></span>⚡ 3–5 business day turnaround</li>
             </ul>
-            <div class="bundle-callout">
-              💡 <strong>that's 2 platforms + 3 stories + 3 months of ad rights</strong> — all for one flat price. 
-            </div>
+            <div class="bundle-callout">💡 <strong>that's 2 platforms + 3 stories + 3 months of ad rights</strong> — all for one flat price.</div>
           </div>
         </div>
       </div>
 
-      <!-- À LA CARTE MENU -->
       <div class="menu-section reveal">
         <div class="menu-head">
-          <div class="menu-head-title">
-            <span>à la carte & add-ons</span>
-            build your own package
-          </div>
+          <div class="menu-head-title"><span>à la carte & add-ons</span>build your own package</div>
           <p class="menu-head-sub">mix and match to get exactly what your brand needs.</p>
         </div>
-
         <div class="menu-body">
           <p class="menu-cat-label">Content</p>
           <div class="menu-row">
-            <div>
-              <p class="menu-row-name">🎬 1 Video / Carousel — Single Platform</p>
-              <p class="menu-row-desc">one video or carousel reel, posted to TikTok or Instagram (your choice)</p>
-            </div>
+            <div><p class="menu-row-name">🎬 1 Video / Carousel — Single Platform</p><p class="menu-row-desc">one video or carousel reel, posted to TikTok or Instagram (your choice)</p></div>
             <p class="menu-row-price">$200</p>
           </div>
           <div class="menu-row">
-            <div>
-              <p class="menu-row-name">📖 1 Instagram Story</p>
-              <p class="menu-row-desc">a single story slide — great for announcements, links, or product drops</p>
-            </div>
+            <div><p class="menu-row-name">📖 1 Instagram Story</p><p class="menu-row-desc">a single story slide — great for announcements, links, or product drops</p></div>
             <p class="menu-row-price">$15</p>
           </div>
-
           <p class="menu-cat-label">Usage Rights</p>
           <div class="menu-row">
-            <div>
-              <p class="menu-row-name">📣 Ad Usage Rights <span class="badge-free">incl. in bundle</span></p>
-              <p class="menu-row-desc">license to run content as paid ads on any platform — per calendar month</p>
-            </div>
+            <div><p class="menu-row-name">📣 Ad Usage Rights <span class="badge-free">incl. in bundle</span></p><p class="menu-row-desc">license to run content as paid ads on any platform — per calendar month</p></div>
             <p class="menu-row-price">$50<span class="unit">/mo</span></p>
           </div>
           <div class="menu-row">
-            <div>
-              <p class="menu-row-name">♾️ Forever Usage Rights</p>
-              <p class="menu-row-desc">one flat fee, unlimited ad usage for life — best for evergreen content</p>
-            </div>
+            <div><p class="menu-row-name">♾️ Forever Usage Rights</p><p class="menu-row-desc">one flat fee, unlimited ad usage for life — best for evergreen content</p></div>
             <p class="menu-row-price">$200</p>
           </div>
-
           <p class="menu-cat-label">Gifting & Collabs</p>
           <div class="menu-row">
-            <div>
-              <p class="menu-row-name">🎁 Gifting / Barter Collabs</p>
-              <p class="menu-row-desc">open to gifting or product-swap arrangements — let's talk about what makes sense</p>
-            </div>
+            <div><p class="menu-row-name">🎁 Gifting / Barter Collabs</p><p class="menu-row-desc">open to gifting or product-swap arrangements — let's talk about what makes sense</p></div>
             <p class="menu-talk">let's talk →</p>
           </div>
         </div>
-
         <p class="menu-footer">all prices are starting points — <strong>negotiation is always welcome.</strong> the right collab matters more than the exact number.</p>
       </div>
-
     </div>
   </section>
 
-  <!-- PROCESS -->
+  <!-- PROCESS — scroll-activated vertical progress bar -->
   <section id="process">
-    <div class="max-w pad">
+    <div class="process-section">
       <p class="eyebrow reveal">the process</p>
       <h2 class="sec-title reveal">wanna work <em>together?</em></h2>
-      <p style="font-size:0.82rem; color:var(--muted); max-width:460px; line-height:1.65; margin-bottom:32px;" class="reveal">
+      <p style="font-size:0.8rem; color:var(--muted); max-width:440px; line-height:1.65; margin-bottom:36px;" class="reveal">
         here's exactly how we go from "interested" to live content on your feed — simple, transparent, no surprises.
       </p>
 
-      <div class="timeline-card reveal">
-
-        <div class="timeline-row">
-          <div class="tl-step">
-            <span class="tl-num">01</span>
-            <span class="tl-icon">👀</span>
-            <span class="tl-label">rate card</span>
-          </div>
-          <div class="tl-body">
-            <p class="tl-title">check my rates & reach out</p>
-            <p class="tl-desc">you're already here — great start. browse the packages above and get a feel for what works for your brand. remember: <em>all prices are negotiable.</em> if you love the idea but the budget's tight, just say so.</p>
-            <span class="tl-pill">you are here ✦</span>
-          </div>
-        </div>
-
-        <div class="timeline-row">
-          <div class="tl-step">
-            <span class="tl-num">02</span>
-            <span class="tl-icon">📩</span>
-            <span class="tl-label">deliverables</span>
-          </div>
-          <div class="tl-body">
-            <p class="tl-title">lock in deliverables via email</p>
-            <p class="tl-desc">once we're aligned on vibe and budget, we lock in the deliverables over email — what i'm making, where it's posted, any specific briefs or brand guidelines. <em>clear expectations on both sides.</em></p>
-          </div>
-        </div>
-
-        <div class="timeline-row">
-          <div class="tl-step">
-            <span class="tl-num">03</span>
-            <span class="tl-icon">💸</span>
-            <span class="tl-label">payment</span>
-          </div>
-          <div class="tl-body">
-            <p class="tl-title">50% upfront via PayPal</p>
-            <p class="tl-desc">once deliverables are agreed, i'll send over a PayPal request for <em>50% of the total.</em> this secures your spot and lets me start working. the remaining 50% is due before final files are delivered.</p>
+      <div class="timeline-wrapper reveal">
+        <!-- Sticky progress rail (desktop only) -->
+        <div class="timeline-rail">
+          <div class="timeline-rail-inner">
+            <p class="rail-label">progress</p>
+            <div class="rail-steps" id="railSteps">
+              <div class="rail-track"><div class="rail-track-fill" id="trackFill"></div></div>
+              <div class="rail-step" data-step="0">
+                <div class="rail-dot"><div class="rail-dot-inner"></div></div>
+                <div><div class="rail-step-label">Rate Card</div><span class="rail-step-num">01</span></div>
+              </div>
+              <div class="rail-step" data-step="1">
+                <div class="rail-dot"><div class="rail-dot-inner"></div></div>
+                <div><div class="rail-step-label">Deliverables</div><span class="rail-step-num">02</span></div>
+              </div>
+              <div class="rail-step" data-step="2">
+                <div class="rail-dot"><div class="rail-dot-inner"></div></div>
+                <div><div class="rail-step-label">Payment</div><span class="rail-step-num">03</span></div>
+              </div>
+              <div class="rail-step" data-step="3">
+                <div class="rail-dot"><div class="rail-dot-inner"></div></div>
+                <div><div class="rail-step-label">First Draft</div><span class="rail-step-num">04</span></div>
+              </div>
+              <div class="rail-step" data-step="4">
+                <div class="rail-dot"><div class="rail-dot-inner"></div></div>
+                <div><div class="rail-step-label">Go Live</div><span class="rail-step-num">05</span></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="timeline-row">
-          <div class="tl-step">
-            <span class="tl-num">04</span>
-            <span class="tl-icon">✏️</span>
-            <span class="tl-label">first draft</span>
+        <!-- Step cards -->
+        <div class="timeline-cards" id="timelineCards">
+          <div class="tl-card" data-card="0">
+            <div class="tl-card-header">
+              <div class="tl-icon-bubble">👀</div>
+              <div class="tl-card-meta">
+                <p class="tl-card-step">Step 01 · Rate Card</p>
+                <p class="tl-card-title">check my rates & reach out</p>
+              </div>
+            </div>
+            <p class="tl-card-body">you're already here — great start. browse the packages above and get a feel for what works for your brand. remember: <em>all prices are negotiable.</em> if you love the idea but the budget's tight, just say so.<br><br><span class="tl-pill">you are here ✦</span></p>
           </div>
-          <div class="tl-body">
-            <p class="tl-title">first draft in 3–5 days</p>
-            <p class="tl-desc">once payment clears, i get to work. expect your <em>first draft within 3–5 business days.</em> you'll have unlimited rounds of revisions — we keep going until you're genuinely happy with it.</p>
+
+          <div class="tl-card" data-card="1">
+            <div class="tl-card-header">
+              <div class="tl-icon-bubble">📩</div>
+              <div class="tl-card-meta">
+                <p class="tl-card-step">Step 02 · Deliverables</p>
+                <p class="tl-card-title">lock in deliverables via email</p>
+              </div>
+            </div>
+            <p class="tl-card-body">once we're aligned on vibe and budget, we lock in the deliverables over email — what i'm making, where it's posted, any specific briefs or brand guidelines. <em>clear expectations on both sides.</em></p>
+          </div>
+
+          <div class="tl-card" data-card="2">
+            <div class="tl-card-header">
+              <div class="tl-icon-bubble">💸</div>
+              <div class="tl-card-meta">
+                <p class="tl-card-step">Step 03 · Payment</p>
+                <p class="tl-card-title">50% upfront via PayPal</p>
+              </div>
+            </div>
+            <p class="tl-card-body">once deliverables are agreed, i'll send over a PayPal request for <em>50% of the total.</em> this secures your spot and lets me start working. the remaining 50% is due before final files are delivered.</p>
+          </div>
+
+          <div class="tl-card" data-card="3">
+            <div class="tl-card-header">
+              <div class="tl-icon-bubble">✏️</div>
+              <div class="tl-card-meta">
+                <p class="tl-card-step">Step 04 · First Draft</p>
+                <p class="tl-card-title">first draft in 3–5 days</p>
+              </div>
+            </div>
+            <p class="tl-card-body">once payment clears, i get to work. expect your <em>first draft within 3–5 business days.</em> you'll have unlimited rounds of revisions — we keep going until you're genuinely happy with it.</p>
+          </div>
+
+          <div class="tl-card" data-card="4">
+            <div class="tl-card-header">
+              <div class="tl-icon-bubble">🚀</div>
+              <div class="tl-card-meta">
+                <p class="tl-card-step">Step 05 · Go Live</p>
+                <p class="tl-card-title">approved → posted on my socials</p>
+              </div>
+            </div>
+            <p class="tl-card-body">once you've signed off, <em>i post it across my platforms</em> as agreed. you'll receive all raw files, and any usage rights you've purchased are yours from that moment.<br><br><span class="tl-pill done-pill">that's a wrap ✦</span></p>
           </div>
         </div>
-
-        <div class="timeline-row">
-          <div class="tl-step">
-            <span class="tl-num">05</span>
-            <span class="tl-icon">🚀</span>
-            <span class="tl-label">go live</span>
-          </div>
-          <div class="tl-body">
-            <p class="tl-title">approved → posted on my socials</p>
-            <p class="tl-desc">once you've signed off, <em>i post it across my platforms</em> as agreed. you'll receive all raw files, and any usage rights you've purchased are yours from that moment.</p>
-            <span class="tl-pill done">that's a wrap ✦</span>
-          </div>
-        </div>
-
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- CONTACT -->
+  <section class="contact-strip-wrap" id="ready-to-collaborate">
+    <div class="contact-strip reveal">
+      <div>
+        <p class="contact-strip-title">ready to collaborate?</p>
+        <p class="contact-strip-sub">email me directly or ping me on telegram and we can align the scope fast.</p>
+      </div>
+      <div class="contact-strip-actions">
+        <a class="contact-chip email" href="mailto:izzyxmcglizzy@gmail.com">✉ email me</a>
+        <a class="contact-chip telegram" href="https://t.me/izzermcglizzer" target="_blank" rel="noopener">✈ telegram</a>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <span>© 2025 <a href="index.html">izzy</a> · all rights reserved</span>
     <span>made with love from bali 🌴</span>
   </footer>
 
   <script>
+    // Reveal on scroll
     const io = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-      { threshold: 0.08 }
+      { threshold: 0.06 }
     );
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Scroll-activated progress timeline
+    const cards = Array.from(document.querySelectorAll('.tl-card'));
+    const railSteps = Array.from(document.querySelectorAll('.rail-step'));
+    const trackFill = document.getElementById('trackFill');
+
+    let confettiFired = false;
+
+    function launchConfetti() {
+      const colors = ['#C3FF4A','#9DD932','#0D0C0B','#FAFAF8','#8C897F'];
+      const container = document.createElement('div');
+      container.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden;';
+      document.body.appendChild(container);
+
+      for (let i = 0; i < 80; i++) {
+        const piece = document.createElement('div');
+        const size = Math.random() * 8 + 5;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const left = Math.random() * 100;
+        const delay = Math.random() * 0.8;
+        const duration = Math.random() * 1.5 + 1.5;
+        const rotation = Math.random() * 360;
+        const isRect = Math.random() > 0.5;
+        piece.style.cssText = `
+          position:absolute;
+          top:-20px;
+          left:${left}%;
+          width:${isRect ? size : size * 0.6}px;
+          height:${isRect ? size * 0.4 : size}px;
+          background:${color};
+          border-radius:${isRect ? '2px' : '50%'};
+          animation:confettiFall ${duration}s ${delay}s ease-in forwards;
+          transform:rotate(${rotation}deg);
+          opacity:0.9;
+        `;
+        container.appendChild(piece);
+      }
+
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes confettiFall {
+          0%   { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+          100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      setTimeout(() => { container.remove(); style.remove(); }, 4000);
+    }
+
+    function updateTimeline() {
+      const triggerY = window.innerHeight * 0.5;
+      let active = -1;
+      cards.forEach((card, i) => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < triggerY) active = i;
+      });
+      if (active < 0) return;
+
+      const lastIdx = cards.length - 1;
+
+      cards.forEach((card, i) => {
+        card.classList.remove('active', 'done');
+        if (i === active) card.classList.add('active');
+        else if (i < active && i !== lastIdx) card.classList.add('done');
+        else if (i < active && i === lastIdx) card.classList.add('active');
+      });
+
+      railSteps.forEach((step, i) => {
+        step.classList.remove('active', 'done');
+        if (i === active) step.classList.add('active');
+        else if (i < active) step.classList.add('done');
+      });
+
+      const pct = railSteps.length > 1 ? (active / (railSteps.length - 1)) * 100 : 0;
+      trackFill.style.height = pct + '%';
+
+      if (active === lastIdx && !confettiFired) {
+        confettiFired = true;
+        launchConfetti();
+      }
+    }
+
+    window.addEventListener('scroll', updateTimeline, { passive: true });
+    updateTimeline();
   </script>
 
 </body>
