@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>izzy — ugc creator</title>
+  <link rel="icon" type="image/png" href="Please%20(3).png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" />
   <style>
@@ -37,36 +38,85 @@
 
     /* ── Nav ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 44px;
-      background: rgba(238,234,227,0.82);
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid var(--border);
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      height: 72px;
+      width: min(1140px, calc(100% - 24px));
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 0 16px;
+      background: rgba(214, 211, 204, 0.9);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(112, 109, 103, 0.22);
+      border-radius: 999px;
+      box-shadow: 0 12px 32px rgba(13,12,11,0.15);
     }
     .nav-logo {
       font-family: 'Poppins', sans-serif;
-      font-weight: 700; font-size: 1.1rem; letter-spacing: -0.04em;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: -0.04em;
       font-style: italic;
+      display: inline-flex;
+      align-items: center;
+      color: var(--black);
+      flex-shrink: 0;
+      justify-self: start;
     }
-    .nav-logo span { color: var(--lime-dim); }
-    .nav-links { display: flex; gap: 32px; list-style: none; font-size: 0.85rem; color: var(--muted); }
-    .nav-links a { transition: color 0.2s; }
-    .nav-links a:hover { color: var(--black); }
-    .nav-links a::after {
-      content: ''; display: block; height: 1.5px;
-      background: var(--black); width: 0;
-      transition: width 0.25s ease;
+    .nav-logo span { color: var(--lime-dim); margin-left: 1px; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      list-style: none;
+      font-size: 0.83rem;
+      color: #6f6c64;
+      padding: 2px 0;
+      justify-self: center;
+      max-width: 100%;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    .nav-links a:hover::after { width: 100%; }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: all 0.22s ease;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .nav-links a:hover {
+      color: #2a2722;
+      background: rgba(255,255,255,0.55);
+      border-color: rgba(112,109,103,0.16);
+    }
+    .nav-links a.active {
+      background: var(--black);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(13,12,11,0.2);
+    }
     .nav-cta {
       background: var(--black); color: var(--lime);
       padding: 9px 22px; border-radius: 999px;
       font-size: 0.82rem; font-weight: 500;
       transition: opacity 0.2s;
+      white-space: nowrap;
+      justify-self: end;
     }
     .nav-cta:hover { opacity: 0.8; }
+    .nav-cta .cta-short { display: none; }
 
     /* ── Hero ── */
     .hero {
@@ -74,7 +124,7 @@
       grid-template-columns: 1fr 400px;
       gap: 48px;
       align-items: center;
-      padding: 90px 44px 60px;
+      padding: 106px 44px 60px;
       max-width: 1050px; margin: 0 auto;
     }
     .hero-left {
@@ -231,60 +281,391 @@
     .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s, transform 0.65s; }
     .reveal.visible { opacity: 1; transform: none; }
 
-    /* ── About section ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 56px;
-      align-items: stretch;
+    /* ── Analytics ── */
+    #about {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
     }
-    .about-photo {
-      border-radius: var(--r-lg); overflow: hidden;
-      aspect-ratio: 3/4;
+    .about-top {
+      max-width: 760px;
+      margin: 0 auto 28px;
+      text-align: center;
     }
-    .about-photo img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
-      display: block;
-      transition: transform 0.5s ease;
+    .about-copy {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 700px;
+      margin: 0 auto;
     }
-    .about-photo:hover img { transform: scale(1.03); }
-    .about-right {
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    .about-bio {
-      font-size: 0.84rem; color: var(--muted);
-      line-height: 1.7; margin-bottom: 36px;
-      max-width: 440px;
-    }
-    .about-stats {
+    .analytics-shell {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: var(--r-lg);
-      overflow: hidden;
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(13,12,11,0.06);
+    }
+    .analytics-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .analytics-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .analytics-source {
+      width: 100%;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: -2px;
+    }
+    .analytics-tabs {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      display: inline-flex;
+      gap: 4px;
+    }
+    .analytics-tab {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .analytics-tab.active {
+      background: var(--black);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(13,12,11,0.18);
+    }
+    .analytics-panels { position: relative; }
+    .analytics-panel {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.26s ease, transform 0.26s ease;
+    }
+    .analytics-panel.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .kpi-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 14px 12px;
+      min-height: 92px;
       display: flex;
       flex-direction: column;
-    }
-    .stat-row {
-      display: flex; align-items: center;
       justify-content: space-between;
-      padding: 20px 28px;
-      min-height: 96px;
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
+      background: linear-gradient(180deg, #fff, #fbfaf7);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .stat-row:last-child { border-bottom: none; }
-    .stat-row:hover { background: rgba(13,12,11,0.03); }
-    .stat-num {
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(13,12,11,0.08);
+    }
+    .kpi-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.35;
+      letter-spacing: 0.01em;
+    }
+    .kpi-value {
       font-family: 'Poppins', sans-serif;
-      font-weight: 700; font-style: italic;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      letter-spacing: -0.04em; line-height: 1;
+      font-size: clamp(1.15rem, 2.2vw, 1.8rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      line-height: 1;
+      margin-top: 6px;
+    }
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    .analytics-card {
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 16px 16px 14px;
+      background: #fff;
+    }
+    .analytics-card.wide {
+      grid-column: 1 / -1;
+    }
+    .analytics-card h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--black);
+      margin-bottom: 12px;
+    }
+    .split-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .mini-stat {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 10px 8px;
+      min-height: 78px;
+      background: var(--bg);
+    }
+    .mini-label {
+      font-size: 0.66rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .mini-value {
+      font-size: 1.32rem;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--black);
+      margin-bottom: 5px;
+    }
+    .mini-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+    .bar-list {
+      list-style: none;
+      display: grid;
+      gap: 9px;
+    }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 0.74rem;
       color: var(--black);
     }
-    .stat-name {
-      font-size: 0.78rem; color: var(--muted);
-      letter-spacing: 0.01em; text-align: right;
+    .bar-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(13,12,11,0.08);
+      overflow: hidden;
+    }
+    .bar-fill {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--lime-dim), var(--lime));
+      transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .bar-fill.blue {
+      background: linear-gradient(90deg, #4f8ad3, #6ca6ec);
+    }
+    .bar-fill.dark {
+      background: linear-gradient(90deg, #2d2c29, #4f4d47);
+    }
+    .bar-fill.peach {
+      background: linear-gradient(90deg, #efc18d, #f2b26f);
+    }
+    .analytics-note {
+      margin-top: 12px;
+      font-size: 0.69rem;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .top-posts {
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+    .top-posts-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .top-posts-title {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--black);
+      font-weight: 700;
+    }
+    .top-posts-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+    .top-posts-row {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(190px, 1fr);
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 4px;
+    }
+    .top-posts-row::-webkit-scrollbar { display: none; }
+    .post-card {
+      scroll-snap-align: start;
+      background: linear-gradient(180deg, #fff, #faf9f6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 12px 10px;
+      min-height: 108px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .post-card-title {
+      font-size: 0.74rem;
+      color: var(--black);
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    .post-metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .post-metric {
+      font-size: 0.64rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      border-radius: 999px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+    .ig-embed-row {
+      grid-auto-columns: minmax(210px, 1fr);
+    }
+    .ig-embed-card {
+      padding: 8px;
+      min-height: 0;
+      background: #fff;
+    }
+    .ig-embed-shell {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #e6eaf0;
+      background: #f5f7fa;
+      position: relative;
+    }
+    .ig-embed-shell iframe {
+      width: 100%;
+      height: 168%;
+      border: 0;
+      transform: translateY(-17%);
+      transform-origin: top center;
+    }
+    .ig-embed-link {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 0.68rem;
+      color: #3a6fa3;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(58,111,163,0.35);
+    }
+    .ig-embed-metrics {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .ig-embed-metrics .post-metric {
+      font-size: 0.62rem;
+      padding: 2px 7px;
+    }
+    .ig-feed-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .ig-feed-card {
+      border: 1px solid #dfe5eb;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .ig-feed-thumb {
+      aspect-ratio: 4 / 4.2;
+      background-size: cover;
+      background-position: center;
+      border-bottom: 1px solid #e7ebf0;
+    }
+    .ig-feed-thumb-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+    .ig-feed-body {
+      padding: 8px 10px 10px;
+    }
+    .ig-feed-title {
+      font-size: 0.82rem;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #212c38;
+      min-height: 44px;
+      margin-bottom: 7px;
+    }
+    .ig-feed-date {
+      font-size: 0.74rem;
+      color: #5f6b78;
+      margin-bottom: 8px;
+    }
+    .ig-feed-metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 12px;
+    }
+    .ig-feed-metric {
+      font-size: 0.78rem;
+      color: #24313d;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1.2;
+    }
+    .ig-feed-open {
+      display: inline-block;
+      margin-top: 9px;
+      font-size: 0.76rem;
+      color: #3a6fa3;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(58,111,163,0.35);
     }
 
     /* ── Work (horizontal scroll) ── */
@@ -400,14 +781,47 @@
       font-style: italic;
       font-weight: 400;
     }
-    .brands-circles-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 150px);
-      gap: 20px;
-      justify-content: center;
+    .brands-slider {
+      overflow: hidden;
+      position: relative;
+      padding: 6px 0;
+    }
+    .brands-slider::before,
+    .brands-slider::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 64px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .brands-slider::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--bg), rgba(238,234,227,0));
+    }
+    .brands-slider::after {
+      right: 0;
+      background: linear-gradient(270deg, var(--bg), rgba(238,234,227,0));
+    }
+    .brands-track {
+      display: flex;
+      width: max-content;
+      animation: brands-scroll 32s linear infinite;
+      will-change: transform;
+    }
+    .brands-group {
+      display: flex;
+      gap: 14px;
+      padding-right: 14px;
+    }
+    @keyframes brands-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
     }
     .brand-circle {
-      width: 150px; height: 150px;
+      flex: 0 0 132px;
+      width: 132px; height: 132px;
       border-radius: 50%;
       background: var(--white);
       border: 1.5px solid var(--border);
@@ -432,6 +846,26 @@
       overflow: visible;
     }
     .brand-circle.cta-circle:hover { transform: scale(1.06); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
+    .brand-circle.cta-circle {
+      animation: cta-pulse 2.8s ease-in-out infinite;
+    }
+    .brand-circle.cta-circle::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(195,255,74,0.32);
+      animation: cta-orbit 8s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes cta-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    @keyframes cta-orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
     /* confetti particles */
     .cta-particle {
       position: absolute;
@@ -529,6 +963,7 @@
       background: #1a1916; aspect-ratio: 9/16; overflow: hidden; cursor: pointer;
     }
     .work-video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .work-video-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .work-video-overlay {
       position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
@@ -670,71 +1105,139 @@
 
     /* ── Responsive ── */
     @media (max-width: 960px) {
-      nav { padding: 0 20px; }
-      .nav-links { display: none; }
-      .hero { grid-template-columns: 1fr; min-height: auto; padding: 80px 20px 0; }
+      nav {
+        position: fixed;
+        top: max(8px, env(safe-area-inset-top));
+        left: 8px;
+        right: 8px;
+        transform: none;
+        width: auto;
+        height: 62px;
+        grid-template-columns: 1fr auto 1fr;
+        padding: 0 12px;
+        z-index: 1000;
+      }
+      .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        padding: 0;
+      }
+      .nav-links a {
+        min-height: 34px;
+        padding: 0 12px;
+        font-size: 0.76rem;
+      }
+      .nav-cta {
+        display: inline-flex;
+        padding: 7px 12px;
+        font-size: 0.72rem;
+      }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding: 92px 20px 0; }
       .hero-right { display: grid; grid-template-columns: 1fr 1fr; padding: 0 0 56px; }
+      .hero-stats-side { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; }
       .hero-photo  { grid-column: span 2; height: 380px; }
-      .pad { padding: 48px 20px; }
-      .about-grid { grid-template-columns: 1fr; }
-      .about-photo { aspect-ratio: 4/3; }
-      .about-bio { max-width: 100%; }
+      .pad { padding: 70px 20px; }
+      .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .analytics-grid { grid-template-columns: 1fr; }
       .work-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 28px; }
       .scroll-row { padding-left: 20px; padding-right: 20px; }
       .contact-grid { grid-template-columns: 1fr; }
       .contact-photo { display: none; }
       .rate-card-btn { width: 100%; }
       footer { padding: 20px; }
-
-      /* Alassari: portrait main + short landscape 2×2 secondary */
-      .carousel-showcase { padding: 28px 20px; }
-      .showcase-title { font-size: 1.4rem; }
-      .showcase-desc { font-size: 0.78rem; margin-bottom: 20px; }
-      .alassari-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; height: auto; gap: 8px; }
-      .alassari-vid-main { grid-column: 1 / 3; aspect-ratio: 3/4; }
-      .alassari-vid { aspect-ratio: 4/3; }
-
-      /* Brands circles: 4 fluid columns = 2 neat rows */
-      #brand-carousel { padding: 28px 20px; }
-      .brands-circles-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-      .brand-circle { width: 100%; height: auto; aspect-ratio: 1; }
-      .brand-circle.cta-circle { font-size: 0.65rem; }
-
-      /* Work cards: 2 columns on tablet */
-      .work-subsection { padding: 32px 20px; }
-      .work-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .alassari-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; height: auto; }
+      .alassari-vid-main { grid-column: 1 / 3; aspect-ratio: 9/16; }
+      .alassari-vid { aspect-ratio: 9/16; }
+      .work-subsection { padding: 40px 20px; }
     }
-
-    @media (max-width: 600px) {
-      /* Hero stats: smaller values */
-      .hero-stat { padding: 10px 12px; min-width: 0; }
-      .hero-stat-val { font-size: 1.2rem; }
-      .hero-stats-side { gap: 8px; }
+    @media (max-width: 640px) {
+      nav {
+        height: 54px;
+        top: max(6px, env(safe-area-inset-top));
+        left: 6px;
+        right: 6px;
+        padding: 0 6px;
+        gap: 8px;
+      }
+      .nav-logo { font-size: 0.94rem; }
+      .nav-links { gap: 2px; }
+      .nav-links a { min-height: 32px; padding: 0 9px; font-size: 0.7rem; }
+      .nav-cta {
+        padding: 6px 10px;
+        font-size: 0.64rem;
+      }
+      .hero { padding: 86px 14px 0; gap: 24px; }
+      .hero-h1 { font-size: clamp(2.1rem, 12vw, 3rem); }
+      .hero-bio { font-size: 0.8rem; max-width: 100%; }
+      .hero-btns { width: 100%; }
+      .btn-dark, .btn-ghost { width: 100%; text-align: center; }
+      .hero-right { gap: 10px; padding-bottom: 30px; }
+      .hero-stats-side { grid-template-columns: 1fr; gap: 8px; }
       .hero-photo { height: 320px; }
-
-      /* Alassari: narrower portrait main, 2×2 square secondary */
-      .alassari-vid-main { aspect-ratio: 4/5; }
-      .alassari-vid { aspect-ratio: 1/1; }
-      .alassari-foot { flex-direction: column; align-items: flex-start; gap: 12px; }
-
-      /* Brands circles: 4 per row still, but tighter gap */
-      .brands-circles-grid { gap: 8px; }
-      .brand-circle.cta-circle { font-size: 0.6rem; line-height: 1.25; }
-
-      /* Work cards: single column on phones */
+      .hero-photo-badge { left: 10px; bottom: 10px; font-size: 0.68rem; padding: 7px 12px; }
+      .pad { padding: 46px 14px; }
+      .sec-title { margin-bottom: 20px; }
+      .about-top { margin-bottom: 16px; }
+      .about-copy { font-size: 0.8rem; line-height: 1.58; }
+      .analytics-shell { padding: 14px; }
+      .analytics-head { margin-bottom: 12px; }
+      .analytics-tabs { width: 100%; justify-content: center; }
+      .analytics-tab { flex: 1; text-align: center; padding: 8px 10px; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .kpi-card { min-height: 84px; padding: 12px 10px; }
+      .kpi-value { font-size: 1.2rem; }
+      .split-stats { grid-template-columns: 1fr; }
+      .bar-row { font-size: 0.7rem; }
+      .top-posts-row { grid-auto-columns: minmax(170px, 80vw); }
+      .ig-embed-row { grid-auto-columns: minmax(170px, 80vw); }
+      .ig-feed-row { grid-template-columns: 1fr 1fr; }
+      #brand-carousel { padding: 28px 14px; }
+      .brands-slider::before, .brands-slider::after { width: 20px; }
+      .brands-group { gap: 10px; padding-right: 10px; }
+      .brands-track { animation-duration: 24s; }
+      .brand-circle { flex-basis: 98px; width: 98px; height: 98px; }
+      .work-subsection { padding: 30px 14px; }
       .work-grid { grid-template-columns: 1fr; gap: 16px; }
-
-      /* Sections: tighter padding */
-      .pad { padding: 40px 16px; }
-      .work-subsection { padding: 28px 16px; }
-      #brand-carousel { padding: 24px 16px; }
-      .carousel-showcase { padding: 24px 16px; }
-      .subsec-title { font-size: 1.3rem; }
-      .sec-title { margin-bottom: 24px; }
-
-      /* About stats: tighter */
-      .stat-row { padding: 14px 18px; min-height: 72px; }
-      .stat-num { font-size: clamp(1.4rem, 6vw, 2rem); }
+      .showcase-title { font-size: 1.45rem; }
+      .showcase-desc { font-size: 0.78rem; }
+      .carousel-showcase { padding: 30px 14px; }
+      .alassari-grid { grid-template-columns: 1fr; gap: 8px; }
+      .alassari-vid-main { grid-column: auto; }
+      .alassari-vid { aspect-ratio: 9/14; }
+      .see-more-btn { width: 100%; justify-content: center; }
+      .contact-h2 { font-size: clamp(1.7rem, 11vw, 2.4rem); }
+      .contact-email { font-size: 0.82rem; }
+      .social-row { width: 100%; }
+      .social-btn { width: 100%; justify-content: center; }
+      .rate-card-btn { width: 100%; justify-content: center; }
+      footer { font-size: 0.7rem; justify-content: center; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      nav {
+        height: 52px;
+        gap: 6px;
+        padding: 0 6px;
+      }
+      .nav-logo { font-size: 0.9rem; }
+      .nav-links a {
+        min-height: 30px;
+        padding: 0 8px;
+        font-size: 0.66rem;
+      }
+      .nav-cta {
+        padding: 5px 8px;
+        font-size: 0.6rem;
+      }
+      .nav-cta .cta-full { display: none; }
+      .nav-cta .cta-short { display: inline; }
+      .hero { padding: 84px 12px 0; }
+      .hero-photo { height: 280px; }
+      .analytics-shell { padding: 12px; }
+      .kpi-grid { grid-template-columns: 1fr; }
+      .ig-feed-row { grid-template-columns: 1fr; }
+      .ig-feed-title { min-height: 0; }
+      .contact-email { font-size: 0.76rem; word-break: break-word; }
     }
   </style>
 </head>
@@ -744,12 +1247,13 @@
   <nav>
     <span class="nav-logo">izzy<span>.</span></span>
     <ul class="nav-links">
-      <li><a href="#work">work</a></li>
+      <li><a href="#home">home</a></li>
+      <li><a href="#about">analytics</a></li>
       <li><a href="#brand-carousel">brands</a></li>
-      <li><a href="rate-card.html">rate card</a></li>
+      <li><a href="#work">work</a></li>
       <li><a href="#contact">contact</a></li>
     </ul>
-    <a href="mailto:izzyxmcglizzy@gmail.com" class="nav-cta">let's work →</a>
+    <a href="ratecard.html" class="nav-cta"><span class="cta-full">See Rate Card</span><span class="cta-short">Rate Card</span> →</a>
   </nav>
 
   <!-- ── HERO ── -->
@@ -821,40 +1325,302 @@
     </div>
   </div>
 
-  <!-- ── ABOUT ── -->
+  <!-- ── ANALYTICS ── -->
   <section id="about">
     <div class="max-w pad">
-      <p class="eyebrow reveal">about me</p>
-      <h2 class="sec-title reveal">the face behind<br><em>the content</em></h2>
-
-      <div class="about-grid reveal">
-        <div class="about-photo">
-          <img
-            src="pictures/literally%20love%20u%20canon%20wtfffffff%20%23canonm50markii%20(1).jpg"
-            alt="izzy"
-          />
+      <div class="about-top reveal">
+        <p class="eyebrow">analytics</p>
+        <h2 class="sec-title">past 365 days<br><em>performance snapshot</em></h2>
+        <p class="about-copy">
+          Real platform insights from the last year. Toggle between TikTok and Instagram to view audience quality, reach, and traction by channel.
+        </p>
+      </div>
+      <div class="analytics-shell reveal">
+        <div class="analytics-head">
+          <span class="analytics-label">past 365 days</span>
+          <div class="analytics-tabs" role="tablist" aria-label="Platform analytics tabs">
+            <button class="analytics-tab active" role="tab" aria-selected="true" data-platform="instagram">Instagram</button>
+            <button class="analytics-tab" role="tab" aria-selected="false" data-platform="tiktok">TikTok</button>
+          </div>
+          <p class="analytics-source">
+            Source: Instagram metrics are from <strong>Meta Business Suite</strong>; TikTok metrics are from <strong>TikTok Analytics</strong>.
+          </p>
         </div>
-        <div class="about-right">
-          <div class="about-stats">
-            <div class="stat-row">
-              <span class="stat-num">80k</span>
-              <span class="stat-name">TikTok Followers</span>
+
+        <div class="analytics-panels">
+          <div class="analytics-panel" data-panel="tiktok">
+            <div class="kpi-grid">
+              <article class="kpi-card"><p class="kpi-label">Video Views</p><p class="kpi-value">7.8M</p></article>
+              <article class="kpi-card"><p class="kpi-label">Profile Views</p><p class="kpi-value">150K</p></article>
+              <article class="kpi-card"><p class="kpi-label">Likes</p><p class="kpi-value">987K</p></article>
+              <article class="kpi-card"><p class="kpi-label">Comments</p><p class="kpi-value">19K</p></article>
+              <article class="kpi-card"><p class="kpi-label">Shares</p><p class="kpi-value">124K</p></article>
             </div>
-            <div class="stat-row">
-              <span class="stat-num">17k</span>
-              <span class="stat-name">Instagram Followers</span>
+            <div class="analytics-grid">
+              <article class="analytics-card">
+                <h3>Audience</h3>
+                <div class="split-stats">
+                  <div class="mini-stat">
+                    <p class="mini-label">Gender Split</p>
+                    <p class="mini-value">60% / 29%</p>
+                    <p class="mini-sub">Female / Male (Other: 11%)</p>
+                  </div>
+                  <div class="mini-stat">
+                    <p class="mini-label">Top Age Group</p>
+                    <p class="mini-value">25-34</p>
+                    <p class="mini-sub">50% of audience</p>
+                  </div>
+                </div>
+                <ul class="bar-list">
+                  <li>
+                    <div class="bar-row"><span>18-24</span><span>37.8%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="37.8"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>25-34</span><span>50%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="50"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>35-44</span><span>7.3%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="7.3"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>45-54</span><span>3%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="3"></span></div>
+                  </li>
+                </ul>
+              </article>
+
+              <article class="analytics-card">
+                <h3>Discovery & Top Locations</h3>
+                <ul class="bar-list">
+                  <li>
+                    <div class="bar-row"><span>Search</span><span>53.3%</span></div>
+                    <div class="bar-track"><span class="bar-fill" data-value="53.3"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>For You</span><span>33.1%</span></div>
+                    <div class="bar-track"><span class="bar-fill" data-value="33.1"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>Personal Profile</span><span>12.3%</span></div>
+                    <div class="bar-track"><span class="bar-fill" data-value="12.3"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>Indonesia</span><span>72.1%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="72.1"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>Philippines</span><span>3.7%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="3.7"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>United States</span><span>2.4%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="2.4"></span></div>
+                  </li>
+                </ul>
+                <p class="analytics-note">Other notable markets: Singapore, Australia, Malaysia, Canada, South Africa.</p>
+              </article>
             </div>
-            <div class="stat-row">
-              <span class="stat-num">29.6%</span>
-              <span class="stat-name">Engagement Rate</span>
+            <div class="top-posts">
+              <div class="top-posts-head">
+                <span class="top-posts-title">Popular TikTok Videos</span>
+                <span class="top-posts-sub">Based on highest-performing content themes</span>
+              </div>
+              <div class="top-posts-row">
+                <article class="post-card">
+                  <p class="post-card-title">GRWM / Beauty Storytelling</p>
+                  <div class="post-metric-row">
+                    <span class="post-metric">views: 7.8M (annual total)</span>
+                    <span class="post-metric">likes: 987K</span>
+                    <span class="post-metric">comments: 19K</span>
+                  </div>
+                </article>
+                <article class="post-card">
+                  <p class="post-card-title">Lifestyle Day-in-the-Life Clips</p>
+                  <div class="post-metric-row">
+                    <span class="post-metric">shares: 124K</span>
+                    <span class="post-metric">profile views: 150K</span>
+                    <span class="post-metric">source: For You + Search</span>
+                  </div>
+                </article>
+                <article class="post-card">
+                  <p class="post-card-title">Travel + Place Recommendation Reels</p>
+                  <div class="post-metric-row">
+                    <span class="post-metric">primary market: Indonesia</span>
+                    <span class="post-metric">key age: 25-34</span>
+                    <span class="post-metric">female audience: 60%</span>
+                  </div>
+                </article>
+                <article class="post-card">
+                  <p class="post-card-title">Tech / App Explanation Content</p>
+                  <div class="post-metric-row">
+                    <span class="post-metric">traffic: Search 53.3%</span>
+                    <span class="post-metric">traffic: For You 33.1%</span>
+                    <span class="post-metric">high intent viewers</span>
+                  </div>
+                </article>
+              </div>
             </div>
-            <div class="stat-row">
-              <span class="stat-num">491%</span>
-              <span class="stat-name">View Rate</span>
+          </div>
+
+          <div class="analytics-panel active" data-panel="instagram">
+            <div class="kpi-grid">
+              <article class="kpi-card"><p class="kpi-label">Total Views</p><p class="kpi-value">9,184,750</p></article>
+              <article class="kpi-card"><p class="kpi-label">Reach</p><p class="kpi-value">4,900,000</p></article>
+              <article class="kpi-card"><p class="kpi-label">Content Interactions</p><p class="kpi-value">1,000,000</p></article>
+              <article class="kpi-card"><p class="kpi-label">Followers (Lifetime)</p><p class="kpi-value">17,750</p></article>
+              <article class="kpi-card"><p class="kpi-label">Organic Views</p><p class="kpi-value">9,184,750</p></article>
             </div>
-            <div class="stat-row">
-              <span class="stat-num">86k</span>
-              <span class="stat-name">Avg. Reel View</span>
+            <div class="analytics-grid">
+              <article class="analytics-card">
+                <h3>Audience Mix</h3>
+                <div class="split-stats">
+                  <div class="mini-stat">
+                    <p class="mini-label">Gender</p>
+                    <p class="mini-value">57.1 / 42.9</p>
+                    <p class="mini-sub">Women / Men</p>
+                  </div>
+                  <div class="mini-stat">
+                    <p class="mini-label">Top Age Group</p>
+                    <p class="mini-value">25-34</p>
+                    <p class="mini-sub">Highest concentration</p>
+                  </div>
+                </div>
+                <ul class="bar-list">
+                  <li>
+                    <div class="bar-row"><span>18-24</span><span>~20%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="20"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>25-34</span><span>~30%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="30"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>35-44</span><span>~6%</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="6"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>45+</span><span>Low but present</span></div>
+                    <div class="bar-track"><span class="bar-fill blue" data-value="2.2"></span></div>
+                  </li>
+                </ul>
+              </article>
+
+              <article class="analytics-card">
+                <h3>Top Countries</h3>
+                <ul class="bar-list">
+                  <li>
+                    <div class="bar-row"><span>Indonesia</span><span>42.5%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="42.5"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>India</span><span>16%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="16"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>United States</span><span>12%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="12"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>Brazil</span><span>1.5%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="1.5"></span></div>
+                  </li>
+                  <li>
+                    <div class="bar-row"><span>Malaysia / Singapore</span><span>1.4% / 1.2%</span></div>
+                    <div class="bar-track"><span class="bar-fill dark" data-value="1.4"></span></div>
+                  </li>
+                </ul>
+                <p class="analytics-note">Key city concentration includes Jakarta, New York, Bandung, Bekasi, and Singapore.</p>
+              </article>
+
+              <article class="analytics-card wide">
+                <h3>Potential Audience (Meta)</h3>
+                <div class="split-stats">
+                  <div class="mini-stat">
+                    <p class="mini-label">Estimated Audience</p>
+                    <p class="mini-value">177,400,000-208,700,000</p>
+                    <p class="mini-sub">Potential audience range from Meta audience tools</p>
+                  </div>
+                  <div class="mini-stat">
+                    <p class="mini-label">Gender Potential</p>
+                    <p class="mini-value">52.9 / 47.1</p>
+                    <p class="mini-sub">Men / Women distribution</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="top-posts">
+              <div class="top-posts-head">
+                <span class="top-posts-title">Popular Instagram Videos</span>
+                <span class="top-posts-sub">Top content by views</span>
+              </div>
+              <div class="ig-feed-row">
+                <article class="ig-feed-card">
+                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DT5YEQGkY5F/" target="_blank" rel="noopener">
+                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/1.png');"></div>
+                  </a>
+                  <div class="ig-feed-body">
+                    <p class="ig-feed-title">a man with many side quests p.s. ended up...</p>
+                    <p class="ig-feed-date">Sat Jan 24, 10:20pm</p>
+                    <div class="ig-feed-metric-grid">
+                      <span class="ig-feed-metric">👁 5.0M</span>
+                      <span class="ig-feed-metric">❤ 465.9K</span>
+                      <span class="ig-feed-metric">💬 962</span>
+                      <span class="ig-feed-metric">➜ 17.3K</span>
+                    </div>
+                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DT5YEQGkY5F/" target="_blank" rel="noopener">open reel ↗</a>
+                  </div>
+                </article>
+                <article class="ig-feed-card">
+                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DVoI5Wrkffn/" target="_blank" rel="noopener">
+                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/2.png');"></div>
+                  </a>
+                  <div class="ig-feed-body">
+                    <p class="ig-feed-title">#lol</p>
+                    <p class="ig-feed-date">Sun Mar 8, 10:42pm</p>
+                    <div class="ig-feed-metric-grid">
+                      <span class="ig-feed-metric">👁 1.9M</span>
+                      <span class="ig-feed-metric">❤ 115.2K</span>
+                      <span class="ig-feed-metric">💬 1.3K</span>
+                      <span class="ig-feed-metric">➜ 83.2K</span>
+                    </div>
+                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DVoI5Wrkffn/" target="_blank" rel="noopener">open reel ↗</a>
+                  </div>
+                </article>
+                <article class="ig-feed-card">
+                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DVOSU9dkW-X/" target="_blank" rel="noopener">
+                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/3.png');"></div>
+                  </a>
+                  <div class="ig-feed-body">
+                    <p class="ig-feed-title">i think they're back for the spices #coloniser...</p>
+                    <p class="ig-feed-date">Thu Feb 26, 9:47pm</p>
+                    <div class="ig-feed-metric-grid">
+                      <span class="ig-feed-metric">👁 718.9K</span>
+                      <span class="ig-feed-metric">❤ 64.2K</span>
+                      <span class="ig-feed-metric">💬 365</span>
+                      <span class="ig-feed-metric">➜ 6K</span>
+                    </div>
+                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DVOSU9dkW-X/" target="_blank" rel="noopener">open reel ↗</a>
+                  </div>
+                </article>
+                <article class="ig-feed-card">
+                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DXjGOKNEQy5/" target="_blank" rel="noopener">
+                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/4.png');"></div>
+                  </a>
+                  <div class="ig-feed-body">
+                    <p class="ig-feed-title">bro got a point ig #indonesia 🦅🦅🦅</p>
+                    <p class="ig-feed-date">Sat Apr 25, 4:46pm</p>
+                    <div class="ig-feed-metric-grid">
+                      <span class="ig-feed-metric">👁 228.9K</span>
+                      <span class="ig-feed-metric">❤ 12.9K</span>
+                      <span class="ig-feed-metric">💬 153</span>
+                      <span class="ig-feed-metric">➜ 3.9K</span>
+                    </div>
+                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DXjGOKNEQy5/" target="_blank" rel="noopener">open reel ↗</a>
+                  </div>
+                </article>
+              </div>
             </div>
           </div>
         </div>
@@ -868,38 +1634,76 @@
       <div class="brands-section-head reveal">
         <h2><em>brands</em> collaborations</h2>
       </div>
-      <div class="brands-circles-grid reveal">
-        <div class="brand-circle" title="Kaze AI">
-          <img src="pictures/brands/images.png" alt="Kaze AI" />
-        </div>
-        <div class="brand-circle" title="Amor Fati">
-          <img src="pictures/brands/images%20(1).png" alt="Amor Fati" />
-        </div>
-        <div class="brand-circle" title="Alassari">
-          <img src="pictures/brands/images%20(2).png" alt="Alassari Sanctuary" />
-        </div>
-        <div class="brand-circle" title="Barrenbliss">
-          <img src="pictures/brands/unnamed%20(3).webp" alt="Barrenbliss" />
-        </div>
-        <div class="brand-circle" title="BUD">
-          <img src="pictures/brands/twitter-image.png" alt="BUD" />
-        </div>
-        <div class="brand-circle" title="Kaze AI">
-          <img src="pictures/brands/8c9b5d30-edbb-4290-a2c7-ff8c1d8b4a24-Logo%20(2)%20(18).png" alt="Kaze AI" />
-        </div>
-        <div class="brand-circle" title="Brillic Media">
-          <img src="pictures/brands/brilic_media_logo.jpeg" alt="Brillic Media" />
-        </div>
-        <div class="brand-circle cta-circle">
-          your brand next!
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
-          <span class="cta-particle"></span>
+      <div class="brands-slider reveal">
+        <div class="brands-track">
+          <div class="brands-group">
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/images.png" alt="Kaze AI" />
+            </div>
+            <div class="brand-circle" title="Amor Fati">
+              <img src="pictures/brands/images%20(1).png" alt="Amor Fati" />
+            </div>
+            <div class="brand-circle" title="Alassari">
+              <img src="pictures/brands/images%20(2).png" alt="Alassari Sanctuary" />
+            </div>
+            <div class="brand-circle" title="Barrenbliss">
+              <img src="pictures/brands/unnamed%20(3).webp" alt="Barrenbliss" />
+            </div>
+            <div class="brand-circle" title="BUD">
+              <img src="pictures/brands/twitter-image.png" alt="BUD" />
+            </div>
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/8c9b5d30-edbb-4290-a2c7-ff8c1d8b4a24-Logo%20(2)%20(18).png" alt="Kaze AI" />
+            </div>
+            <div class="brand-circle" title="Brillic Media">
+              <img src="pictures/brands/brilic_media_logo.jpeg" alt="Brillic Media" />
+            </div>
+            <div class="brand-circle cta-circle">
+              your brand next!
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+            </div>
+          </div>
+          <div class="brands-group" aria-hidden="true">
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/images.png" alt="" />
+            </div>
+            <div class="brand-circle" title="Amor Fati">
+              <img src="pictures/brands/images%20(1).png" alt="" />
+            </div>
+            <div class="brand-circle" title="Alassari">
+              <img src="pictures/brands/images%20(2).png" alt="" />
+            </div>
+            <div class="brand-circle" title="Barrenbliss">
+              <img src="pictures/brands/unnamed%20(3).webp" alt="" />
+            </div>
+            <div class="brand-circle" title="BUD">
+              <img src="pictures/brands/twitter-image.png" alt="" />
+            </div>
+            <div class="brand-circle" title="Kaze AI">
+              <img src="pictures/brands/8c9b5d30-edbb-4290-a2c7-ff8c1d8b4a24-Logo%20(2)%20(18).png" alt="" />
+            </div>
+            <div class="brand-circle" title="Brillic Media">
+              <img src="pictures/brands/brilic_media_logo.jpeg" alt="" />
+            </div>
+            <div class="brand-circle cta-circle">
+              your brand next!
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+              <span class="cta-particle"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1064,8 +1868,7 @@
             <p class="work-blurb">A real-time CCTV &amp; location discovery app. I crafted a travel-themed reel showing live feeds from around the world — turning a utility app into a wanderlust moment.</p>
           </div>
           <div class="work-video-wrap">
-            <video src="videos/brillicmedia_map.MOV" muted playsinline preload="metadata"></video>
-            <div class="work-video-overlay"><div class="wv-play-btn">▶</div></div>
+            <img src="videos/brillicmedia_map.gif" alt="Brillic Media map app preview" />
           </div>
           <div class="work-analytics">
             <a href="https://www.instagram.com/reel/DXYl5-uESfQ/" target="_blank" rel="noopener" class="view-post-btn">view post ↗</a>
@@ -1144,7 +1947,7 @@
           <a href="mailto:izzyxmcglizzy@gmail.com" class="contact-email">
             ✉ izzyxmcglizzy@gmail.com
           </a>
-          <a class="rate-card-btn" href="rate-card.html">
+          <a class="rate-card-btn" href="ratecard.html">
             <span class="rate-card-copy">
               <span class="rate-card-title">see rate card + process</span>
               <span class="rate-card-desc">Packages, timeline, and exactly how we can work together for your next campaign.</span>
@@ -1158,6 +1961,10 @@
             </a>
             <a class="social-btn" href="https://www.instagram.com/izzermcglizzer" target="_blank" rel="noopener">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+              @izzermcglizzer
+            </a>
+            <a class="social-btn" href="https://t.me/izzermcglizzer" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 4.6a2 2 0 0 0-2.1-.3L3.9 10.2a2 2 0 0 0 .1 3.7l4.3 1.5 1.6 4.8a2 2 0 0 0 3.4.7l2.4-2.5 4.2 3.1a2 2 0 0 0 3.1-1.2l2-13.7a2 2 0 0 0-.6-2zM9.9 14.2l8.2-6.1-6.3 8.1-.5 2.4-1.4-4.4z"/></svg>
               @izzermcglizzer
             </a>
           </div>
@@ -1184,6 +1991,7 @@
       // Work video cards: click to play/pause
       document.querySelectorAll('.work-video-wrap').forEach(wrap => {
         const vid = wrap.querySelector('video');
+        if (!vid) return;
         wrap.addEventListener('mouseenter', () => { vid.play(); wrap.classList.add('playing'); });
         wrap.addEventListener('mouseleave', () => { vid.pause(); wrap.classList.remove('playing'); });
         wrap.addEventListener('click', () => {
@@ -1200,6 +2008,80 @@
           if (vid.paused) vid.play(); else vid.pause();
         });
       });
+
+      // Analytics section: platform switch + animated bars
+      const analyticsTabs = document.querySelectorAll('.analytics-tab');
+      const analyticsPanels = document.querySelectorAll('.analytics-panel');
+
+      const animatePanelBars = (panel) => {
+        panel.querySelectorAll('.bar-fill').forEach((bar) => {
+          const width = bar.dataset.value || '0';
+          bar.style.width = '0';
+          requestAnimationFrame(() => {
+            bar.style.width = `${width}%`;
+          });
+        });
+      };
+
+      const activateAnalyticsPanel = (platform) => {
+        analyticsTabs.forEach((tab) => {
+          const isActive = tab.dataset.platform === platform;
+          tab.classList.toggle('active', isActive);
+          tab.setAttribute('aria-selected', String(isActive));
+        });
+
+        analyticsPanels.forEach((panel) => {
+          const isActive = panel.dataset.panel === platform;
+          panel.classList.toggle('active', isActive);
+          panel.hidden = !isActive;
+          if (isActive) animatePanelBars(panel);
+        });
+      };
+
+      analyticsTabs.forEach((tab) => {
+        tab.addEventListener('click', () => activateAnalyticsPanel(tab.dataset.platform));
+      });
+
+      const defaultTab = document.querySelector('.analytics-tab.active');
+      if (defaultTab) activateAnalyticsPanel(defaultTab.dataset.platform);
+
+      // Header: highlight current section like a dashboard tab
+      const navSectionLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+      const navSectionEntries = navSectionLinks
+        .map((link) => ({ link, section: document.querySelector(link.getAttribute('href')) }))
+        .filter((entry) => entry.section);
+      const navSections = navSectionEntries
+        .map((entry) => entry.section)
+        .filter(Boolean);
+
+      const setActiveNav = (activeId) => {
+        navSectionLinks.forEach((link) => {
+          const isActive = link.getAttribute('href') === `#${activeId}`;
+          link.classList.toggle('active', isActive);
+          if (isActive) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+      };
+
+      const updateNavByScroll = () => {
+        if (!navSectionEntries.length) return;
+        const scrollPoint = window.scrollY + window.innerHeight * 0.32;
+        const orderedSections = [...navSectionEntries].sort(
+          (a, b) => a.section.offsetTop - b.section.offsetTop
+        );
+        let current = orderedSections[0].section;
+
+        orderedSections.forEach((entry) => {
+          const sectionTop = entry.section.offsetTop;
+          if (sectionTop <= scrollPoint) current = entry.section;
+        });
+
+        if (current && current.id) setActiveNav(current.id);
+      };
+
+      updateNavByScroll();
+      window.addEventListener('scroll', updateNavByScroll, { passive: true });
+      window.addEventListener('resize', updateNavByScroll);
     });
   </script>
 
