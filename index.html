@@ -33,8 +33,52 @@
       word-spacing: -0.05em;
       overflow-x: hidden;
     }
+    body.cursor-enabled { cursor: none; }
     a { color: inherit; text-decoration: none; }
+    body.cursor-enabled a,
+    body.cursor-enabled button,
+    body.cursor-enabled summary,
+    body.cursor-enabled [role="button"] { cursor: none; }
     img { display: block; max-width: 100%; }
+
+    .cursor-ring,
+    .cursor-dot {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 3000;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.18s ease;
+    }
+    .cursor-ring {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(157, 217, 50, 0.9);
+      background: rgba(157, 217, 50, 0.06);
+      box-shadow: 0 0 0 1px rgba(13,12,11,0.04);
+      transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.18s ease;
+    }
+    .cursor-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--black);
+    }
+    .cursor-ring.active,
+    .cursor-dot.active { opacity: 1; }
+    .cursor-ring.is-hover {
+      width: 56px;
+      height: 56px;
+      border-color: rgba(157, 217, 50, 1);
+      background: rgba(157, 217, 50, 0.14);
+    }
+    .cursor-ring.is-press {
+      width: 30px;
+      height: 30px;
+    }
 
     /* ── Nav ── */
     nav {
@@ -121,11 +165,11 @@
     /* ── Hero ── */
     .hero {
       display: grid;
-      grid-template-columns: 1fr 400px;
+      grid-template-columns: 0.76fr 1.24fr;
       gap: 48px;
       align-items: center;
       padding: 106px 44px 60px;
-      max-width: 1050px; margin: 0 auto;
+      max-width: 1240px; margin: 0 auto;
     }
     .hero-left {
       display: flex; flex-direction: column; justify-content: center;
@@ -193,7 +237,13 @@
     }
     .hero-stat.dark:hover { box-shadow: inset 0 1px 2px rgba(255,255,255,0.05), 0 10px 28px rgba(0,0,0,0.35); }
     .hero-photo {
-      flex: 1; border-radius: var(--r-lg); overflow: hidden; position: relative;
+      flex: 1;
+      aspect-ratio: 21 / 10;
+      min-height: 0;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      position: relative;
+      background: #111;
       transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
     .hero-photo:hover { transform: translateY(-4px); box-shadow: 0 24px 60px rgba(0,0,0,0.14); }
@@ -218,13 +268,22 @@
       to { transform: scaleX(1); }
     }
 
-    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; transition: transform 0.5s ease; }
-    .hero-photo:hover img { transform: scale(1.03); }
+    .hero-photo video {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+    }
+    .hero-photo:hover video { transform: scale(1.02); }
     .hero-photo-badge {
-      position: absolute; bottom: 16px; left: 16px;
-      background: rgba(250,250,248,0.88); backdrop-filter: blur(12px);
-      padding: 8px 16px; border-radius: 999px;
-      font-size: 0.75rem; font-weight: 500; color: var(--black);
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(250,250,248,0.62); backdrop-filter: blur(8px);
+      padding: 6px 12px; border-radius: 999px;
+      font-size: 0.66rem; font-weight: 500; color: rgba(13,12,11,0.82);
+      z-index: 2;
     }
     .hero-stat-val {
       font-family: 'Poppins', sans-serif;
@@ -278,8 +337,36 @@
     .sec-title em { font-style: italic; font-weight: 400; color: var(--muted); }
 
     /* reveal animation */
-    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.65s, transform 0.65s; }
-    .reveal.visible { opacity: 1; transform: none; }
+    .reveal {
+      opacity: 0;
+      transform: translate3d(0, 30px, 0) scale(0.985);
+      filter: blur(6px);
+      transition:
+        opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform, opacity, filter;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      filter: blur(0);
+    }
+    .reveal.reveal-left { transform: translate3d(-28px, 18px, 0) scale(0.985); }
+    .reveal.reveal-right { transform: translate3d(28px, 18px, 0) scale(0.985); }
+    .reveal.reveal-zoom { transform: translate3d(0, 20px, 0) scale(0.94); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal,
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+      }
+      .cursor-ring,
+      .cursor-dot { display: none !important; }
+    }
 
     /* ── Analytics ── */
     #about {
@@ -363,6 +450,58 @@
       display: block;
       opacity: 1;
       transform: translateY(0);
+    }
+    .analytics-drop {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .analytics-drop > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--black);
+      background: linear-gradient(180deg, #fff, #fbfaf7);
+    }
+    .analytics-drop > summary::-webkit-details-marker { display: none; }
+    .analytics-drop > summary::after {
+      content: '▾';
+      font-size: 0.86rem;
+      letter-spacing: 0;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }
+    .analytics-drop[open] > summary::after {
+      transform: rotate(180deg);
+    }
+    .analytics-drop-preview {
+      margin-left: auto;
+      font-size: 0.64rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      font-weight: 500;
+      color: var(--muted);
+      text-align: right;
+    }
+    .analytics-drop-body {
+      border-top: 1px solid var(--border);
+      padding: 12px;
+    }
+    .analytics-drop .analytics-grid { gap: 10px; }
+    .analytics-drop .top-posts {
+      margin-top: 0;
+      border-top: none;
+      padding-top: 0;
     }
     .kpi-grid {
       display: grid;
@@ -1106,16 +1245,14 @@
     /* ── Responsive ── */
     @media (max-width: 960px) {
       nav {
-        position: fixed;
-        top: max(8px, env(safe-area-inset-top));
-        left: 8px;
-        right: 8px;
+        position: static;
         transform: none;
-        width: auto;
+        width: calc(100% - 16px);
+        margin: 8px auto 0;
         height: 62px;
         grid-template-columns: 1fr auto 1fr;
         padding: 0 12px;
-        z-index: 1000;
+        z-index: 10;
       }
       .nav-links {
         display: flex;
@@ -1133,10 +1270,10 @@
         padding: 7px 12px;
         font-size: 0.72rem;
       }
-      .hero { grid-template-columns: 1fr; min-height: auto; padding: 92px 20px 0; }
+      .hero { grid-template-columns: 1fr; min-height: auto; padding: 28px 20px 0; }
       .hero-right { display: grid; grid-template-columns: 1fr 1fr; padding: 0 0 56px; }
       .hero-stats-side { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; }
-      .hero-photo  { grid-column: span 2; height: 380px; }
+      .hero-photo  { grid-column: span 2; height: auto; aspect-ratio: 16 / 9; }
       .pad { padding: 70px 20px; }
       .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .analytics-grid { grid-template-columns: 1fr; }
@@ -1154,9 +1291,8 @@
     @media (max-width: 640px) {
       nav {
         height: 54px;
-        top: max(6px, env(safe-area-inset-top));
-        left: 6px;
-        right: 6px;
+        width: calc(100% - 12px);
+        margin-top: 6px;
         padding: 0 6px;
         gap: 8px;
       }
@@ -1167,15 +1303,15 @@
         padding: 6px 10px;
         font-size: 0.64rem;
       }
-      .hero { padding: 86px 14px 0; gap: 24px; }
+      .hero { padding: 22px 14px 0; gap: 24px; }
       .hero-h1 { font-size: clamp(2.1rem, 12vw, 3rem); }
       .hero-bio { font-size: 0.8rem; max-width: 100%; }
       .hero-btns { width: 100%; }
       .btn-dark, .btn-ghost { width: 100%; text-align: center; }
       .hero-right { gap: 10px; padding-bottom: 30px; }
       .hero-stats-side { grid-template-columns: 1fr; gap: 8px; }
-      .hero-photo { height: 320px; }
-      .hero-photo-badge { left: 10px; bottom: 10px; font-size: 0.68rem; padding: 7px 12px; }
+      .hero-photo { height: auto; aspect-ratio: 16 / 9; }
+      .hero-photo-badge { right: 10px; top: 10px; font-size: 0.62rem; padding: 6px 10px; }
       .pad { padding: 46px 14px; }
       .sec-title { margin-bottom: 20px; }
       .about-top { margin-bottom: 16px; }
@@ -1217,6 +1353,8 @@
       nav {
         height: 52px;
         gap: 6px;
+        width: calc(100% - 10px);
+        margin-top: 5px;
         padding: 0 6px;
       }
       .nav-logo { font-size: 0.9rem; }
@@ -1231,8 +1369,8 @@
       }
       .nav-cta .cta-full { display: none; }
       .nav-cta .cta-short { display: inline; }
-      .hero { padding: 84px 12px 0; }
-      .hero-photo { height: 280px; }
+      .hero { padding: 18px 12px 0; }
+      .hero-photo { height: auto; aspect-ratio: 16 / 9; }
       .analytics-shell { padding: 12px; }
       .kpi-grid { grid-template-columns: 1fr; }
       .ig-feed-row { grid-template-columns: 1fr; }
@@ -1293,10 +1431,13 @@
         </div>
       </div>
       <div class="hero-photo">
-        <img
-          src="pictures/literally%20love%20u%20canon%20wtfffffff%20%23canonm50markii%20(3).jpg"
-          alt="izzy — ugc creator"
-        />
+        <video
+          src="videos/UGC/Izzy%20I%20UGC%20Intro.mp4"
+          controls
+          loop
+          playsinline
+          preload="metadata"
+        ></video>
         <div class="hero-photo-badge">@izzermcglizzer · tiktok &amp; instagram</div>
       </div>
     </div>
@@ -1356,8 +1497,14 @@
               <article class="kpi-card"><p class="kpi-label">Comments</p><p class="kpi-value">19K</p></article>
               <article class="kpi-card"><p class="kpi-label">Shares</p><p class="kpi-value">124K</p></article>
             </div>
-            <div class="analytics-grid">
-              <article class="analytics-card">
+            <details class="analytics-drop">
+              <summary>
+                audience + discovery breakdown
+                <span class="analytics-drop-preview">click to expand details</span>
+              </summary>
+              <div class="analytics-drop-body">
+                <div class="analytics-grid">
+                  <article class="analytics-card">
                 <h3>Audience</h3>
                 <div class="split-stats">
                   <div class="mini-stat">
@@ -1389,9 +1536,9 @@
                     <div class="bar-track"><span class="bar-fill blue" data-value="3"></span></div>
                   </li>
                 </ul>
-              </article>
+                  </article>
 
-              <article class="analytics-card">
+                  <article class="analytics-card">
                 <h3>Discovery & Top Locations</h3>
                 <ul class="bar-list">
                   <li>
@@ -1419,10 +1566,18 @@
                     <div class="bar-track"><span class="bar-fill dark" data-value="2.4"></span></div>
                   </li>
                 </ul>
-                <p class="analytics-note">Other notable markets: Singapore, Australia, Malaysia, Canada, South Africa.</p>
-              </article>
-            </div>
-            <div class="top-posts">
+                    <p class="analytics-note">Other notable markets: Singapore, Australia, Malaysia, Canada, South Africa.</p>
+                  </article>
+                </div>
+              </div>
+            </details>
+            <details class="analytics-drop">
+              <summary>
+                popular tiktok videos
+                <span class="analytics-drop-preview">highest-performing themes</span>
+              </summary>
+              <div class="analytics-drop-body">
+                <div class="top-posts">
               <div class="top-posts-head">
                 <span class="top-posts-title">Popular TikTok Videos</span>
                 <span class="top-posts-sub">Based on highest-performing content themes</span>
@@ -1460,8 +1615,10 @@
                     <span class="post-metric">high intent viewers</span>
                   </div>
                 </article>
+                  </div>
+                </div>
               </div>
-            </div>
+            </details>
           </div>
 
           <div class="analytics-panel active" data-panel="instagram">
@@ -1472,8 +1629,14 @@
               <article class="kpi-card"><p class="kpi-label">Followers (Lifetime)</p><p class="kpi-value">17,750</p></article>
               <article class="kpi-card"><p class="kpi-label">Organic Views</p><p class="kpi-value">9,184,750</p></article>
             </div>
-            <div class="analytics-grid">
-              <article class="analytics-card">
+            <details class="analytics-drop">
+              <summary>
+                audience + geography breakdown
+                <span class="analytics-drop-preview">click to expand details</span>
+              </summary>
+              <div class="analytics-drop-body">
+                <div class="analytics-grid">
+                  <article class="analytics-card">
                 <h3>Audience Mix</h3>
                 <div class="split-stats">
                   <div class="mini-stat">
@@ -1505,9 +1668,9 @@
                     <div class="bar-track"><span class="bar-fill blue" data-value="2.2"></span></div>
                   </li>
                 </ul>
-              </article>
+                  </article>
 
-              <article class="analytics-card">
+                  <article class="analytics-card">
                 <h3>Top Countries</h3>
                 <ul class="bar-list">
                   <li>
@@ -1531,10 +1694,10 @@
                     <div class="bar-track"><span class="bar-fill dark" data-value="1.4"></span></div>
                   </li>
                 </ul>
-                <p class="analytics-note">Key city concentration includes Jakarta, New York, Bandung, Bekasi, and Singapore.</p>
-              </article>
+                    <p class="analytics-note">Key city concentration includes Jakarta, New York, Bandung, Bekasi, and Singapore.</p>
+                  </article>
 
-              <article class="analytics-card wide">
+                  <article class="analytics-card wide">
                 <h3>Potential Audience (Meta)</h3>
                 <div class="split-stats">
                   <div class="mini-stat">
@@ -1548,9 +1711,17 @@
                     <p class="mini-sub">Men / Women distribution</p>
                   </div>
                 </div>
-              </article>
-            </div>
-            <div class="top-posts">
+                  </article>
+                </div>
+              </div>
+            </details>
+            <details class="analytics-drop">
+              <summary>
+                popular instagram videos
+                <span class="analytics-drop-preview">top content by views</span>
+              </summary>
+              <div class="analytics-drop-body">
+                <div class="top-posts">
               <div class="top-posts-head">
                 <span class="top-posts-title">Popular Instagram Videos</span>
                 <span class="top-posts-sub">Top content by views</span>
@@ -1620,8 +1791,10 @@
                     <a class="ig-feed-open" href="https://www.instagram.com/reel/DXjGOKNEQy5/" target="_blank" rel="noopener">open reel ↗</a>
                   </div>
                 </article>
+                  </div>
+                </div>
               </div>
-            </div>
+            </details>
           </div>
         </div>
       </div>
@@ -2034,12 +2207,22 @@
           const isActive = panel.dataset.panel === platform;
           panel.classList.toggle('active', isActive);
           panel.hidden = !isActive;
-          if (isActive) animatePanelBars(panel);
+          if (isActive) {
+            panel.querySelectorAll('.analytics-drop').forEach((drop) => {
+              drop.open = false;
+            });
+          }
         });
       };
 
       analyticsTabs.forEach((tab) => {
         tab.addEventListener('click', () => activateAnalyticsPanel(tab.dataset.platform));
+      });
+
+      document.querySelectorAll('.analytics-drop').forEach((drop) => {
+        drop.addEventListener('toggle', () => {
+          if (drop.open) animatePanelBars(drop);
+        });
       });
 
       const defaultTab = document.querySelector('.analytics-tab.active');
@@ -2085,13 +2268,73 @@
     });
   </script>
 
-  <!-- Scroll reveal -->
+  <!-- Scroll reveal + custom cursor -->
   <script>
-    const io = new IntersectionObserver(
-      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
-      { threshold: 0.08 }
-    );
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    document.addEventListener('DOMContentLoaded', () => {
+      const revealNodes = Array.from(document.querySelectorAll('.reveal'));
+      revealNodes.forEach((node, index) => {
+        if (!node.style.transitionDelay) {
+          node.style.transitionDelay = `${(index % 6) * 55}ms`;
+        }
+      });
+
+      const io = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+      revealNodes.forEach((node) => io.observe(node));
+
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        document.body.classList.add('cursor-enabled');
+        const ring = document.createElement('div');
+        const dot = document.createElement('div');
+        ring.className = 'cursor-ring';
+        dot.className = 'cursor-dot';
+        document.body.append(ring, dot);
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let ringX = mouseX;
+        let ringY = mouseY;
+
+        const revealCursor = () => {
+          ring.classList.add('active');
+          dot.classList.add('active');
+        };
+        const hideCursor = () => {
+          ring.classList.remove('active', 'is-hover', 'is-press');
+          dot.classList.remove('active');
+        };
+
+        const animateCursor = () => {
+          ringX += (mouseX - ringX) * 0.16;
+          ringY += (mouseY - ringY) * 0.16;
+          ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+          dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+          requestAnimationFrame(animateCursor);
+        };
+        requestAnimationFrame(animateCursor);
+
+        const interactiveSelector = 'a, button, summary, .work-video-wrap, .alassari-vid, .brand-circle, .analytics-tab, .nav-cta';
+
+        window.addEventListener('mousemove', (event) => {
+          mouseX = event.clientX;
+          mouseY = event.clientY;
+          revealCursor();
+
+          const interactive = event.target.closest(interactiveSelector);
+          ring.classList.toggle('is-hover', !!interactive);
+        });
+        window.addEventListener('mousedown', () => ring.classList.add('is-press'));
+        window.addEventListener('mouseup', () => ring.classList.remove('is-press'));
+        window.addEventListener('blur', hideCursor);
+        document.addEventListener('mouseleave', hideCursor);
+      }
+    });
   </script>
 
 </body>
