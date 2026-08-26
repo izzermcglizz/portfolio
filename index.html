@@ -1146,57 +1146,6 @@
     .see-more-btn.tt { background: var(--black); color: #fff; }
     .see-more-btn.ig { background: #E1306C; color: #fff; }
     .see-more-btn svg { flex-shrink: 0; }
-    .rate-card-btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      width: min(100%, 460px);
-      background: rgba(255,255,255,0.02);
-      color: #fff;
-      border: 1.5px solid rgba(255,255,255,0.12);
-      border-radius: 26px;
-      padding: 18px 20px;
-      margin-bottom: 18px;
-      transition: border-color 0.2s, background 0.2s, transform 0.2s;
-    }
-    .rate-card-copy {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-width: 0;
-    }
-    .rate-card-title {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--lime);
-      line-height: 1.2;
-      text-transform: lowercase;
-    }
-    .rate-card-desc {
-      font-size: 0.74rem;
-      color: rgba(255,255,255,0.68);
-      line-height: 1.5;
-      max-width: 30ch;
-    }
-    .rate-card-arrow {
-      flex-shrink: 0;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(182, 255, 47, 0.5);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--lime);
-      font-size: 1rem;
-      line-height: 1;
-    }
-    .rate-card-btn:hover {
-      border-color: rgba(182, 255, 47, 0.75);
-      background: rgba(182, 255, 47, 0.06);
-      transform: translateY(-2px);
-    }
 
     /* ── Contact ── */
     #contact { background: var(--dark); color: #fff; }
@@ -1281,7 +1230,6 @@
       .scroll-row { padding-left: 20px; padding-right: 20px; }
       .contact-grid { grid-template-columns: 1fr; }
       .contact-photo { display: none; }
-      .rate-card-btn { width: 100%; }
       footer { padding: 20px; }
       .alassari-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; height: auto; }
       .alassari-vid-main { grid-column: 1 / 3; aspect-ratio: 9/16; }
@@ -1346,7 +1294,6 @@
       .contact-email { font-size: 0.82rem; }
       .social-row { width: 100%; }
       .social-btn { width: 100%; justify-content: center; }
-      .rate-card-btn { width: 100%; justify-content: center; }
       footer { font-size: 0.7rem; justify-content: center; text-align: center; }
     }
     @media (max-width: 480px) {
@@ -1386,417 +1333,24 @@
     <span class="nav-logo">izzy<span>.</span></span>
     <ul class="nav-links">
       <li><a href="#home">home</a></li>
-      <li><a href="#about">analytics</a></li>
       <li><a href="#brand-carousel">brands</a></li>
       <li><a href="#work">work</a></li>
       <li><a href="#contact">contact</a></li>
     </ul>
-    <a href="ratecard.html" class="nav-cta"><span class="cta-full">See Rate Card</span><span class="cta-short">Rate Card</span> →</a>
+    <a href="#contact" class="nav-cta"><span class="cta-full">Get In Touch</span><span class="cta-short">Contact</span> →</a>
   </nav>
 
   <!-- ── HERO ── -->
   <section class="hero" id="home">
     <div class="hero-left">
-      <div class="hero-tag">content creator · bali, indonesia</div>
+      <div class="hero-tag">content creator</div>
       <h1 class="hero-h1">
         creative<br>
         <span class="highlight-word">portfolio</span>
       </h1>
-      <p class="hero-bio">
-        i'm izzy — a content creator from Bali making authentic, scroll-stopping videos for brands i actually love. lifestyle · beauty · travel · tech.
-      </p>
       <div class="hero-btns">
         <a href="#work" class="btn-dark">view my work ↓</a>
         <a href="#contact" class="btn-ghost">get in touch</a>
-      </div>
-    </div>
-
-    <div class="hero-right">
-      <div class="hero-stats-side">
-        <div class="hero-stat dark">
-          <div class="hero-stat-val">80k</div>
-          <div class="hero-stat-lbl">TikTok</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-val">17k</div>
-          <div class="hero-stat-lbl">Instagram</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-val">29.6%</div>
-          <div class="hero-stat-lbl">Engagement</div>
-        </div>
-        <div class="hero-stat dark">
-          <div class="hero-stat-val">86k</div>
-          <div class="hero-stat-lbl">Reel Views</div>
-        </div>
-      </div>
-      <div class="hero-photo">
-        <video
-          src="videos/UGC/Izzy%20I%20UGC%20Intro.mp4"
-          controls
-          loop
-          playsinline
-          preload="metadata"
-        ></video>
-        <div class="hero-photo-badge">@izzermcglizzer · tiktok &amp; instagram</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── MARQUEE ── -->
-  <div class="marquee">
-    <div class="marquee-track">
-      <span class="marquee-item">beauty &amp; makeup</span>
-      <span class="marquee-item">lifestyle content</span>
-      <span class="marquee-item">travel storytelling</span>
-      <span class="marquee-item">tech ugc</span>
-      <span class="marquee-item">short-form video</span>
-      <span class="marquee-item">brand collabs</span>
-      <span class="marquee-item">tiktok &amp; reels</span>
-      <span class="marquee-item">authentic content</span>
-      <!-- duplicate for seamless loop -->
-      <span class="marquee-item">beauty &amp; makeup</span>
-      <span class="marquee-item">lifestyle content</span>
-      <span class="marquee-item">travel storytelling</span>
-      <span class="marquee-item">tech ugc</span>
-      <span class="marquee-item">short-form video</span>
-      <span class="marquee-item">brand collabs</span>
-      <span class="marquee-item">tiktok &amp; reels</span>
-      <span class="marquee-item">authentic content</span>
-    </div>
-  </div>
-
-  <!-- ── ANALYTICS ── -->
-  <section id="about">
-    <div class="max-w pad">
-      <div class="about-top reveal">
-        <p class="eyebrow">analytics</p>
-        <h2 class="sec-title">past 365 days<br><em>performance snapshot</em></h2>
-        <p class="about-copy">
-          Real platform insights from the last year. Toggle between TikTok and Instagram to view audience quality, reach, and traction by channel.
-        </p>
-      </div>
-      <div class="analytics-shell reveal">
-        <div class="analytics-head">
-          <span class="analytics-label">past 365 days</span>
-          <div class="analytics-tabs" role="tablist" aria-label="Platform analytics tabs">
-            <button class="analytics-tab active" role="tab" aria-selected="true" data-platform="instagram">Instagram</button>
-            <button class="analytics-tab" role="tab" aria-selected="false" data-platform="tiktok">TikTok</button>
-          </div>
-          <p class="analytics-source">
-            Source: Instagram metrics are from <strong>Meta Business Suite</strong>; TikTok metrics are from <strong>TikTok Analytics</strong>.
-          </p>
-        </div>
-
-        <div class="analytics-panels">
-          <div class="analytics-panel" data-panel="tiktok">
-            <div class="kpi-grid">
-              <article class="kpi-card"><p class="kpi-label">Video Views</p><p class="kpi-value">7.8M</p></article>
-              <article class="kpi-card"><p class="kpi-label">Profile Views</p><p class="kpi-value">150K</p></article>
-              <article class="kpi-card"><p class="kpi-label">Likes</p><p class="kpi-value">987K</p></article>
-              <article class="kpi-card"><p class="kpi-label">Comments</p><p class="kpi-value">19K</p></article>
-              <article class="kpi-card"><p class="kpi-label">Shares</p><p class="kpi-value">124K</p></article>
-            </div>
-            <details class="analytics-drop">
-              <summary>
-                audience + discovery breakdown
-                <span class="analytics-drop-preview">click to expand details</span>
-              </summary>
-              <div class="analytics-drop-body">
-                <div class="analytics-grid">
-                  <article class="analytics-card">
-                <h3>Audience</h3>
-                <div class="split-stats">
-                  <div class="mini-stat">
-                    <p class="mini-label">Gender Split</p>
-                    <p class="mini-value">60% / 29%</p>
-                    <p class="mini-sub">Female / Male (Other: 11%)</p>
-                  </div>
-                  <div class="mini-stat">
-                    <p class="mini-label">Top Age Group</p>
-                    <p class="mini-value">25-34</p>
-                    <p class="mini-sub">50% of audience</p>
-                  </div>
-                </div>
-                <ul class="bar-list">
-                  <li>
-                    <div class="bar-row"><span>18-24</span><span>37.8%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="37.8"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>25-34</span><span>50%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="50"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>35-44</span><span>7.3%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="7.3"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>45-54</span><span>3%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="3"></span></div>
-                  </li>
-                </ul>
-                  </article>
-
-                  <article class="analytics-card">
-                <h3>Discovery & Top Locations</h3>
-                <ul class="bar-list">
-                  <li>
-                    <div class="bar-row"><span>Search</span><span>53.3%</span></div>
-                    <div class="bar-track"><span class="bar-fill" data-value="53.3"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>For You</span><span>33.1%</span></div>
-                    <div class="bar-track"><span class="bar-fill" data-value="33.1"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>Personal Profile</span><span>12.3%</span></div>
-                    <div class="bar-track"><span class="bar-fill" data-value="12.3"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>Indonesia</span><span>72.1%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="72.1"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>Philippines</span><span>3.7%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="3.7"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>United States</span><span>2.4%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="2.4"></span></div>
-                  </li>
-                </ul>
-                    <p class="analytics-note">Other notable markets: Singapore, Australia, Malaysia, Canada, South Africa.</p>
-                  </article>
-                </div>
-              </div>
-            </details>
-            <details class="analytics-drop">
-              <summary>
-                popular tiktok videos
-                <span class="analytics-drop-preview">highest-performing themes</span>
-              </summary>
-              <div class="analytics-drop-body">
-                <div class="top-posts">
-              <div class="top-posts-head">
-                <span class="top-posts-title">Popular TikTok Videos</span>
-                <span class="top-posts-sub">Based on highest-performing content themes</span>
-              </div>
-              <div class="top-posts-row">
-                <article class="post-card">
-                  <p class="post-card-title">GRWM / Beauty Storytelling</p>
-                  <div class="post-metric-row">
-                    <span class="post-metric">views: 7.8M (annual total)</span>
-                    <span class="post-metric">likes: 987K</span>
-                    <span class="post-metric">comments: 19K</span>
-                  </div>
-                </article>
-                <article class="post-card">
-                  <p class="post-card-title">Lifestyle Day-in-the-Life Clips</p>
-                  <div class="post-metric-row">
-                    <span class="post-metric">shares: 124K</span>
-                    <span class="post-metric">profile views: 150K</span>
-                    <span class="post-metric">source: For You + Search</span>
-                  </div>
-                </article>
-                <article class="post-card">
-                  <p class="post-card-title">Travel + Place Recommendation Reels</p>
-                  <div class="post-metric-row">
-                    <span class="post-metric">primary market: Indonesia</span>
-                    <span class="post-metric">key age: 25-34</span>
-                    <span class="post-metric">female audience: 60%</span>
-                  </div>
-                </article>
-                <article class="post-card">
-                  <p class="post-card-title">Tech / App Explanation Content</p>
-                  <div class="post-metric-row">
-                    <span class="post-metric">traffic: Search 53.3%</span>
-                    <span class="post-metric">traffic: For You 33.1%</span>
-                    <span class="post-metric">high intent viewers</span>
-                  </div>
-                </article>
-                  </div>
-                </div>
-              </div>
-            </details>
-          </div>
-
-          <div class="analytics-panel active" data-panel="instagram">
-            <div class="kpi-grid">
-              <article class="kpi-card"><p class="kpi-label">Total Views</p><p class="kpi-value">9,184,750</p></article>
-              <article class="kpi-card"><p class="kpi-label">Reach</p><p class="kpi-value">4,900,000</p></article>
-              <article class="kpi-card"><p class="kpi-label">Content Interactions</p><p class="kpi-value">1,000,000</p></article>
-              <article class="kpi-card"><p class="kpi-label">Followers (Lifetime)</p><p class="kpi-value">17,750</p></article>
-              <article class="kpi-card"><p class="kpi-label">Organic Views</p><p class="kpi-value">9,184,750</p></article>
-            </div>
-            <details class="analytics-drop">
-              <summary>
-                audience + geography breakdown
-                <span class="analytics-drop-preview">click to expand details</span>
-              </summary>
-              <div class="analytics-drop-body">
-                <div class="analytics-grid">
-                  <article class="analytics-card">
-                <h3>Audience Mix</h3>
-                <div class="split-stats">
-                  <div class="mini-stat">
-                    <p class="mini-label">Gender</p>
-                    <p class="mini-value">57.1 / 42.9</p>
-                    <p class="mini-sub">Women / Men</p>
-                  </div>
-                  <div class="mini-stat">
-                    <p class="mini-label">Top Age Group</p>
-                    <p class="mini-value">25-34</p>
-                    <p class="mini-sub">Highest concentration</p>
-                  </div>
-                </div>
-                <ul class="bar-list">
-                  <li>
-                    <div class="bar-row"><span>18-24</span><span>~20%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="20"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>25-34</span><span>~30%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="30"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>35-44</span><span>~6%</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="6"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>45+</span><span>Low but present</span></div>
-                    <div class="bar-track"><span class="bar-fill blue" data-value="2.2"></span></div>
-                  </li>
-                </ul>
-                  </article>
-
-                  <article class="analytics-card">
-                <h3>Top Countries</h3>
-                <ul class="bar-list">
-                  <li>
-                    <div class="bar-row"><span>Indonesia</span><span>42.5%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="42.5"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>India</span><span>16%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="16"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>United States</span><span>12%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="12"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>Brazil</span><span>1.5%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="1.5"></span></div>
-                  </li>
-                  <li>
-                    <div class="bar-row"><span>Malaysia / Singapore</span><span>1.4% / 1.2%</span></div>
-                    <div class="bar-track"><span class="bar-fill dark" data-value="1.4"></span></div>
-                  </li>
-                </ul>
-                    <p class="analytics-note">Key city concentration includes Jakarta, New York, Bandung, Bekasi, and Singapore.</p>
-                  </article>
-
-                  <article class="analytics-card wide">
-                <h3>Potential Audience (Meta)</h3>
-                <div class="split-stats">
-                  <div class="mini-stat">
-                    <p class="mini-label">Estimated Audience</p>
-                    <p class="mini-value">177,400,000-208,700,000</p>
-                    <p class="mini-sub">Potential audience range from Meta audience tools</p>
-                  </div>
-                  <div class="mini-stat">
-                    <p class="mini-label">Gender Potential</p>
-                    <p class="mini-value">52.9 / 47.1</p>
-                    <p class="mini-sub">Men / Women distribution</p>
-                  </div>
-                </div>
-                  </article>
-                </div>
-              </div>
-            </details>
-            <details class="analytics-drop">
-              <summary>
-                popular instagram videos
-                <span class="analytics-drop-preview">top content by views</span>
-              </summary>
-              <div class="analytics-drop-body">
-                <div class="top-posts">
-              <div class="top-posts-head">
-                <span class="top-posts-title">Popular Instagram Videos</span>
-                <span class="top-posts-sub">Top content by views</span>
-              </div>
-              <div class="ig-feed-row">
-                <article class="ig-feed-card">
-                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DT5YEQGkY5F/" target="_blank" rel="noopener">
-                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/1.png');"></div>
-                  </a>
-                  <div class="ig-feed-body">
-                    <p class="ig-feed-title">a man with many side quests p.s. ended up...</p>
-                    <p class="ig-feed-date">Sat Jan 24, 10:20pm</p>
-                    <div class="ig-feed-metric-grid">
-                      <span class="ig-feed-metric">👁 5.0M</span>
-                      <span class="ig-feed-metric">❤ 465.9K</span>
-                      <span class="ig-feed-metric">💬 962</span>
-                      <span class="ig-feed-metric">➜ 17.3K</span>
-                    </div>
-                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DT5YEQGkY5F/" target="_blank" rel="noopener">open reel ↗</a>
-                  </div>
-                </article>
-                <article class="ig-feed-card">
-                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DVoI5Wrkffn/" target="_blank" rel="noopener">
-                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/2.png');"></div>
-                  </a>
-                  <div class="ig-feed-body">
-                    <p class="ig-feed-title">#lol</p>
-                    <p class="ig-feed-date">Sun Mar 8, 10:42pm</p>
-                    <div class="ig-feed-metric-grid">
-                      <span class="ig-feed-metric">👁 1.9M</span>
-                      <span class="ig-feed-metric">❤ 115.2K</span>
-                      <span class="ig-feed-metric">💬 1.3K</span>
-                      <span class="ig-feed-metric">➜ 83.2K</span>
-                    </div>
-                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DVoI5Wrkffn/" target="_blank" rel="noopener">open reel ↗</a>
-                  </div>
-                </article>
-                <article class="ig-feed-card">
-                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DVOSU9dkW-X/" target="_blank" rel="noopener">
-                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/3.png');"></div>
-                  </a>
-                  <div class="ig-feed-body">
-                    <p class="ig-feed-title">i think they're back for the spices #coloniser...</p>
-                    <p class="ig-feed-date">Thu Feb 26, 9:47pm</p>
-                    <div class="ig-feed-metric-grid">
-                      <span class="ig-feed-metric">👁 718.9K</span>
-                      <span class="ig-feed-metric">❤ 64.2K</span>
-                      <span class="ig-feed-metric">💬 365</span>
-                      <span class="ig-feed-metric">➜ 6K</span>
-                    </div>
-                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DVOSU9dkW-X/" target="_blank" rel="noopener">open reel ↗</a>
-                  </div>
-                </article>
-                <article class="ig-feed-card">
-                  <a class="ig-feed-thumb-link" href="https://www.instagram.com/reel/DXjGOKNEQy5/" target="_blank" rel="noopener">
-                    <div class="ig-feed-thumb" style="background-image:url('pictures/ig-analytics/4.png');"></div>
-                  </a>
-                  <div class="ig-feed-body">
-                    <p class="ig-feed-title">bro got a point ig #indonesia 🦅🦅🦅</p>
-                    <p class="ig-feed-date">Sat Apr 25, 4:46pm</p>
-                    <div class="ig-feed-metric-grid">
-                      <span class="ig-feed-metric">👁 228.9K</span>
-                      <span class="ig-feed-metric">❤ 12.9K</span>
-                      <span class="ig-feed-metric">💬 153</span>
-                      <span class="ig-feed-metric">➜ 3.9K</span>
-                    </div>
-                    <a class="ig-feed-open" href="https://www.instagram.com/reel/DXjGOKNEQy5/" target="_blank" rel="noopener">open reel ↗</a>
-                  </div>
-                </article>
-                  </div>
-                </div>
-              </div>
-            </details>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -1890,7 +1444,7 @@
       <div class="reveal">
         <p class="eyebrow" style="color: rgba(255,255,255,0.3);">featured work</p>
         <h2 class="showcase-title">alassari<br><em style="font-weight: 400; color: var(--lime);">sanctuary collection</em></h2>
-        <p class="showcase-desc">A serene luxury retreat nestled in Bali. I created this 5-slide Instagram carousel capturing the peaceful ambiance, architectural beauty, and lush greenery of Alassari Sanctuary.</p>
+        <p class="showcase-desc">A serene luxury retreat. I created this 5-slide Instagram carousel capturing the peaceful ambiance, architectural beauty, and lush greenery of Alassari Sanctuary.</p>
       </div>
       <div class="alassari-grid reveal">
         <div class="alassari-vid alassari-vid-main">
@@ -1935,7 +1489,7 @@
           <div class="work-desc">
             <span class="pill pill-ig">Instagram</span>
             <div class="work-brand">Amor Fati · Tattoo Studio</div>
-            <p class="work-blurb">A beloved tattoo studio in Bali. I documented my full tattoo experience — from the session itself to the healed result — turning a personal moment into a dreamy, shareable reel.</p>
+            <p class="work-blurb">A beloved tattoo studio. I documented my full tattoo experience — from the session itself to the healed result — turning a personal moment into a dreamy, shareable reel.</p>
           </div>
           <div class="work-video-wrap">
             <video src="videos/amorfati.mp4" muted playsinline preload="metadata"></video>
@@ -2120,13 +1674,6 @@
           <a href="mailto:izzyxmcglizzy@gmail.com" class="contact-email">
             ✉ izzyxmcglizzy@gmail.com
           </a>
-          <a class="rate-card-btn" href="ratecard.html">
-            <span class="rate-card-copy">
-              <span class="rate-card-title">see rate card + process</span>
-              <span class="rate-card-desc">Packages, timeline, and exactly how we can work together for your next campaign.</span>
-            </span>
-            <span class="rate-card-arrow" aria-hidden="true">↗</span>
-          </a>
           <div class="social-row">
             <a class="social-btn" href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.01a8.16 8.16 0 0 0 4.77 1.52V7.1a4.85 4.85 0 0 1-1-.41z"/></svg>
@@ -2155,7 +1702,7 @@
   <!-- ── FOOTER ── -->
   <footer>
     <span>© 2026 <a href="#">izzy</a> · all rights reserved</span>
-    <span>made with love from bali 🌴</span>
+    <span>made with love ✨</span>
   </footer>
 
   <!-- Video hover/click play -->
@@ -2181,52 +1728,6 @@
           if (vid.paused) vid.play(); else vid.pause();
         });
       });
-
-      // Analytics section: platform switch + animated bars
-      const analyticsTabs = document.querySelectorAll('.analytics-tab');
-      const analyticsPanels = document.querySelectorAll('.analytics-panel');
-
-      const animatePanelBars = (panel) => {
-        panel.querySelectorAll('.bar-fill').forEach((bar) => {
-          const width = bar.dataset.value || '0';
-          bar.style.width = '0';
-          requestAnimationFrame(() => {
-            bar.style.width = `${width}%`;
-          });
-        });
-      };
-
-      const activateAnalyticsPanel = (platform) => {
-        analyticsTabs.forEach((tab) => {
-          const isActive = tab.dataset.platform === platform;
-          tab.classList.toggle('active', isActive);
-          tab.setAttribute('aria-selected', String(isActive));
-        });
-
-        analyticsPanels.forEach((panel) => {
-          const isActive = panel.dataset.panel === platform;
-          panel.classList.toggle('active', isActive);
-          panel.hidden = !isActive;
-          if (isActive) {
-            panel.querySelectorAll('.analytics-drop').forEach((drop) => {
-              drop.open = false;
-            });
-          }
-        });
-      };
-
-      analyticsTabs.forEach((tab) => {
-        tab.addEventListener('click', () => activateAnalyticsPanel(tab.dataset.platform));
-      });
-
-      document.querySelectorAll('.analytics-drop').forEach((drop) => {
-        drop.addEventListener('toggle', () => {
-          if (drop.open) animatePanelBars(drop);
-        });
-      });
-
-      const defaultTab = document.querySelector('.analytics-tab.active');
-      if (defaultTab) activateAnalyticsPanel(defaultTab.dataset.platform);
 
       // Header: highlight current section like a dashboard tab
       const navSectionLinks = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
@@ -2319,7 +1820,7 @@
         };
         requestAnimationFrame(animateCursor);
 
-        const interactiveSelector = 'a, button, summary, .work-video-wrap, .alassari-vid, .brand-circle, .analytics-tab, .nav-cta';
+        const interactiveSelector = 'a, button, summary, .work-video-wrap, .alassari-vid, .brand-circle, .nav-cta';
 
         window.addEventListener('mousemove', (event) => {
           mouseX = event.clientX;
