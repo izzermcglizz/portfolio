@@ -1,0 +1,9 @@
+# only ship what the site uses
+/*
+!index.html
+!pictures
+!videos
+pictures/hero
+pictures/ig-analytics
+videos/UGC
+.DS_Store

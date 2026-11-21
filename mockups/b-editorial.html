@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Izzy — Mockup B · Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f6f6f4; --white: #fff; --ink: #0e0e0e; --dim: #6e6e6a; --line: #dcdcd7;
+    --acc: #2a3bff;
+    --sans: 'Inter Tight', system-ui, sans-serif; --mono: 'IBM Plex Mono', monospace;
+    --pad: clamp(20px, 4vw, 56px);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  img, video, iframe { display: block; max-width: 100%; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { padding: 0 var(--pad); max-width: 1440px; margin: 0 auto; }
+  .label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
+
+  /* background tech grid */
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(rgba(14,14,14,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(14,14,14,.045) 1px, transparent 1px);
+    background-size: 80px 80px; }
+  main, nav, footer { position: relative; z-index: 1; }
+
+  /* scroll progress */
+  .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: var(--acc); transform-origin: 0 50%; transform: scaleX(0); z-index: 50; }
+
+  /* ── reveal system ── */
+  .rv { opacity: 0; transform: translateY(40px); filter: blur(6px); transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease); transition-delay: var(--d, 0s); }
+  .rv.in { opacity: 1; transform: none; filter: none; }
+  .wipe::after { content: ''; position: absolute; inset: 0; z-index: 8; background: var(--ink); transform-origin: 50% 0; transition: transform 1.2s var(--ease); transition-delay: var(--d, 0s); pointer-events: none; }
+  .wipe.in::after { transform: scaleY(0); }
+  .wipe > video, .wipe > .embed { transform: scale(1.25); transition: transform 1.8s var(--ease); transition-delay: var(--d, 0s); }
+  .wipe.in > video, .wipe.in > .embed { transform: none; }
+  .split .ch { display: inline-block; overflow: hidden; vertical-align: top; }
+  .split .ch > span { display: inline-block; transform: translateY(105%); transition: transform 1s var(--ease); transition-delay: calc(var(--i) * 28ms); }
+  .split.in .ch > span { transform: none; }
+  .line-draw { transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.4s var(--ease); }
+  .line-draw.in { transform: scaleX(1); }
+
+  /* nav */
+  nav { position: sticky; top: 0; z-index: 40; background: rgba(246,246,244,.8); backdrop-filter: blur(12px); }
+  nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; border-bottom: 1px solid var(--ink); }
+  nav .name { font-weight: 700; letter-spacing: -0.02em; font-size: 18px; }
+  nav .links { display: flex; gap: 32px; font-size: 14px; }
+  nav .links a { position: relative; }
+  nav .links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--acc); transform: scaleX(0); transition: transform .4s var(--ease); transform-origin: right; }
+  nav .links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  nav .right { justify-self: end; display: flex; align-items: center; gap: 18px; font-size: 13px; }
+  nav .clock { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+  nav .status { display: flex; align-items: center; gap: 8px; }
+  nav .status i { width: 8px; height: 8px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 0 rgba(42,59,255,.5); animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 8px rgba(42,59,255,0); } 100% { box-shadow: 0 0 0 0 rgba(42,59,255,0); } }
+
+  /* HUD frame shared by all video tiles */
+  .hud { position: relative; overflow: hidden; background: #111; border-radius: 6px; }
+  .hud video, .hud .embed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hud .corner { position: absolute; width: 14px; height: 14px; border: 1.5px solid #fff; z-index: 3; opacity: .9; pointer-events: none; }
+  .hud .tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+  .hud .tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+  .hud .bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+  .hud .br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+  .hud .ov { position: absolute; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 14px 30px; font-family: var(--mono); font-size: 10.5px; color: #fff; letter-spacing: .06em; text-transform: uppercase; pointer-events: none; text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+  .hud .ov.top { top: 0; } .hud .ov.bot { bottom: 0; }
+  .hud .rec::before { content: '●'; color: #ff3b3b; margin-right: 6px; animation: blink 1.2s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hud .scan { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px); }
+  .hud .bar { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--acc); width: 0; z-index: 4; }
+  .hud .snd { pointer-events: auto; position: absolute; right: 12px; bottom: 34px; z-index: 5; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,.45); backdrop-filter: blur(6px); color: #fff; display: grid; place-items: center; font-size: 14px; transition: background .2s; }
+  .hud .snd:hover { background: var(--acc); }
+  /* cropped IG embed fallback (only the 9:16 video area shows) */
+  .hud .embed { overflow: hidden; inset: 0; }
+  .hud .embed iframe { position: absolute; border: 0; max-width: none; }
+  .hud .gif { position: absolute; inset: 0; z-index: 1; display: block; cursor: pointer; }
+  .hud .gif img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease), filter .4s; }
+  .hud:hover .gif img { transform: scale(1.04); filter: brightness(.75); }
+  .hud .go-ig { position: absolute; z-index: 5; left: 50%; top: 50%; transform: translate(-50%, -40%); opacity: 0; pointer-events: none; padding: 10px 16px; border-radius: 999px; background: var(--acc); color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; transition: opacity .3s, transform .5s var(--ease); }
+  .hud:hover .go-ig { opacity: 1; transform: translate(-50%, -50%); }
+  .is-embed .go-ig { display: none; }
+  .wipe > .gif { transform: scale(1.25); transition: transform 1.8s var(--ease); transition-delay: var(--d, 0s); }
+  .wipe.in > .gif { transform: none; }
+  .is-embed .snd, .is-embed .bar, .is-embed .tc { display: none; }
+
+  /* hero */
+  .hero { padding: 56px 0 0; }
+  .hero-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .hero-meta div { padding-top: 12px; font-size: 14px; line-height: 1.5; position: relative; }
+  .hero-meta div::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: 0; transition: transform 1.2s var(--ease); transition-delay: var(--d); }
+  .hero-meta div.in::before { transform: scaleX(1); }
+  .hero-meta .label { margin-bottom: 6px; display: block; }
+  .hero-main { display: grid; grid-template-columns: 1fr 1.25fr; gap: 56px; margin-top: 72px; align-items: end; }
+  .intro { font-size: clamp(26px, 2.6vw, 40px); line-height: 1.18; letter-spacing: -0.03em; font-weight: 500; }
+  .intro .w { display: inline-block; opacity: .12; transition: opacity .5s; }
+  .intro .w.on { opacity: 1; }
+  .intro em { font-style: normal; color: var(--acc); }
+  .hero-cta { display: flex; gap: 12px; margin-top: 36px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border: 1px solid var(--ink); border-radius: 999px; font-size: 14px; transition: .3s var(--ease); position: relative; overflow: hidden; }
+  .btn.solid { background: var(--ink); color: var(--bg); }
+  .btn:hover { background: var(--acc); border-color: var(--acc); color: #fff; }
+  .monitor { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 14px; align-items: center; }
+  .monitor .hud { aspect-ratio: 9/16; }
+  .monitor .hud:nth-child(2) { transform: translateY(var(--py, 0px)); }
+  .monitor .hud:nth-child(1), .monitor .hud:nth-child(3) { transform: translateY(calc(var(--py, 0px) * -0.6)); }
+
+  .num-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 88px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .num-strip div { padding: 28px 0 28px 20px; border-right: 1px solid var(--line); }
+  .num-strip div:first-child { padding-left: 0; } .num-strip div:last-child { border-right: 0; }
+  .num-strip b { display: block; font-size: clamp(40px, 5vw, 72px); font-weight: 600; letter-spacing: -0.05em; line-height: 1; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+
+  /* ticker */
+  .ticker { margin-top: 0; background: var(--acc); color: #fff; overflow: hidden; white-space: nowrap; padding: 14px 0; font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .ticker-track { display: inline-flex; gap: 48px; will-change: transform; }
+  .ticker-track span::after { content: '✦'; margin-left: 48px; opacity: .6; }
+
+  section { padding: 140px 0 0; }
+  .sec-head { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 24px; align-items: start; padding-top: 16px; position: relative; margin-bottom: 64px; }
+  .sec-head > .rule { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--ink); }
+  .sec-head h2 { font-size: clamp(44px, 6vw, 92px); font-weight: 600; letter-spacing: -0.055em; line-height: .92; }
+  .sec-head p { font-size: 15px; line-height: 1.55; color: var(--dim); }
+
+  /* top 3 */
+  .top3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .top3 .hud { aspect-ratio: 9/16; border-radius: 8px; }
+  .top3 .card:nth-child(2) { margin-top: 80px; }
+  .top3 .cap { display: flex; justify-content: space-between; align-items: end; padding-top: 18px; border-top: 1px solid var(--ink); margin-top: 18px; }
+  .top3 .cap b { font-size: clamp(44px, 4.6vw, 72px); font-weight: 600; letter-spacing: -0.055em; line-height: .9; font-variant-numeric: tabular-nums; }
+  .top3 .cap b sup { font-size: .35em; color: var(--acc); vertical-align: top; margin-left: 4px; }
+  .top3 .cap a { text-align: right; line-height: 1.6; }
+  .top3 .cap a:hover { color: var(--acc); }
+  .top3 .rank { position: absolute; z-index: 4; top: 40px; left: 28px; font-size: 96px; font-weight: 700; letter-spacing: -0.06em; color: #fff; mix-blend-mode: difference; line-height: 1; pointer-events: none; }
+
+  /* carousel */
+  .car-head { display: flex; justify-content: space-between; align-items: end; margin: 120px 0 28px; gap: 24px; }
+  .car-head h3 { font-size: clamp(28px, 3vw, 44px); font-weight: 600; letter-spacing: -0.04em; }
+  .car-ctrl { display: flex; align-items: center; gap: 16px; }
+  .car-ctrl button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ink); font-size: 18px; transition: .3s var(--ease); }
+  .car-ctrl button:hover { background: var(--ink); color: var(--bg); }
+  .car-count { font-family: var(--mono); font-size: 12px; min-width: 64px; text-align: center; }
+  .car { overflow: hidden; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad); }
+  .car-track { display: flex; gap: 18px; transition: transform 1s var(--ease); }
+  .slide { flex: 0 0 clamp(220px, 21vw, 300px); }
+  .slide .hud { aspect-ratio: 9/16; transition: transform .6s var(--ease); }
+  .slide.active .hud { transform: scale(1.0); }
+  .slide:not(.active) .hud { transform: scale(.94); }
+  .slide .meta { display: flex; justify-content: space-between; padding-top: 12px; font-size: 15px; }
+  .slide .meta b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .car-prog { height: 2px; background: var(--line); margin-top: 28px; position: relative; overflow: hidden; }
+  .car-prog i { position: absolute; inset: 0; background: var(--ink); transform-origin: 0; transform: scaleX(0); }
+
+  /* campaigns */
+  .cmp { display: grid; grid-template-columns: 70px 1.5fr 1.6fr 1fr; gap: 24px; padding: 34px 0; border-bottom: 1px solid var(--line); align-items: center; transition: padding .5s var(--ease), background .3s; position: relative; }
+  .cmp:hover { padding-left: 16px; }
+  .cmp:hover h3 { color: var(--acc); }
+  .cmp h3 { font-size: clamp(32px, 4vw, 60px); font-weight: 600; letter-spacing: -0.045em; transition: color .3s; line-height: 1; }
+  .cmp h3 small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--dim); font-weight: 400; margin-top: 10px; }
+  .cmp p { font-size: 15px; line-height: 1.5; color: var(--dim); }
+  .cmp .who { display: flex; align-items: center; gap: 20px; }
+  .cmp .logo { flex: 0 0 auto; width: 64px; height: 64px; border-radius: 16px; background: var(--white); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; transition: transform .6s var(--ease), border-color .3s; }
+  .cmp .logo img { width: 70%; height: 70%; object-fit: contain; }
+  .cmp .logo.full img { width: 100%; height: 100%; object-fit: cover; }
+  .cmp:hover .logo { transform: rotate(-8deg) scale(1.08); border-color: var(--acc); }
+  .cmp .v { font-size: clamp(32px, 3.6vw, 52px); font-weight: 600; letter-spacing: -0.045em; text-align: right; font-variant-numeric: tabular-nums; line-height: 1; }
+  .cmp .new { font-family: var(--mono); font-size: 10px; background: var(--acc); color: #fff; padding: 3px 7px; border-radius: 3px; vertical-align: middle; margin-left: 10px; letter-spacing: .06em; }
+
+  /* work */
+  .work { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .work .hud { aspect-ratio: 4/5; }
+  .work .w:nth-child(even) { transform: translateY(var(--py, 0px)); }
+  .work .cap { display: flex; justify-content: space-between; padding-top: 12px; font-size: 15px; }
+
+  /* brands */
+  .brands { display: flex; flex-wrap: wrap; gap: 0 36px; font-size: clamp(30px, 4vw, 60px); font-weight: 500; letter-spacing: -0.045em; line-height: 1.2; }
+  .brands span { color: #b9b9b4; transition: color .3s; cursor: default; }
+  .brands span:hover { color: var(--acc); }
+
+  /* contact */
+  .contact { padding: 180px 0 48px; }
+  .contact a.big { display: block; font-size: clamp(44px, 8.6vw, 150px); font-weight: 600; letter-spacing: -0.06em; line-height: .9; padding-bottom: 24px; position: relative; word-break: break-all; }
+  .contact a.big::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--ink); }
+  .contact a.big:hover { color: var(--acc); }
+  .foot { display: flex; justify-content: space-between; padding-top: 24px; font-size: 14px; }
+  .foot div { display: flex; gap: 24px; } .foot a:hover { color: var(--acc); }
+
+  @media (max-width: 900px) {
+    nav .links, nav .clock { display: none; } nav .wrap { grid-template-columns: 1fr 1fr; }
+    .hero-meta, .num-strip { grid-template-columns: 1fr 1fr; }
+    .hero-main, .sec-head, .top3 { grid-template-columns: 1fr; }
+    .top3 .card:nth-child(2) { margin-top: 0; }
+    .work { grid-template-columns: 1fr 1fr; }
+    .cmp { grid-template-columns: 1fr; gap: 10px; } .cmp .v { text-align: left; }
+    .car-head { flex-direction: column; align-items: start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv, .wipe, .split .ch > span, .line-draw { transition: none !important; opacity: 1; transform: none; filter: none; clip-path: none; }
+    .intro .w { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<nav><div class="wrap">
+  <a href="#" class="name">Izzy®</a>
+  <div class="links"><a href="#top">Top reels</a><a href="#campaigns">Campaigns</a><a href="#work">Work</a><a href="#contact">Contact</a></div>
+  <div class="right"><span class="clock" id="clock">--:--:--</span><span class="status"><i></i>Open to collabs</span></div>
+</div></nav>
+
+<main>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-meta">
+      <div class="rv" style="--d:.05s"><span class="label">Discipline</span>UGC &amp; short-form video</div>
+      <div class="rv" style="--d:.15s"><span class="label">Focus</span>Tech, AI &amp; lifestyle brands</div>
+      <div class="rv" style="--d:.25s"><span class="label">Formats</span>Campaign accounts, endorsements, cinematic</div>
+      <div class="rv" style="--d:.35s"><span class="label">Platforms</span>Instagram, TikTok</div>
+    </div>
+
+    <div class="hero-main">
+      <div>
+        <p class="intro" id="intro">I'm Izzy, a UGC creator making short-form video for <em>AI tools</em> and <em>tech products.</em> I build campaign accounts from zero and turn software into something people actually want to watch.</p>
+        <div class="hero-cta rv" style="--d:.4s"><a href="#top" class="btn solid">See top reels ↓</a><a href="mailto:izzyxmcglizzy@gmail.com" class="btn">Get in touch ↗</a></div>
+      </div>
+      <div class="monitor" id="monitor">
+        <div class="hud wipe" style="--d:.2s" data-src="../videos/kazeai_imagerestoration.mp4" data-l="Kaze AI"></div>
+        <div class="hud wipe" style="--d:.35s" data-src="../videos/widgify.mp4" data-l="Widgify"></div>
+        <div class="hud wipe" style="--d:.5s" data-src="../videos/kazeai_imagegeneration.mp4" data-l="Kaze AI"></div>
+      </div>
+    </div>
+
+    <div class="num-strip">
+      <div class="rv"><b data-count="9" data-suf="M+">0</b><span class="label">Campaign views</span></div>
+      <div class="rv" style="--d:.1s"><b data-count="624" data-suf="K">0</b><span class="label">Top single reel</span></div>
+      <div class="rv" style="--d:.2s"><b data-count="80" data-suf="K">0</b><span class="label">TikTok followers</span></div>
+      <div class="rv" style="--d:.3s"><b data-count="12" data-suf="+">0</b><span class="label">Brands</span></div>
+    </div>
+  </header>
+</div>
+
+<div class="ticker" style="margin-top:0"><div class="ticker-track" id="ticker"></div></div>
+
+<div class="wrap">
+  <section id="top">
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(01) — Top performing</span>
+      <h2 class="split">Best performing</h2>
+      <p class="rv" style="--d:.2s">The three highest-view reels across my campaign accounts. Click any reel to watch it on Instagram.</p>
+    </div>
+    <div class="top3" id="top3"></div>
+
+    <div class="car-head">
+      <div><span class="label">(01.b) — Also hitting</span><h3 class="split" style="margin-top:10px">More reels over 100K</h3></div>
+      <div class="car-ctrl"><button id="prev" aria-label="previous">←</button><span class="car-count" id="count">01 / 11</span><button id="next" aria-label="next">→</button></div>
+    </div>
+    <div class="car" id="car"><div class="car-track" id="track"></div></div>
+    <div class="car-prog"><i id="prog"></i></div>
+  </section>
+
+  <section id="campaigns">
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(02) — Campaigns</span>
+      <h2 class="split">Campaigns</h2>
+      <p class="rv" style="--d:.2s">New accounts built from zero per campaign, run with agencies, posted daily.</p>
+    </div>
+    <div id="cmps"></div>
+  </section>
+
+  <section id="work">
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(03) — UGC &amp; endorsements</span>
+      <h2 class="split">Selected work</h2>
+      <p class="rv" style="--d:.2s">Posted on my own Instagram &amp; TikTok.</p>
+    </div>
+    <div class="work" id="workgrid">
+      <div class="w rv"><div class="hud" data-src="../videos/kazeai_imagerestoration.mp4" data-l="Kaze AI"></div><div class="cap"><span>Kaze AI</span><span class="label">TikTok</span></div></div>
+      <div class="w rv" style="--d:.1s"><div class="hud" data-src="../videos/barrenbliss.mp4" data-l="Barrenbliss"></div><div class="cap"><span>Barrenbliss</span><span class="label">TikTok</span></div></div>
+      <div class="w rv" style="--d:.2s"><div class="hud" data-src="../videos/brillicmedia_garageringtones.MOV" data-l="Brillic"></div><div class="cap"><span>Brillic Media</span><span class="label">Instagram</span></div></div>
+      <div class="w rv" style="--d:.3s"><div class="hud" data-src="../videos/amorfati.mp4" data-l="Amor Fati"></div><div class="cap"><span>Amor Fati</span><span class="label">Instagram</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(04) — Clients</span>
+      <h2 class="split">Clients</h2>
+      <p></p>
+    </div>
+    <div class="brands" id="brands"></div>
+  </section>
+
+  <div class="contact" id="contact">
+    <span class="label rv">(05) — Let's work together</span>
+    <a class="big rv" href="mailto:izzyxmcglizzy@gmail.com" id="mail">izzyxmcglizzy@gmail.com ↗</a>
+    <div class="foot"><span>© 2026 Izzy</span><div><a href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/izzermcglizzer" target="_blank" rel="noopener">Instagram</a><a href="https://t.me/izzermcglizzer" target="_blank" rel="noopener">Telegram</a></div></div>
+  </div>
+</div>
+</main>
+
+<script src="top-reels.js"></script>
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+
+  /* ── HUD video tile ──
+     Tries a local MP4 first (videos/top/<id>.mp4 for reels). If that file is missing,
+     falls back to the Instagram embed, cropped to just the 9:16 video. */
+  const HUD_CHROME = '<span class="scan"></span><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>';
+  function hud(el, { src, igId, label = '', right = '' }) {
+    el.insertAdjacentHTML('beforeend', HUD_CHROME +
+      `<div class="ov top"><span class="rec">${label}</span><span class="tc">00:00</span></div>` +
+      (right ? `<div class="ov bot"><span></span><span>${right}</span></div>` : '') + '<i class="bar"></i>');
+    const v = document.createElement('video');
+    Object.assign(v, { muted: true, loop: true, playsInline: true, preload: 'metadata' });
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+    v.src = src;
+    el.prepend(v);
+    const tc = el.querySelector('.tc'), bar = el.querySelector('.bar');
+    v.addEventListener('timeupdate', () => {
+      const t = v.currentTime; tc.textContent = `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+      if (v.duration) bar.style.width = (t / v.duration * 100) + '%';
+    });
+    v.addEventListener('error', () => { if (igId) { v.remove(); embed(el, igId); el.classList.add('is-embed'); } }, { once: true });
+    if (igId) {
+      const b = document.createElement('button'); b.className = 'snd'; b.setAttribute('aria-label', 'toggle sound'); b.textContent = '🔇';
+      b.onclick = e => { e.stopPropagation(); v.muted = !v.muted; b.textContent = v.muted ? '🔇' : '🔊'; if (!v.muted) $$('video').forEach(o => { if (o !== v) { o.muted = true; } }); $$('.snd').forEach(o => { if (o !== b) o.textContent = '🔇'; }); };
+      el.appendChild(b);
+    }
+    io.observe(el);
+    el._v = v;
+    return v;
+  }
+  // IG's embed shows a 4:5 media box with the 9:16 reel pillarboxed in the middle.
+  // Scale the iframe so that pillar fills our 9:16 tile exactly, and hide the header/footer.
+  function embed(el, id) {
+    const box = document.createElement('div'); box.className = 'embed';
+    const f = document.createElement('iframe');
+    f.src = `https://www.instagram.com/reel/${id}/embed`; f.loading = 'lazy'; f.scrolling = 'no'; f.title = 'Instagram reel';
+    box.appendChild(f); el.prepend(box);
+    const fit = () => { const W = el.clientWidth, E = W / 0.5625 * 0.8; f.style.width = E + 'px'; f.style.height = (E * 1.25 + 400) + 'px'; f.style.left = -(E - W) / 2 + 'px'; f.style.top = '-54px'; };
+    fit(); new ResizeObserver(fit).observe(el);
+  }
+  // play videos only while on screen
+  const io = new IntersectionObserver(es => es.forEach(e => { const v = e.target._v; if (!v || !v.isConnected) return; e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }), { threshold: .25 });
+
+  /* hero monitor + work grid */
+  $$('#monitor .hud, #workgrid .hud').forEach(el => hud(el, { src: el.dataset.src, label: el.dataset.l }));
+
+  /* reel tile: looping GIF, whole tile links to the reel on Instagram.
+     Falls back to the cropped IG embed if the GIF isn't there. */
+  function gifTile(el, r, { label = '', right = '' } = {}) {
+    el.insertAdjacentHTML('beforeend', HUD_CHROME +
+      `<div class="ov top"><span class="rec">${label}</span><span>IG ↗</span></div>` +
+      (right ? `<div class="ov bot"><span></span><span>${right}</span></div>` : '') +
+      `<span class="go-ig">Watch on Instagram ↗</span>`);
+    const a = document.createElement('a');
+    Object.assign(a, { className: 'gif', href: r.url, target: '_blank', rel: 'noopener' });
+    a.setAttribute('aria-label', `Watch ${r.brand} reel (${r.views} views) on Instagram`);
+    const img = new Image(); img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.src = `../videos/top/${r.id}.gif`;
+    img.onerror = () => { a.replaceWith(); embed(el, r.id); el.classList.add('is-embed'); };
+    a.appendChild(img); el.prepend(a);
+  }
+
+  /* top 3 */
+  $('#top3').innerHTML = TOP_REELS.slice(0, 3).map((r, i) => `
+    <div class="card rv" style="--d:${i * .15}s">
+      <div class="hud wipe" style="--d:${i * .15}s" data-i="${i}"><span class="rank">0${i + 1}</span></div>
+      <div class="cap"><b data-count="${r.n}" data-suf="K">0</b><a class="label" href="${r.url}" target="_blank" rel="noopener">${r.brand}<br/>@${r.acct} ↗</a></div>
+    </div>`).join('');
+  $$('#top3 .hud').forEach(el => { const r = TOP_REELS[el.dataset.i]; gifTile(el, r, { label: r.brand, right: r.views + ' views' }); });
+
+  /* carousel: auto-advancing, autoplay muted */
+  const rest = TOP_REELS.slice(3);
+  const track = $('#track');
+  track.innerHTML = rest.map((r, i) => `<div class="slide"><div class="hud" data-i="${i}"></div><div class="meta"><span>${r.brand} <span class="label">@${r.acct}</span></span><b>${r.views}</b></div></div>`).join('');
+  $$('#track .hud').forEach(el => { const r = rest[el.dataset.i]; gifTile(el, r, { label: '#' + String(+el.dataset.i + 4).padStart(2, '0'), right: r.views }); });
+  const slides = $$('#track .slide'); let cur = 0, timer, paused = false;
+  const DUR = 4500;
+  function go(n) {
+    cur = (n + slides.length) % slides.length;
+    const max = track.scrollWidth - $('#car').clientWidth + parseFloat(getComputedStyle($('#car')).paddingLeft) * 2;
+    track.style.transform = `translateX(${-Math.min(slides[cur].offsetLeft - slides[0].offsetLeft, max)}px)`;
+    slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+    $('#count').textContent = `${String(cur + 1).padStart(2, '0')} / ${slides.length}`;
+    const p = $('#prog'); p.style.transition = 'none'; p.style.transform = `scaleX(${cur / slides.length})`;
+    requestAnimationFrame(() => { p.style.transition = `transform ${DUR}ms linear`; p.style.transform = `scaleX(${(cur + 1) / slides.length})`; });
+    clearTimeout(timer); if (!paused && !reduce) timer = setTimeout(() => go(cur + 1), DUR);
+  }
+  $('#next').onclick = () => go(cur + 1); $('#prev').onclick = () => go(cur - 1);
+  $('#car').onmouseenter = () => { paused = true; clearTimeout(timer); };
+  $('#car').onmouseleave = () => { paused = false; go(cur + 1); };
+  go(0);
+
+  /* campaigns (Tapnow added) */
+  const CMPS = [
+    ['Replit', '@izzercreates · AI app builder', '"Tech for whimsical girlies": a relatable take on building apps.', 'replit', '8M+'],
+    ['Manus', '@buildingwizzy · AI agent', '"Girl in tech" persona showing what the agent can build.', 'manus', '1M+'],
+    ['Tapnow', '@codewissa · AI creative OS', 'Newest campaign account, already around 100K views.', 'tapnow', '100K+', true],
+    ['Tonebird', '@candace.texts · AI reply assistant', 'Text-story account built around relatable texting moments.', 'tonebird', '50K+', false, true],
+  ];
+  $('#cmps').innerHTML = CMPS.map(([n, h, p, logo, v, isNew, full], i) => `
+    <div class="cmp rv">
+      <span class="label">0${i + 1}</span>
+      <div class="who"><span class="logo${full ? ' full' : ''}"><img src="../pictures/brands/campaigns/${logo}.png" alt="${n} logo" /></span><h3>${n}${isNew ? '<span class="new">NEW</span>' : ''}<small>${h}</small></h3></div>
+      <p>${p}</p>
+      <div class="v">${v}</div>
+    </div>`).join('');
+
+  /* clients */
+  $('#brands').innerHTML = ['Replit', 'Manus', 'Tapnow', 'Kaze AI', 'Tonebird', 'Widgify', 'Brillic Media', 'Amor Fati', 'Alassari', 'Barrenbliss', 'BUD', 'Rosé All Day']
+    .map((b, i) => `<span class="rv" style="--d:${i * .05}s">${b}</span>`).join('');
+
+  /* ticker */
+  const tick = ['9M+ campaign views', '624K top reel', '26 reels over 100K', '80K TikTok', '17K Instagram', 'Replit · Manus · Tapnow · Tonebird', 'Open to collabs'];
+  $('#ticker').innerHTML = [...tick, ...tick, ...tick].map(t => `<span>${t}</span>`).join('');
+
+  /* split headings into chars */
+  $$('.split').forEach(el => { let i = 0; el.innerHTML = el.textContent.split('').map(c => c === ' ' ? ' ' : `<span class="ch"><span style="--i:${i++}">${c}</span></span>`).join(''); });
+
+  /* reveal on scroll */
+  const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } }), { threshold: .15, rootMargin: '0px 0px -8% 0px' });
+  $$('.rv, .wipe, .split, .line-draw, .hero-meta div').forEach(el => rio.observe(el));
+
+  /* count-up */
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; cio.unobserve(e.target);
+    const el = e.target, to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(), D = 1600;
+    const step = t => { const p = Math.min((t - t0) / D, 1), ease = 1 - Math.pow(1 - p, 4); el.textContent = Math.round(to * ease) + suf; if (p < 1) requestAnimationFrame(step); };
+    reduce ? (el.textContent = to + suf) : requestAnimationFrame(step);
+  }), { threshold: .5 });
+  $$('[data-count]').forEach(el => cio.observe(el));
+
+  /* intro words light up as you scroll */
+  const intro = $('#intro');
+  intro.innerHTML = intro.innerHTML.replace(/(<em>.*?<\/em>)|([^\s<]+)/g, (m) => `<span class="w">${m}</span>`);
+  const words = [...intro.querySelectorAll('.w')];
+  words.forEach((w, i) => setTimeout(() => w.classList.add('on'), 400 + i * 45));
+
+  /* scroll-driven: progress bar, parallax, ticker speed */
+  let last = scrollY, tx = 0, vel = 0;
+  const tk = $('#ticker');
+  function frame() {
+    const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+    $('#progress').style.transform = `scaleX(${y / h})`;
+    vel = vel * .9 + (y - last) * .1; last = y;
+    if (!reduce) {
+      tx -= 0.6 + Math.abs(vel) * 0.4;
+      const half = tk.scrollWidth / 3; if (-tx > half) tx += half;
+      tk.style.transform = `translateX(${tx}px)`;
+      const m = $('#monitor').getBoundingClientRect(); $('#monitor').style.setProperty('--py', (m.top - innerHeight / 2) * -0.08 + 'px');
+      const w = $('#workgrid').getBoundingClientRect(); $('#workgrid').style.setProperty('--py', (w.top - innerHeight / 2) * 0.08 + 'px');
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  /* live clock */
+  const clk = $('#clock'); const tickClock = () => clk.textContent = new Date().toLocaleTimeString('en-GB') + ' LOCAL'; tickClock(); setInterval(tickClock, 1000);
+
+  /* email scramble on hover */
+  const mail = $('#mail'), orig = mail.textContent, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@._';
+  mail.onmouseenter = () => { if (reduce) return; let f = 0; const id = setInterval(() => {
+    mail.textContent = orig.split('').map((c, i) => i < f / 1.5 || c === ' ' ? c : chars[Math.random() * chars.length | 0]).join('');
+    if (++f > orig.length * 1.5) { clearInterval(id); mail.textContent = orig; } }, 22); };
+})();
+</script>
+</body>
+</html>

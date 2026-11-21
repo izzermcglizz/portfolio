@@ -1,1135 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>izzy — ugc creator</title>
-  <meta name="description" content="izzy — UGC creator for tech, AI and lifestyle brands. Brand-owned account campaigns, short-form organic content." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    /* ── Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #08080a;
-      --bg-2: #101013;
-      --fg: #ececec;
-      --dim: #75757d;
-      --line: rgba(255,255,255,0.09);
-      --acc: #c6ff3d;
-      --acc-soft: rgba(198,255,61,0.12);
-      --sans: 'Space Grotesk', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', ui-monospace, monospace;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --pad: clamp(18px, 4vw, 56px);
-    }
-    html { background: var(--bg); }
-    body {
-      background: var(--bg); color: var(--fg); font-family: var(--sans);
-      -webkit-font-smoothing: antialiased; overflow-x: hidden;
-    }
-    body.loading { overflow: hidden; }
-    a { color: inherit; text-decoration: none; }
-    img, video { display: block; max-width: 100%; }
-    ::selection { background: var(--acc); color: #000; }
-    .mono { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
-    .acc { color: var(--acc); }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Izzy — UGC creator for tech &amp; AI brands</title>
+<meta name="description" content="Izzy — UGC creator making short-form video for tech, AI and lifestyle brands. 9M+ campaign views across Replit, Manus, Tapnow and Tonebird." />
+<meta name="theme-color" content="#f6f6f4" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f6f6f4; --white: #fff; --ink: #0e0e0e; --dim: #6e6e6a; --line: #dcdcd7;
+    --acc: #2a3bff;
+    --sans: 'Inter Tight', system-ui, sans-serif; --mono: 'IBM Plex Mono', monospace;
+    --pad: clamp(20px, 4vw, 56px);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+  img, video, iframe { display: block; max-width: 100%; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  .wrap { padding: 0 var(--pad); max-width: 1440px; margin: 0 auto; }
+  .label { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
 
-    /* background grid + grain */
-    body::before {
-      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background-image:
-        linear-gradient(var(--line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--line) 1px, transparent 1px);
-      background-size: 80px 80px;
-      mask-image: radial-gradient(ellipse at 50% 30%, #000 10%, transparent 75%);
-      opacity: 0.5;
-    }
-    body::after {
-      content: ''; position: fixed; inset: -50%; pointer-events: none; z-index: 999;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-      opacity: 0.05; animation: grain 0.8s steps(4) infinite;
-    }
-    @keyframes grain {
-      0% { transform: translate(0,0); } 25% { transform: translate(-3%,2%); }
-      50% { transform: translate(2%,-3%); } 75% { transform: translate(-2%,-1%); }
-    }
-    main, nav, footer { position: relative; z-index: 1; }
+  /* background tech grid */
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: linear-gradient(rgba(14,14,14,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(14,14,14,.045) 1px, transparent 1px);
+    background-size: 80px 80px; }
+  main, nav, footer { position: relative; z-index: 1; }
 
-    /* ── Loader ── */
-    .loader {
-      position: fixed; inset: 0; z-index: 1000; background: var(--bg);
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: var(--pad); cursor: pointer;
-      transition: clip-path 0.9s var(--ease);
-      clip-path: inset(0 0 0 0);
-    }
-    .loader.done { clip-path: inset(0 0 100% 0); }
-    .loader-lines { font-family: var(--mono); font-size: 0.8rem; color: var(--dim); line-height: 1.9; }
-    .loader-lines .ok { color: var(--acc); }
-    .loader-pct {
-      font-family: var(--sans); font-weight: 700; line-height: 0.85; letter-spacing: -0.06em;
-      font-size: clamp(5rem, 20vw, 16rem); margin-top: 20px;
-    }
-    .loader-bar { height: 2px; background: var(--line); margin-top: 18px; }
-    .loader-bar i { display: block; height: 100%; width: 0; background: var(--acc); }
+  /* scroll progress */
+  .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: var(--acc); transform-origin: 0 50%; transform: scaleX(0); z-index: 50; }
 
-    /* ── Progress + Nav ── */
-    .progress {
-      position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 60;
-      background: var(--acc); transform-origin: 0 50%; transform: scaleX(0);
-    }
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px var(--pad);
-      background: linear-gradient(to bottom, rgba(8,8,10,0.85), rgba(8,8,10,0));
-      backdrop-filter: blur(6px);
-    }
-    .logo { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.04em; display: flex; align-items: center; gap: 8px; }
-    .logo .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 12px var(--acc); animation: blink 1.6s ease-in-out infinite; }
-    @keyframes blink { 50% { opacity: 0.25; } }
-    .nav-links { display: flex; gap: 4px; list-style: none; }
-    .nav-links a {
-      font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
-      padding: 8px 12px; border-radius: 999px; color: var(--dim); transition: color 0.3s, background 0.3s;
-    }
-    .nav-links a span { color: var(--acc); opacity: 0.6; margin-right: 4px; }
-    .nav-links a:hover, .nav-links a.active { color: var(--fg); background: rgba(255,255,255,0.06); }
-    .nav-right { display: flex; align-items: center; gap: 16px; }
-    .nav-clock { color: var(--dim); }
-    .btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
-      padding: 12px 20px; border-radius: 999px; border: 1px solid var(--line);
-      transition: background 0.3s, color 0.3s, border-color 0.3s; will-change: transform;
-    }
-    .btn:hover { border-color: var(--acc); color: var(--acc); }
-    .btn-acc { background: var(--acc); color: #000; border-color: var(--acc); font-weight: 500; }
-    .btn-acc:hover { background: transparent; color: var(--acc); }
+  /* ── reveal system ── */
+  .rv { opacity: 0; transform: translateY(40px); filter: blur(6px); transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease); transition-delay: var(--d, 0s); }
+  .rv.in { opacity: 1; transform: none; filter: none; }
+  .wipe::after { content: ''; position: absolute; inset: 0; z-index: 8; background: var(--ink); transform-origin: 50% 0; transition: transform 1.2s var(--ease); transition-delay: var(--d, 0s); pointer-events: none; }
+  .wipe.in::after { transform: scaleY(0); }
+  .wipe > video, .wipe > .embed { transform: scale(1.25); transition: transform 1.8s var(--ease); transition-delay: var(--d, 0s); }
+  .wipe.in > video, .wipe.in > .embed { transform: none; }
+  .split .ch { display: inline-block; overflow: hidden; vertical-align: top; }
+  .split .ch > span { display: inline-block; transform: translateY(105%); transition: transform 1s var(--ease); transition-delay: calc(var(--i) * 28ms); }
+  .split.in .ch > span { transform: none; }
+  .line-draw { transform: scaleX(0); transform-origin: 0 50%; transition: transform 1.4s var(--ease); }
+  .line-draw.in { transform: scaleX(1); }
 
-    /* ── Hero ── */
-    .hero {
-      position: relative; min-height: 100vh; min-height: 100svh;
-      display: grid; grid-template-columns: 1.3fr 0.7fr; align-items: center; gap: 40px;
-      padding: 110px var(--pad) 80px; overflow: hidden;
-    }
-    #grid-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
-    .hero > *:not(canvas) { position: relative; z-index: 1; }
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
-    .chip {
-      font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em;
-      padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--dim);
-      background: rgba(8,8,10,0.6);
-    }
-    .chip.live { color: var(--acc); border-color: rgba(198,255,61,0.35); display: inline-flex; align-items: center; gap: 7px; }
-    .chip.live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--acc); animation: blink 1.4s infinite; }
-    .hero-title {
-      font-weight: 700; letter-spacing: -0.07em; line-height: 0.82;
-      font-size: clamp(6rem, 22vw, 20rem);
-    }
-    .hero-title .ch { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 0.02em 0.16em; margin-bottom: -0.16em; }
-    .hero-title .ch i { display: inline-block; font-style: normal; transform: translateY(105%); transition: transform 1.1s var(--ease); }
-    .hero.in .hero-title .ch i { transform: none; }
-    .hero-title .stroke i { color: transparent; -webkit-text-stroke: 2px var(--acc); }
-    .hero-sub {
-      margin-top: 26px; max-width: 560px; font-size: clamp(1.05rem, 1.8vw, 1.4rem); line-height: 1.45; color: #bdbdc3;
-    }
-    .hero-sub b { color: var(--fg); font-weight: 500; }
-    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
-    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
-    .hero.in .fade-up { opacity: 1; transform: none; }
+  /* nav */
+  nav { position: sticky; top: 0; z-index: 40; background: rgba(246,246,244,.8); backdrop-filter: blur(12px); }
+  nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; border-bottom: 1px solid var(--ink); }
+  nav .name { font-weight: 700; letter-spacing: -0.02em; font-size: 18px; }
+  nav .links { display: flex; gap: 32px; font-size: 14px; }
+  nav .links a { position: relative; }
+  nav .links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--acc); transform: scaleX(0); transition: transform .4s var(--ease); transform-origin: right; }
+  nav .links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  nav .right { justify-self: end; display: flex; align-items: center; gap: 18px; font-size: 13px; }
+  nav .clock { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+  nav .status { display: flex; align-items: center; gap: 8px; }
+  nav .status i { width: 8px; height: 8px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 0 rgba(42,59,255,.5); animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 8px rgba(42,59,255,0); } 100% { box-shadow: 0 0 0 0 rgba(42,59,255,0); } }
 
-    .viewfinder {
-      position: relative; aspect-ratio: 3/4; width: 100%; max-width: 380px; justify-self: end;
-      border-radius: 18px; overflow: hidden; background: #111;
-      clip-path: inset(100% 0 0 0 round 18px); transition: clip-path 1.4s var(--ease) 0.3s;
-    }
-    .hero.in .viewfinder { clip-path: inset(0 0 0 0 round 18px); }
-    .viewfinder img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.85) contrast(1.05); transform: scale(1.15); }
-    .viewfinder::after {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.15) 0 1px, transparent 1px 3px);
-    }
-    .vf-ui { position: absolute; inset: 14px; pointer-events: none; z-index: 2; font-family: var(--mono); font-size: 0.64rem; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
-    .vf-corner { position: absolute; width: 22px; height: 22px; border-color: #fff; border-style: solid; border-width: 0; }
-    .vf-corner.tl { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; }
-    .vf-corner.tr { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; }
-    .vf-corner.bl { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; }
-    .vf-corner.br { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; }
-    .vf-rec { position: absolute; top: 6px; left: 32px; display: flex; align-items: center; gap: 6px; }
-    .vf-rec::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #ff3b3b; animation: blink 1s steps(1) infinite; }
-    .vf-tc { position: absolute; top: 6px; right: 32px; }
-    .vf-bottom { position: absolute; bottom: 6px; left: 32px; right: 32px; display: flex; justify-content: space-between; }
-    .vf-focus {
-      position: absolute; top: 50%; left: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px;
-      border: 1px solid var(--acc); animation: focus 3.2s var(--ease) infinite;
-    }
-    @keyframes focus { 0%,100% { transform: scale(1.4); opacity: 0; } 20%,80% { transform: scale(1); opacity: 0.9; } }
+  /* HUD frame shared by all video tiles */
+  .hud { position: relative; overflow: hidden; background: #111; border-radius: 6px; }
+  .hud video, .hud .embed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hud .corner { position: absolute; width: 14px; height: 14px; border: 1.5px solid #fff; z-index: 3; opacity: .9; pointer-events: none; }
+  .hud .tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+  .hud .tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+  .hud .bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+  .hud .br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+  .hud .ov { position: absolute; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 14px 30px; font-family: var(--mono); font-size: 10.5px; color: #fff; letter-spacing: .06em; text-transform: uppercase; pointer-events: none; text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+  .hud .ov.top { top: 0; } .hud .ov.bot { bottom: 0; }
+  .hud .rec::before { content: '●'; color: #ff3b3b; margin-right: 6px; animation: blink 1.2s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .hud .scan { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px); }
+  .hud .bar { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--acc); width: 0; z-index: 4; }
+  .hud .snd { pointer-events: auto; position: absolute; right: 12px; bottom: 34px; z-index: 5; width: 34px; height: 34px; border-radius: 50%; background: rgba(0,0,0,.45); backdrop-filter: blur(6px); color: #fff; display: grid; place-items: center; font-size: 14px; transition: background .2s; }
+  .hud .snd:hover { background: var(--acc); }
+  /* cropped IG embed fallback (only the 9:16 video area shows) */
+  .hud .embed { overflow: hidden; inset: 0; }
+  .hud .embed iframe { position: absolute; border: 0; max-width: none; }
+  .hud .gif { position: absolute; inset: 0; z-index: 1; display: block; cursor: pointer; }
+  .hud .gif img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease), filter .4s; }
+  .hud:hover .gif img { transform: scale(1.04); filter: brightness(.75); }
+  .hud .go-ig { position: absolute; z-index: 5; left: 50%; top: 50%; transform: translate(-50%, -40%); opacity: 0; pointer-events: none; padding: 10px 16px; border-radius: 999px; background: var(--acc); color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; transition: opacity .3s, transform .5s var(--ease); }
+  .hud:hover .go-ig { opacity: 1; transform: translate(-50%, -50%); }
+  .is-embed .go-ig { display: none; }
+  .wipe > .gif { transform: scale(1.25); transition: transform 1.8s var(--ease); transition-delay: var(--d, 0s); }
+  .wipe.in > .gif { transform: none; }
+  .is-embed .snd, .is-embed .bar, .is-embed .tc { display: none; }
 
-    .hero-foot {
-      position: absolute; left: var(--pad); right: var(--pad); bottom: 22px; z-index: 1;
-      display: flex; justify-content: space-between; color: var(--dim);
-    }
-    .scroll-ind { display: flex; align-items: center; gap: 10px; }
-    .scroll-ind i { width: 1px; height: 28px; background: var(--line); position: relative; overflow: hidden; }
-    .scroll-ind i::after { content: ''; position: absolute; left: 0; top: -100%; width: 100%; height: 100%; background: var(--acc); animation: drip 1.8s var(--ease) infinite; }
-    @keyframes drip { to { top: 100%; } }
+  /* hero */
+  .hero { padding: 56px 0 0; }
+  .hero-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .hero-meta div { padding-top: 12px; font-size: 14px; line-height: 1.5; position: relative; }
+  .hero-meta div::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: 0; transition: transform 1.2s var(--ease); transition-delay: var(--d); }
+  .hero-meta div.in::before { transform: scaleX(1); }
+  .hero-meta .label { margin-bottom: 6px; display: block; }
+  .hero-main { display: grid; grid-template-columns: 1fr 1.25fr; gap: 56px; margin-top: 72px; align-items: end; }
+  .intro { font-size: clamp(26px, 2.6vw, 40px); line-height: 1.18; letter-spacing: -0.03em; font-weight: 500; }
+  .intro .w { display: inline-block; opacity: .12; transition: opacity .5s; }
+  .intro .w.on { opacity: 1; }
+  .intro em { font-style: normal; color: var(--acc); }
+  .hero-cta { display: flex; gap: 12px; margin-top: 36px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border: 1px solid var(--ink); border-radius: 999px; font-size: 14px; transition: .3s var(--ease); position: relative; overflow: hidden; }
+  .btn.solid { background: var(--ink); color: var(--bg); }
+  .btn:hover { background: var(--acc); border-color: var(--acc); color: #fff; }
+  .monitor { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 14px; align-items: center; }
+  .monitor .hud { aspect-ratio: 9/16; }
+  .monitor .hud:nth-child(2) { transform: translateY(var(--py, 0px)); }
+  .monitor .hud:nth-child(1), .monitor .hud:nth-child(3) { transform: translateY(calc(var(--py, 0px) * -0.6)); }
 
-    /* ── Section shell ── */
-    section { position: relative; }
-    .shell { padding: clamp(80px, 12vw, 160px) var(--pad); }
-    .sec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; flex-wrap: wrap; margin-bottom: clamp(40px, 6vw, 72px); }
-    .sec-label { color: var(--acc); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
-    .sec-label::before { content: ''; width: 24px; height: 1px; background: var(--acc); }
-    .sec-title { font-weight: 700; letter-spacing: -0.05em; line-height: 0.92; font-size: clamp(2.6rem, 7vw, 6rem); }
-    .sec-title em { font-style: normal; color: var(--dim); }
-    .sec-intro { max-width: 440px; color: #a5a5ad; line-height: 1.6; font-size: 0.98rem; }
-    .sec-intro b { color: var(--fg); font-weight: 500; }
+  .num-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 88px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .num-strip div { padding: 28px 0 28px 20px; border-right: 1px solid var(--line); }
+  .num-strip div:first-child { padding-left: 0; } .num-strip div:last-child { border-right: 0; }
+  .num-strip b { display: block; font-size: clamp(40px, 5vw, 72px); font-weight: 600; letter-spacing: -0.05em; line-height: 1; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
 
-    /* reveal */
-    .rv { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
-    .rv.in { opacity: 1; transform: none; }
-    .rv-line { display: block; overflow: hidden; }
-    .rv-line > span { display: block; transform: translateY(105%); transition: transform 1.1s var(--ease); }
-    .rv.in .rv-line > span, .rv-line.in > span { transform: none; }
+  /* ticker */
+  .ticker { margin-top: 0; background: var(--acc); color: #fff; overflow: hidden; white-space: nowrap; padding: 14px 0; font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .ticker-track { display: inline-flex; gap: 48px; will-change: transform; }
+  .ticker-track span::after { content: '✦'; margin-left: 48px; opacity: .6; }
 
-    /* ── Stats ── */
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .stat { padding: clamp(28px, 4vw, 48px) var(--pad); border-right: 1px solid var(--line); }
-    .stat:last-child { border-right: 0; }
-    .stat-num { font-weight: 700; font-size: clamp(2.4rem, 5vw, 4.4rem); letter-spacing: -0.05em; line-height: 1; }
-    .stat-num .acc { font-size: 0.6em; vertical-align: top; }
-    .stat-label { color: var(--dim); margin-top: 12px; }
+  section { padding: 140px 0 0; }
+  .sec-head { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 24px; align-items: start; padding-top: 16px; position: relative; margin-bottom: 64px; }
+  .sec-head > .rule { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--ink); }
+  .sec-head h2 { font-size: clamp(44px, 6vw, 92px); font-weight: 600; letter-spacing: -0.055em; line-height: .92; }
+  .sec-head p { font-size: 15px; line-height: 1.55; color: var(--dim); }
 
-    /* ── Marquee ── */
-    .marquee { padding: 46px 0; overflow: hidden; border-bottom: 1px solid var(--line); }
-    .marquee-label { padding: 0 var(--pad) 26px; color: var(--dim); }
-    .marquee-track { display: flex; width: max-content; will-change: transform; }
-    .marquee-item { display: flex; align-items: center; gap: 18px; padding-right: 56px; white-space: nowrap; }
-    .marquee-item img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; background: #fff; filter: grayscale(1); transition: filter 0.4s; }
-    .marquee-item:hover img { filter: none; }
-    .marquee-item span { font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.8rem); letter-spacing: -0.04em; }
-    .marquee-item .star { color: var(--acc); font-size: 1.4rem; }
+  /* top 3 */
+  .top3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .top3 .hud { aspect-ratio: 9/16; border-radius: 8px; }
+  .top3 .card:nth-child(2) { margin-top: 80px; }
+  .top3 .cap { display: flex; justify-content: space-between; align-items: end; padding-top: 18px; border-top: 1px solid var(--ink); margin-top: 18px; }
+  .top3 .cap b { font-size: clamp(44px, 4.6vw, 72px); font-weight: 600; letter-spacing: -0.055em; line-height: .9; font-variant-numeric: tabular-nums; }
+  .top3 .cap b sup { font-size: .35em; color: var(--acc); vertical-align: top; margin-left: 4px; }
+  .top3 .cap a { text-align: right; line-height: 1.6; }
+  .top3 .cap a:hover { color: var(--acc); }
+  .top3 .rank { position: absolute; z-index: 4; top: 40px; left: 28px; font-size: 96px; font-weight: 700; letter-spacing: -0.06em; color: #fff; mix-blend-mode: difference; line-height: 1; pointer-events: none; }
 
-    /* ── Campaigns (stacking cards) ── */
-    .stack { display: flex; flex-direction: column; gap: 32px; }
-    .cmp {
-      position: sticky; top: 96px;
-      display: grid; grid-template-columns: 1fr 1fr; min-height: 520px;
-      background: var(--bg-2); border: 1px solid var(--line); border-radius: 24px; overflow: hidden;
-      transform-origin: 50% 0; will-change: transform;
-    }
-    .cmp:nth-child(2) { top: 116px; }
-    .cmp:nth-child(3) { top: 136px; }
-    .cmp-info { padding: clamp(24px, 3.5vw, 44px); display: flex; flex-direction: column; gap: 18px; }
-    .cmp-top { display: flex; justify-content: space-between; align-items: center; color: var(--dim); }
-    .cmp-status { padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.06); }
-    .cmp-status.live { background: var(--acc-soft); color: var(--acc); display: inline-flex; align-items: center; gap: 6px; }
-    .cmp-status.live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--acc); animation: blink 1.4s infinite; }
-    .cmp-brand { font-weight: 700; font-size: clamp(2.6rem, 6vw, 5rem); letter-spacing: -0.06em; line-height: 0.9; }
-    .cmp-handle { color: var(--dim); }
-    .cmp-stat { margin-top: auto; display: flex; align-items: baseline; gap: 12px; }
-    .cmp-stat b { font-size: clamp(3rem, 6vw, 5rem); font-weight: 700; letter-spacing: -0.06em; color: var(--acc); line-height: 1; }
-    .cmp-blurb { color: #a5a5ad; line-height: 1.6; max-width: 420px; }
-    .cmp-embed { position: relative; background: #fff; border-left: 1px solid var(--line); min-height: 520px; }
-    .cmp-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-    .cmp-embed.pending {
-      background: radial-gradient(circle at 50% 45%, var(--acc-soft), transparent 60%), #0d0d10;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 30px;
-    }
-    .cmp-embed.pending p { font-weight: 700; font-size: 1.8rem; letter-spacing: -0.04em; }
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  /* carousel */
+  .car-head { display: flex; justify-content: space-between; align-items: end; margin: 120px 0 28px; gap: 24px; }
+  .car-head h3 { font-size: clamp(28px, 3vw, 44px); font-weight: 600; letter-spacing: -0.04em; }
+  .car-ctrl { display: flex; align-items: center; gap: 16px; }
+  .car-ctrl button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ink); font-size: 18px; transition: .3s var(--ease); }
+  .car-ctrl button:hover { background: var(--ink); color: var(--bg); }
+  .car-count { font-family: var(--mono); font-size: 12px; min-width: 64px; text-align: center; }
+  .car { overflow: hidden; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad); }
+  .car-track { display: flex; gap: 18px; transition: transform 1s var(--ease); }
+  .slide { flex: 0 0 clamp(220px, 21vw, 300px); }
+  .slide .hud { aspect-ratio: 9/16; transition: transform .6s var(--ease); }
+  .slide.active .hud { transform: scale(1.0); }
+  .slide:not(.active) .hud { transform: scale(.94); }
+  .slide .meta { display: flex; justify-content: space-between; padding-top: 12px; font-size: 15px; }
+  .slide .meta b { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .car-prog { height: 2px; background: var(--line); margin-top: 28px; position: relative; overflow: hidden; }
+  .car-prog i { position: absolute; inset: 0; background: var(--ink); transform-origin: 0; transform: scaleX(0); }
 
-    /* ── Alassari (fan on scroll) ── */
-    .fan { height: 260vh; }
-    .fan-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; padding: 84px var(--pad) 24px; }
-    .fan-head { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: flex-end; }
-    .fan-head .sec-title { font-size: clamp(2.4rem, 5.5vw, 4.8rem); }
-    .fan-stage { position: relative; flex: 1; min-height: 0; max-height: 560px; margin: 28px 0; }
-    .fan-card {
-      position: absolute; left: 50%; top: 50%; height: 100%; aspect-ratio: 9/16;
-      border-radius: 18px; overflow: hidden; background: #111; border: 1px solid var(--line);
-      will-change: transform; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-    }
-    .fan-card video { width: 100%; height: 100%; object-fit: cover; }
-    .fan-card .idx { position: absolute; top: 10px; left: 12px; font-family: var(--mono); font-size: 0.64rem; color: #fff; text-shadow: 0 1px 4px #000; }
-    .fan-foot { display: flex; justify-content: space-between; align-items: center; color: var(--dim); }
+  /* campaigns */
+  .cmp { display: grid; grid-template-columns: 70px 1.5fr 1.6fr 1fr; gap: 24px; padding: 34px 0; border-bottom: 1px solid var(--line); align-items: center; transition: padding .5s var(--ease), background .3s; position: relative; }
+  .cmp:hover { padding-left: 16px; }
+  .cmp:hover h3 { color: var(--acc); }
+  .cmp h3 { font-size: clamp(32px, 4vw, 60px); font-weight: 600; letter-spacing: -0.045em; transition: color .3s; line-height: 1; }
+  .cmp h3 small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--dim); font-weight: 400; margin-top: 10px; }
+  .cmp p { font-size: 15px; line-height: 1.5; color: var(--dim); }
+  .cmp .who { display: flex; align-items: center; gap: 20px; }
+  .cmp .logo { flex: 0 0 auto; width: 64px; height: 64px; border-radius: 16px; background: var(--white); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; transition: transform .6s var(--ease), border-color .3s; }
+  .cmp .logo img { width: 70%; height: 70%; object-fit: contain; }
+  .cmp .logo.full img { width: 100%; height: 100%; object-fit: cover; }
+  .cmp:hover .logo { transform: rotate(-8deg) scale(1.08); border-color: var(--acc); }
+  .cmp .v { font-size: clamp(32px, 3.6vw, 52px); font-weight: 600; letter-spacing: -0.045em; text-align: right; font-variant-numeric: tabular-nums; line-height: 1; }
+  .cmp .new { font-family: var(--mono); font-size: 10px; background: var(--acc); color: #fff; padding: 3px 7px; border-radius: 3px; vertical-align: middle; margin-left: 10px; letter-spacing: .06em; }
 
-    /* ── Work (horizontal) ── */
-    .hz { position: relative; }
-    .hz-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding-top: 84px; }
-    .hz-head { padding: 0 var(--pad); display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-    .hz-head .sec-title { font-size: clamp(2.4rem, 5.5vw, 4.8rem); }
-    .hz-side { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; max-width: 440px; }
-    .hz-side .sec-intro { font-size: 0.92rem; }
-    .hz-handles { display: flex; gap: 8px; flex-wrap: wrap; }
-    .hz-handles .chip { color: var(--fg); transition: border-color 0.3s, color 0.3s; }
-    .hz-handles .chip b { color: var(--acc); font-weight: 500; }
-    .hz-handles .chip:hover { border-color: var(--acc); }
-    .hz-count { color: var(--dim); }
-    .hz-count b { color: var(--acc); font-weight: 500; }
-    .hz-track { display: flex; gap: 24px; padding: 0 var(--pad); width: max-content; will-change: transform; }
-    .hz-divider {
-      width: clamp(190px, 27vh, 320px); flex-shrink: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 14px;
-      padding: 26px; border-radius: 20px; border: 1px dashed rgba(198,255,61,0.3);
-    }
-    .hz-divider h3 { font-size: 2.6rem; letter-spacing: -0.05em; line-height: 0.95; }
-    .hz-end { justify-content: center; align-items: flex-start; border-style: solid; border-color: var(--line); background: var(--bg-2); }
-    .hz-spine {
-      flex-shrink: 0; width: 34px; align-self: stretch; position: relative;
-      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 6px;
-    }
-    .hz-spine::before {
-      content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px;
-      background: linear-gradient(to bottom, var(--acc), rgba(198,255,61,0.05));
-    }
-    .hz-spine::after {
-      content: ''; position: absolute; top: 0; left: 50%; width: 7px; height: 7px; margin-left: -3px;
-      border-radius: 50%; background: var(--acc); box-shadow: 0 0 10px var(--acc);
-    }
-    .hz-spine span {
-      position: relative; writing-mode: vertical-rl; transform: rotate(180deg);
-      background: var(--bg); padding: 10px 0; color: var(--dim); white-space: nowrap;
-    }
-    .hz-spine b { color: var(--fg); font-weight: 500; }
-    .work {
-      width: clamp(180px, 27vh, 300px); flex-shrink: 0; display: flex; flex-direction: column;
-      border-radius: 20px; overflow: hidden; background: var(--bg-2); border: 1px solid var(--line);
-      transition: border-color 0.4s, transform 0.5s var(--ease);
-    }
-    .work:hover { border-color: rgba(198,255,61,0.45); transform: translateY(-8px); }
-    .work-media { position: relative; aspect-ratio: 9/14; background: #000; overflow: hidden; }
-    .work-media video, .work-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
-    .work:hover .work-media video, .work:hover .work-media img { transform: scale(1.05); }
-    .work-plat { position: absolute; top: 12px; left: 12px; z-index: 2; }
-    .work-plat .chip { background: rgba(0,0,0,0.55); color: #fff; backdrop-filter: blur(6px); }
-    .work-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-    .work-brand { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.03em; }
-    .work-blurb { color: #9d9da5; font-size: 0.8rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-    .work-link { margin-top: auto; padding-top: 8px; color: var(--acc); display: inline-flex; gap: 6px; }
-    .work-link:hover { text-decoration: underline; }
-    .hz-bar { margin: 20px var(--pad) 0; height: 1px; background: var(--line); }
-    .hz-bar i { display: block; height: 100%; width: 100%; background: var(--acc); transform-origin: 0 50%; transform: scaleX(0); }
+  /* work */
+  .work { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .work .hud { aspect-ratio: 4/5; }
+  .work .w:nth-child(even) { transform: translateY(var(--py, 0px)); }
+  .work .cap { display: flex; justify-content: space-between; padding-top: 12px; font-size: 15px; }
 
-    /* ── More cinematic (instagram embeds) ── */
-    .ig-more { padding: clamp(60px, 8vw, 100px) 0 0; }
-    .ig-head { display: flex; justify-content: space-between; align-items: center; padding: 0 var(--pad); margin-bottom: 24px; }
-    .ig-head .sec-label { margin-bottom: 0; }
-    .ig-nav { display: flex; gap: 8px; }
-    .ig-btn { background: none; color: var(--fg); padding: 10px 16px; cursor: pointer; }
-    .ig-row {
-      display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--pad);
-      padding: 0 var(--pad) 8px; scrollbar-width: none; overscroll-behavior-x: contain; align-items: flex-start;
-    }
-    .ig-row::-webkit-scrollbar { display: none; }
-    .ig-card { flex: 0 0 360px; scroll-snap-align: start; border-radius: 16px; overflow: hidden; background: #fff; }
-    .ig-card .instagram-media { margin: 0 !important; min-width: 0 !important; width: 100% !important; max-width: none !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
-    .ig-card blockquote:not(.instagram-media-rendered) { display: flex; align-items: center; justify-content: center; min-height: 480px; font-family: var(--mono); font-size: 0.75rem; color: #000; }
-    .ig-card iframe { min-width: 0 !important; }
-    .ig-cta { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding: 40px var(--pad) 0; }
-    .ig-cta p { font-weight: 700; font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -0.04em; }
+  /* brands */
+  .brands { display: flex; flex-wrap: wrap; gap: 0 36px; font-size: clamp(30px, 4vw, 60px); font-weight: 500; letter-spacing: -0.045em; line-height: 1.2; }
+  .brands span { color: #b9b9b4; transition: color .3s; cursor: default; }
+  .brands span:hover { color: var(--acc); }
 
-    /* ── Contact ── */
-    .contact { padding: clamp(100px, 14vw, 200px) var(--pad) 60px; }
-    .contact-grid { display: grid; grid-template-columns: 1.4fr 0.6fr; gap: 48px; align-items: end; }
-    .big-type { font-weight: 700; letter-spacing: -0.07em; line-height: 0.85; font-size: clamp(4.5rem, 15vw, 14rem); }
-    .big-type .w { display: inline-block; }
-    .big-type .l { color: #1f1f24; transition: color 0.2s; }
-    .big-type .l.on { color: var(--fg); }
-    .big-type .w.acc .l.on { color: var(--acc); }
-    .contact-actions { margin-top: 44px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-    .email-btn { font-size: clamp(1rem, 2.4vw, 1.5rem); font-family: var(--sans); text-transform: none; letter-spacing: -0.02em; padding: 20px 30px; }
-    .socials { display: flex; gap: 10px; flex-wrap: wrap; }
-    .contact-photo { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 3/4; }
-    .contact-photo img { width: 100%; height: 115%; object-fit: cover; will-change: transform; }
-    .contact-photo .vf-ui { inset: 12px; }
-    footer {
-      display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-      padding: 24px var(--pad); border-top: 1px solid var(--line); color: var(--dim);
-    }
-    footer a:hover { color: var(--acc); }
+  /* contact */
+  .contact { padding: 180px 0 48px; }
+  .contact a.big { display: block; font-size: clamp(44px, 8.6vw, 150px); font-weight: 600; letter-spacing: -0.06em; line-height: .9; padding-bottom: 24px; position: relative; word-break: break-all; }
+  .contact a.big::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--ink); }
+  .contact a.big:hover { color: var(--acc); }
+  .foot { display: flex; justify-content: space-between; padding-top: 24px; font-size: 14px; }
+  .foot div { display: flex; gap: 24px; } .foot a:hover { color: var(--acc); }
 
-    /* ── Cursor ── */
-    .cursor, .cursor-dot { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2000; border-radius: 50%; opacity: 0; transition: opacity 0.3s; }
-    .cursor { width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.4); transition: opacity 0.3s, width 0.35s var(--ease), height 0.35s var(--ease), background 0.35s, border-color 0.35s; display: flex; align-items: center; justify-content: center; }
-    .cursor span { font-family: var(--mono); font-size: 0.6rem; color: #000; opacity: 0; text-transform: uppercase; transition: opacity 0.2s; }
-    .cursor.hover { width: 70px; height: 70px; background: var(--acc); border-color: var(--acc); mix-blend-mode: normal; }
-    .cursor.hover span { opacity: 1; }
-    .cursor-dot { width: 5px; height: 5px; background: var(--acc); }
-    body.has-cursor .cursor, body.has-cursor .cursor-dot { opacity: 1; }
-    body.has-cursor, body.has-cursor a, body.has-cursor button { cursor: none; }
-
-    /* ── Responsive ── */
-    @media (max-width: 960px) {
-      .nav-links, .nav-clock { display: none; }
-      .hero { grid-template-columns: 1fr; padding-top: 100px; padding-bottom: 90px; }
-      .viewfinder { justify-self: start; max-width: 260px; order: -1; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
-      .stat:nth-child(2) { border-right: 0; }
-      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
-      .cmp { grid-template-columns: 1fr; position: relative; top: 0 !important; }
-      .cmp-embed { border-left: 0; border-top: 1px solid var(--line); min-height: 460px; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .contact-photo { max-width: 320px; }
-    }
-    .mob-only { display: none; }
-    @media (max-width: 760px) {
-      .mob-only { display: inline; }
-      .desk-only { display: none; }
-      .hero { min-height: 0; padding-top: 96px; padding-bottom: 56px; gap: 36px; }
-      .hero-foot { display: none; }
-      .hero-title { font-size: 34vw; }
-      .viewfinder { order: 0; max-width: none; aspect-ratio: 4/5; }
-
-      /* swipe carousels instead of scroll-pinned sections */
-      .swipe {
-        display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain;
-        scroll-snap-type: x mandatory; scroll-padding: 0 var(--pad);
-        padding: 0 var(--pad) 6px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
-      }
-      .swipe::-webkit-scrollbar { display: none; }
-      .swipe > * { scroll-snap-align: start; flex-shrink: 0; }
-
-      .fan { height: auto; }
-      .fan-pin { position: static; height: auto; overflow: visible; padding: clamp(80px, 12vw, 160px) 0 0; }
-      .fan-head, .fan-foot { padding: 0 var(--pad); }
-      .fan-stage { flex: none; max-height: none; height: auto; margin: 28px 0 20px; }
-      .fan-card { position: relative; left: auto; top: auto; height: auto; width: 70vw; transform: none !important; box-shadow: none; }
-      .fan-foot { gap: 12px; flex-wrap: wrap; }
-
-      .hz { height: auto !important; }
-      .hz-pin { position: static; height: auto; overflow: visible; padding: clamp(80px, 12vw, 160px) 0 0; }
-      .hz-track { width: auto; transform: none !important; gap: 12px; }
-      .work, .hz-divider { width: 76vw; }
-      .hz-side { max-width: none; }
-      .ig-card { flex-basis: 84vw; }
-      .ig-nav { display: none; }
-      .work:hover { transform: none; }
-      .hz-divider { padding: 22px; }
-      .swipe > .hz-spine { scroll-snap-align: none; }
-      .hz-divider h3 { font-size: 2.2rem; }
-
-      .contact-photo { max-width: none; aspect-ratio: 4/5; }
-      .email-btn { width: 100%; justify-content: center; font-size: 1rem; padding: 18px 20px; }
-      .sec-head { gap: 24px; }
-      footer { flex-direction: column; gap: 8px; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-      .rv, .fade-up { opacity: 1; transform: none; }
-      .rv-line > span, .hero-title .ch i { transform: none; }
-      .viewfinder { clip-path: none; }
-    }
-  </style>
+  @media (max-width: 900px) {
+    nav .links, nav .clock { display: none; } nav .wrap { grid-template-columns: 1fr 1fr; }
+    .hero-meta, .num-strip { grid-template-columns: 1fr 1fr; }
+    .hero-main, .sec-head, .top3 { grid-template-columns: 1fr; }
+    .top3 .card:nth-child(2) { margin-top: 0; }
+    .work { grid-template-columns: 1fr 1fr; }
+    .cmp { grid-template-columns: 1fr; gap: 10px; } .cmp .v { text-align: left; }
+    .car-head { flex-direction: column; align-items: start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv, .wipe, .split .ch > span, .line-draw { transition: none !important; opacity: 1; transform: none; filter: none; clip-path: none; }
+    .intro .w { opacity: 1; }
+  }
+</style>
 </head>
-<body class="loading">
+<body>
+<div class="progress" id="progress"></div>
 
-  <!-- ── LOADER ── -->
-  <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader-lines" id="loader-lines"></div>
-    <div class="loader-pct"><span id="loader-pct">0</span><span class="acc">%</span></div>
-    <div class="loader-bar"><i id="loader-bar"></i></div>
+<nav><div class="wrap">
+  <a href="#" class="name">Izzy®</a>
+  <div class="links"><a href="#top">Top reels</a><a href="#campaigns">Campaigns</a><a href="#work">Work</a><a href="#contact">Contact</a></div>
+  <div class="right"><span class="clock" id="clock">--:--:--</span><span class="status"><i></i>Open to collabs</span></div>
+</div></nav>
+
+<main>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-meta">
+      <div class="rv" style="--d:.05s"><span class="label">Discipline</span>UGC &amp; short-form video</div>
+      <div class="rv" style="--d:.15s"><span class="label">Focus</span>Tech, AI &amp; lifestyle brands</div>
+      <div class="rv" style="--d:.25s"><span class="label">Formats</span>Campaign accounts, endorsements, cinematic</div>
+      <div class="rv" style="--d:.35s"><span class="label">Platforms</span>Instagram, TikTok</div>
+    </div>
+
+    <div class="hero-main">
+      <div>
+        <p class="intro" id="intro">I'm Izzy, a UGC creator making short-form video for <em>AI tools</em> and <em>tech products.</em> I build campaign accounts from zero and turn software into something people actually want to watch.</p>
+        <div class="hero-cta rv" style="--d:.4s"><a href="#top" class="btn solid">See top reels ↓</a><a href="mailto:izzyxmcglizzy@gmail.com" class="btn">Get in touch ↗</a></div>
+      </div>
+      <div class="monitor" id="monitor">
+        <div class="hud wipe" style="--d:.2s" data-src="videos/kazeai_imagerestoration.mp4" data-l="Kaze AI"></div>
+        <div class="hud wipe" style="--d:.35s" data-src="videos/widgify.mp4" data-l="Widgify"></div>
+        <div class="hud wipe" style="--d:.5s" data-src="videos/kazeai_imagegeneration.mp4" data-l="Kaze AI"></div>
+      </div>
+    </div>
+
+    <div class="num-strip">
+      <div class="rv"><b data-count="9" data-suf="M+">0</b><span class="label">Campaign views</span></div>
+      <div class="rv" style="--d:.1s"><b data-count="624" data-suf="K">0</b><span class="label">Top single reel</span></div>
+      <div class="rv" style="--d:.2s"><b data-count="80" data-suf="K">0</b><span class="label">TikTok followers</span></div>
+      <div class="rv" style="--d:.3s"><b data-count="12" data-suf="+">0</b><span class="label">Brands</span></div>
+    </div>
+  </header>
+</div>
+
+<div class="ticker" style="margin-top:0"><div class="ticker-track" id="ticker"></div></div>
+
+<div class="wrap">
+  <section id="top">
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(01) — Top performing</span>
+      <h2 class="split">Best performing</h2>
+      <p class="rv" style="--d:.2s">The three highest-view reels across my campaign accounts. Click any reel to watch it on Instagram.</p>
+    </div>
+    <div class="top3" id="top3"></div>
+
+    <div class="car-head">
+      <div><span class="label">(01.b) — Also hitting</span><h3 class="split" style="margin-top:10px">More reels over 100K</h3></div>
+      <div class="car-ctrl"><button id="prev" aria-label="previous">←</button><span class="car-count" id="count">01 / 11</span><button id="next" aria-label="next">→</button></div>
+    </div>
+    <div class="car" id="car"><div class="car-track" id="track"></div></div>
+    <div class="car-prog"><i id="prog"></i></div>
+  </section>
+
+  <section id="campaigns">
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(02) — Campaigns</span>
+      <h2 class="split">Campaigns</h2>
+      <p class="rv" style="--d:.2s">New accounts built from zero per campaign, run with agencies, posted daily.</p>
+    </div>
+    <div id="cmps"></div>
+  </section>
+
+  <section id="work">
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(03) — UGC &amp; endorsements</span>
+      <h2 class="split">Selected work</h2>
+      <p class="rv" style="--d:.2s">Posted on my own Instagram &amp; TikTok.</p>
+    </div>
+    <div class="work" id="workgrid">
+      <div class="w rv"><div class="hud" data-src="videos/kazeai_imagerestoration.mp4" data-l="Kaze AI"></div><div class="cap"><span>Kaze AI</span><span class="label">TikTok</span></div></div>
+      <div class="w rv" style="--d:.1s"><div class="hud" data-src="videos/barrenbliss.mp4" data-l="Barrenbliss"></div><div class="cap"><span>Barrenbliss</span><span class="label">TikTok</span></div></div>
+      <div class="w rv" style="--d:.2s"><div class="hud" data-src="videos/brillicmedia_garageringtones.MOV" data-l="Brillic"></div><div class="cap"><span>Brillic Media</span><span class="label">Instagram</span></div></div>
+      <div class="w rv" style="--d:.3s"><div class="hud" data-src="videos/amorfati.mp4" data-l="Amor Fati"></div><div class="cap"><span>Amor Fati</span><span class="label">Instagram</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="rule line-draw"></span>
+      <span class="label rv">(04) — Clients</span>
+      <h2 class="split">Clients</h2>
+      <p></p>
+    </div>
+    <div class="brands" id="brands"></div>
+  </section>
+
+  <div class="contact" id="contact">
+    <span class="label rv">(05) — Let's work together</span>
+    <a class="big rv" href="mailto:izzyxmcglizzy@gmail.com" id="mail">izzyxmcglizzy@gmail.com ↗</a>
+    <div class="foot"><span>© 2026 Izzy</span><div><a href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">TikTok</a><a href="https://www.instagram.com/izzermcglizzer" target="_blank" rel="noopener">Instagram</a><a href="https://t.me/izzermcglizzer" target="_blank" rel="noopener">Telegram</a></div></div>
   </div>
+</div>
+</main>
 
-  <div class="progress" id="progress"></div>
-  <div class="cursor" id="cursor"><span id="cursor-label">play</span></div>
-  <div class="cursor-dot" id="cursor-dot"></div>
+<script>
+// Top-performing reels, from top_reels.md (IG grid view counts, 2026-11-20), sorted by views.
+const TOP_REELS = [
+  ['izzercreates', 'Replit', 'DdRTRGHEeDO', '624K', 624],
+  ['izzercreates', 'Replit', 'DYo6JjipEu8', '596K', 596],
+  ['izzercreates', 'Replit', 'DaiFcR2p5mF', '530K', 530],
+  ['izzercreates', 'Replit', 'DY07UJDp2qg', '257K', 257],
+  ['buildingwizzy', 'Manus', 'DbiqI31Dt6W', '239K', 239],
+  ['izzercreates', 'Replit', 'DaflOWqJpdn', '237K', 237],
+  ['buildingwizzy', 'Manus', 'DctJPsCFanj', '227K', 227],
+  ['izzercreates', 'Replit', 'DZZ2SEUJJUd', '220K', 220],
+  ['izzercreates', 'Replit', 'DasPIVBpki1', '183K', 183],
+  ['izzercreates', 'Replit', 'De33jotAams', '180K', 180],
+  ['izzercreates', 'Replit', 'DaqGXXjJWJ1', '155K', 155],
+  ['izzercreates', 'Replit', 'DfMQL9_DyD1', '153K', 153],
+  ['buildingwizzy', 'Manus', 'DcgDyNzE9Om', '138K', 138],
+  ['buildingwizzy', 'Manus', 'DclbB7MFex8', '100K', 100],
+].map(([acct, brand, id, views, n]) => ({ acct, brand, id, views, n, url: `https://www.instagram.com/${acct}/reel/${id}/` }));
+</script>
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 
-  <nav>
-    <a href="#home" class="logo"><span class="dot"></span>izzy.sys</a>
-    <ul class="nav-links">
-      <li><a href="#campaigns"><span>01</span>campaigns</a></li>
-      <li><a href="#work"><span>02</span>ugc</a></li>
-      <li><a href="#alassari"><span>03</span>cinematic</a></li>
-      <li><a href="#contact"><span>04</span>contact</a></li>
-    </ul>
-    <div class="nav-right">
-      <span class="mono nav-clock" id="clock">--:--:--</span>
-      <a href="#contact" class="btn btn-acc magnetic">let's talk →</a>
-    </div>
-  </nav>
-
-  <main>
-    <!-- ── HERO ── -->
-    <section class="hero" id="home">
-      <canvas id="grid-canvas"></canvas>
-      <div class="hero-left" data-speed="-0.25">
-        <div class="hero-meta fade-up">
-          <span class="chip live">open for collabs</span>
-          <span class="chip">ugc creator</span>
-          <span class="chip">tech · ai · lifestyle</span>
-        </div>
-        <h1 class="hero-title" aria-label="izzy">
-          <span class="ch"><i>i</i></span><span class="ch"><i>z</i></span><span class="ch stroke"><i>z</i></span><span class="ch"><i>y</i></span><span class="ch"><i class="acc">.</i></span>
-        </h1>
-        <p class="hero-sub fade-up" style="transition-delay: 0.5s">
-          UGC creator for <b>tech, AI &amp; lifestyle</b> brands. I do <b>UGC campaigns</b> on new accounts, <b>endorsements</b> on my own accounts, and <b>cinematic</b> creative projects.
-        </p>
-        <div class="hero-cta fade-up" style="transition-delay: 0.65s">
-          <a href="#campaigns" class="btn btn-acc magnetic">view my work ↓</a>
-          <a href="#contact" class="btn magnetic">get in touch</a>
-        </div>
-      </div>
-
-      <div class="viewfinder" data-speed="0.12">
-        <img src="pictures/literally%20love%20u%20canon%20wtfffffff%20%23canonm50markii%20(2).jpg" alt="izzy" />
-        <div class="vf-ui">
-          <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
-          <span class="vf-corner bl"></span><span class="vf-corner br"></span>
-          <span class="vf-rec">REC</span>
-          <span class="vf-tc" id="timecode">00:00:00:00</span>
-          <span class="vf-focus"></span>
-          <div class="vf-bottom"><span>ISO 400</span><span>F1.8</span><span>1/125</span><span>4K</span></div>
-        </div>
-      </div>
-
-      <div class="hero-foot mono">
-        <span class="scroll-ind"><i></i>scroll to explore</span>
-        <span class="coords" id="coords">x:0000 y:0000</span>
-      </div>
-    </section>
-
-    <!-- ── STATS ── -->
-    <div class="stats">
-      <div class="stat rv"><div class="stat-num"><span data-count="80">0</span>K</div><div class="stat-label mono">followers on tiktok</div></div>
-      <div class="stat rv"><div class="stat-num"><span data-count="17">0</span>K</div><div class="stat-label mono">followers on instagram</div></div>
-      <div class="stat rv"><div class="stat-num"><span data-count="11">0</span><span class="acc">+</span></div><div class="stat-label mono">brands worked with</div></div>
-      <div class="stat rv"><div class="stat-num"><span data-count="3">0</span></div><div class="stat-label mono">ugc campaigns running</div></div>
-    </div>
-
-    <!-- ── BRANDS MARQUEE ── -->
-    <section class="marquee" id="brands" aria-label="Brands">
-      <div class="marquee-label mono">// trusted by</div>
-      <div class="marquee-track" id="marquee">
-        <div class="marquee-item"><img src="pictures/brands/images.png" alt="" /><span>Kaze AI</span><span class="star">✦</span></div>
-        <div class="marquee-item"><span>Replit</span><span class="star">✦</span></div>
-        <div class="marquee-item"><img src="pictures/brands/images%20(1).png" alt="" /><span>Amor Fati</span><span class="star">✦</span></div>
-        <div class="marquee-item"><span>Manus</span><span class="star">✦</span></div>
-        <div class="marquee-item"><img src="pictures/brands/images%20(2).png" alt="" /><span>Alassari</span><span class="star">✦</span></div>
-        <div class="marquee-item"><img src="pictures/brands/unnamed%20(3).webp" alt="" /><span>Barrenbliss</span><span class="star">✦</span></div>
-        <div class="marquee-item"><span>Tonebird</span><span class="star">✦</span></div>
-        <div class="marquee-item"><img src="pictures/brands/twitter-image.png" alt="" /><span>BUD</span><span class="star">✦</span></div>
-        <div class="marquee-item"><img src="pictures/brands/brilic_media_logo.jpeg" alt="" /><span>Brillic Media</span><span class="star">✦</span></div>
-        <div class="marquee-item"><span>Rosé All Day</span><span class="star">✦</span></div>
-        <div class="marquee-item"><span>Widgify</span><span class="star">✦</span></div>
-      </div>
-    </section>
-
-    <!-- ── CAMPAIGNS ── -->
-    <section class="shell" id="campaigns">
-      <div class="sec-head">
-        <div class="rv">
-          <div class="sec-label mono">01 / ugc campaigns</div>
-          <h2 class="sec-title"><span class="rv-line"><span>ugc</span></span><span class="rv-line"><span><em>campaigns.</em></span></span></h2>
-        </div>
-        <div class="rv">
-          <p class="sec-intro">Campaigns where the brand needs content posted on a <b>brand-new account</b>. I've done these with agencies, so I know how they run, and which formats usually work best for me.</p>
-          <div class="tags">
-            <span class="chip">new account per campaign</span><span class="chip">via agencies</span>
-            <span class="chip">short-form</span><span class="chip">daily posting</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="stack">
-        <article class="cmp">
-          <div class="cmp-info">
-            <div class="cmp-top mono"><span>case_01</span><span class="cmp-status live">ongoing</span></div>
-            <h3 class="cmp-brand" data-scramble>Replit</h3>
-            <div class="cmp-handle mono">@izzercreates · ai app builder</div>
-            <p class="cmp-blurb">"Tech for whimsical girlies": a girly, relatable take on building apps with Replit, on a new account now close to 3K followers.</p>
-            <div class="cmp-stat"><b><span data-count="3">0</span>M+</b><span class="mono">total views</span></div>
-            <a href="https://www.instagram.com/izzercreates/" target="_blank" rel="noopener" class="btn magnetic" style="align-self:flex-start">view account ↗</a>
-          </div>
-          <div class="cmp-embed"><iframe src="https://www.instagram.com/izzercreates/embed" loading="lazy" title="@izzercreates on Instagram"></iframe></div>
-        </article>
-
-        <article class="cmp">
-          <div class="cmp-info">
-            <div class="cmp-top mono"><span>case_02</span><span class="cmp-status live">ongoing</span></div>
-            <h3 class="cmp-brand" data-scramble>Manus</h3>
-            <div class="cmp-handle mono">@buildingwizzy · ai agent</div>
-            <p class="cmp-blurb">"Girl in tech" persona showing what Manus can build, with a referral link in the bio.</p>
-            <div class="cmp-stat"><b><span data-count="1">0</span>M+</b><span class="mono">total views</span></div>
-            <a href="https://www.instagram.com/buildingwizzy/" target="_blank" rel="noopener" class="btn magnetic" style="align-self:flex-start">view account ↗</a>
-          </div>
-          <div class="cmp-embed"><iframe src="https://www.instagram.com/buildingwizzy/embed" loading="lazy" title="@buildingwizzy on Instagram"></iframe></div>
-        </article>
-
-        <article class="cmp">
-          <div class="cmp-info">
-            <div class="cmp-top mono"><span>case_03</span><span class="cmp-status live">ongoing</span></div>
-            <h3 class="cmp-brand" data-scramble>Tonebird</h3>
-            <div class="cmp-handle mono">@candace.texts · texting app</div>
-            <p class="cmp-blurb">A text-story account built around relatable texting moments, posted daily for Tonebird.</p>
-            <div class="cmp-stat"><b><span data-count="50">0</span>K+</b><span class="mono">total views</span></div>
-            <a href="https://www.instagram.com/candace.texts/" target="_blank" rel="noopener" class="btn magnetic" style="align-self:flex-start">view account ↗</a>
-          </div>
-          <div class="cmp-embed"><iframe src="https://www.instagram.com/candace.texts/embed" loading="lazy" title="@candace.texts on Instagram"></iframe></div>
-        </article>
-      </div>
-    </section>
-
-    <!-- ── WORK (horizontal) ── -->
-    <section class="hz" id="work">
-      <div class="hz-pin">
-        <div class="hz-head">
-          <div>
-            <div class="sec-label mono">02 / ugc &amp; endorsements</div>
-            <h2 class="sec-title" data-scramble>on my accounts</h2>
-          </div>
-          <div class="hz-side">
-            <p class="sec-intro">Other than campaigns, I also take <b>UGC and endorsement videos</b> posted on my own accounts.</p>
-            <div class="hz-handles">
-              <a class="chip" href="https://www.instagram.com/izzermcglizzer/" target="_blank" rel="noopener">instagram · <b>17K</b></a>
-              <a class="chip" href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">tiktok · <b>80K</b></a>
-            </div>
-            <div class="hz-count mono"><b id="hz-idx">01</b> / 09 — <span class="desk-only">keep scrolling</span><span class="mob-only">swipe</span> →</div>
-          </div>
-        </div>
-        <div class="hz-track swipe" id="hz-track">
-          <div class="hz-spine" aria-label="lifestyle and beauty"><span class="mono"><b>lifestyle &amp; beauty</b> · 03</span></div>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">instagram</span></div><video src="videos/amorfati.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Amor Fati · Tattoo Studio</div>
-              <p class="work-blurb">I documented my full tattoo experience, from the session itself to the healed result, turning a personal moment into a dreamy, shareable reel.</p>
-              <a class="work-link mono" href="https://www.instagram.com/reel/DVkv2TuEfqi/" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">instagram</span></div><video src="videos/rose_all_day.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Rosé All Day · Makeup</div>
-              <p class="work-blurb">An Indonesian makeup brand with a glow-first philosophy. Genuine thoughts on self-alignment while naturally showcasing the Rosé All Day look.</p>
-              <a class="work-link mono" href="https://www.instagram.com/p/DFaNCUpya8V/" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">tiktok</span></div><video src="videos/barrenbliss.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Barrenbliss · Makeup</div>
-              <p class="work-blurb">A Korean beauty brand known for skin-like, glowy finishes, showcased in a candid get-ready-with-me format: relatable, soft, and on-brand.</p>
-              <a class="work-link mono" href="https://www.tiktok.com/@izzermcglizzer/video/7514546644289883397" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <div class="hz-spine" aria-label="tech and apps"><span class="mono"><b>tech &amp; apps</b> · 06</span></div>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">tiktok</span></div><video src="videos/kazeai_imagerestoration.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Kaze AI · Image Restoration</div>
-              <p class="work-blurb">Restoring an old family photo became an emotional, personal hook, showing the app's magic through real storytelling.</p>
-              <a class="work-link mono" href="https://www.tiktok.com/@izzermcglizzer/video/7525734421337623814" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">tiktok</span></div><video src="videos/kazeai_imagegeneration.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Kaze AI · Image Creation</div>
-              <p class="work-blurb">A fantastical scene (me with a 7-foot blue monster) showing off the app's creative range in a viral-ready, personality-driven format.</p>
-              <a class="work-link mono" href="https://www.tiktok.com/@izzermcglizzer/video/7604301617059351815" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media"><div class="work-plat"><span class="chip">instagram</span></div><img src="videos/brillicmedia_map.gif" alt="Brillic Media map app preview" loading="lazy" /></div>
-            <div class="work-body">
-              <div class="work-brand">Brillic Media · Live Map App</div>
-              <p class="work-blurb">A travel-themed reel showing live CCTV feeds from around the world, turning a utility app into a wanderlust moment.</p>
-              <a class="work-link mono" href="https://www.instagram.com/reel/DXYl5-uESfQ/" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">instagram</span></div><video src="videos/brillicmedia_garageringtones.MOV#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Brillic Media · Garage Ringtones</div>
-              <p class="work-blurb">A trendy, personality-driven reel showing how easy and fun it is to set a custom ringtone, making the mundane feel exciting.</p>
-              <a class="work-link mono" href="https://www.instagram.com/reel/DXgzYrFkW5J/" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">tiktok</span></div><video src="videos/bud.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">BUD · Create &amp; Play</div>
-              <p class="work-blurb">Tapped into the Spy x Family anime trend to showcase cute in-game moments, driving massive organic reach with 14.6K likes.</p>
-              <a class="work-link mono" href="https://www.tiktok.com/@izzermcglizzer/video/7108574120941522203" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <article class="work">
-            <div class="work-media" data-cursor="play"><div class="work-plat"><span class="chip">tiktok</span></div><video src="videos/widgify.mp4#t=0.1" muted loop playsinline preload="metadata"></video></div>
-            <div class="work-body">
-              <div class="work-brand">Widgify · App</div>
-              <p class="work-blurb">Styled my phone aesthetic with custom widgets and wallpapers, making the upgrade feel aspirational and effortless.</p>
-              <a class="work-link mono" href="https://www.tiktok.com/@izzermcglizzer/video/7517518259705466168" target="_blank" rel="noopener">view post ↗</a>
-            </div>
-          </article>
-
-          <div class="hz-divider hz-end">
-            <span class="mono acc">// more</span>
-            <h3>see the full feed</h3>
-            <a class="btn magnetic" href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">tiktok ↗</a>
-            <a class="btn magnetic" href="https://www.instagram.com/izzermcglizzer/" target="_blank" rel="noopener">instagram ↗</a>
-          </div>
-        </div>
-        <div class="hz-bar"><i id="hz-bar"></i></div>
-      </div>
-    </section>
-
-    <!-- ── ALASSARI ── -->
-    <section class="fan" id="alassari">
-      <div class="fan-pin">
-        <div class="fan-head">
-          <div class="rv">
-            <div class="sec-label mono">03 / cinematic &amp; creative</div>
-            <h2 class="sec-title">cinematic <em>work.</em></h2>
-          </div>
-          <p class="sec-intro rv">I also shoot more <b>cinematic</b> pieces. If this is the style you like, let's make a <b>creative project</b> together.</p>
-        </div>
-        <div class="fan-stage swipe" id="fan-stage">
-          <div class="fan-card" data-cursor="play"><video src="videos/alassari/1.mp4#t=0.1" muted loop playsinline preload="metadata"></video><span class="idx">01/05</span></div>
-          <div class="fan-card" data-cursor="play"><video src="videos/alassari/2.mp4#t=0.1" muted loop playsinline preload="metadata"></video><span class="idx">02/05</span></div>
-          <div class="fan-card" data-cursor="play"><video src="videos/alassari/3.mp4#t=0.1" muted loop playsinline preload="metadata"></video><span class="idx">03/05</span></div>
-          <div class="fan-card" data-cursor="play"><video src="videos/alassari/4.mp4#t=0.1" muted loop playsinline preload="metadata"></video><span class="idx">04/05</span></div>
-          <div class="fan-card" data-cursor="play"><video src="videos/alassari/5.mp4#t=0.1" muted loop playsinline preload="metadata"></video><span class="idx">05/05</span></div>
-        </div>
-        <div class="fan-foot mono">
-          <span><b class="acc">alassari sanctuary</b> · 5-slide carousel<span class="mob-only"> — swipe →</span></span>
-          <a href="https://www.instagram.com/p/DXBdrSnEax7/" target="_blank" rel="noopener" class="btn magnetic">view on instagram ↗</a>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ── MORE CINEMATIC ── -->
-    <section class="ig-more" id="cinematic-more">
-      <div class="ig-head">
-        <div class="sec-label mono">more cinematic</div>
-        <div class="ig-nav">
-          <button class="btn ig-btn" data-dir="-1" aria-label="previous">←</button>
-          <button class="btn ig-btn" data-dir="1" aria-label="next">→</button>
-        </div>
-      </div>
-      <div class="ig-row" id="ig-row">
-          <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DYGtdoPRxgF/" data-instgrm-version="14"><a href="https://www.instagram.com/p/DYGtdoPRxgF/" target="_blank" rel="noopener">view on instagram ↗</a></blockquote></div>
-          <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DcIUaMTNVtC/" data-instgrm-version="14"><a href="https://www.instagram.com/p/DcIUaMTNVtC/" target="_blank" rel="noopener">view on instagram ↗</a></blockquote></div>
-          <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/DcSx9-qs8SR/" data-instgrm-version="14"><a href="https://www.instagram.com/p/DcSx9-qs8SR/" target="_blank" rel="noopener">view on instagram ↗</a></blockquote></div>
-          <div class="ig-card"><blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZhzHMxN90k/" data-instgrm-version="14"><a href="https://www.instagram.com/reel/DZhzHMxN90k/" target="_blank" rel="noopener">view on instagram ↗</a></blockquote></div>
-      </div>
-      <div class="ig-cta rv">
-        <p>like this style?</p>
-        <a href="#contact" class="btn btn-acc magnetic">let's make something →</a>
-      </div>
-    </section>
-
-    <!-- ── CONTACT ── -->
-    <section class="contact" id="contact">
-      <div class="sec-label mono">04 / let's create something</div>
-      <div class="contact-grid">
-        <div>
-          <h2 class="big-type" id="big-type"><span class="w">work</span> <span class="w">with</span><br><span class="w acc">me.</span></h2>
-          <div class="contact-actions">
-            <a href="mailto:izzyxmcglizzy@gmail.com" class="btn btn-acc email-btn magnetic">izzyxmcglizzy@gmail.com ↗</a>
-            <div class="socials">
-              <a class="btn magnetic" href="https://www.tiktok.com/@izzermcglizzer" target="_blank" rel="noopener">tiktok</a>
-              <a class="btn magnetic" href="https://www.instagram.com/izzermcglizzer" target="_blank" rel="noopener">instagram</a>
-              <a class="btn magnetic" href="https://t.me/izzermcglizzer" target="_blank" rel="noopener">telegram</a>
-            </div>
-          </div>
-        </div>
-        <div class="contact-photo rv">
-          <img id="contact-img" src="pictures/literally%20love%20u%20canon%20wtfffffff%20%23canonm50markii%20(3).jpg" alt="izzy with a camera" loading="lazy" />
-          <div class="vf-ui">
-            <span class="vf-corner tl"></span><span class="vf-corner tr"></span>
-            <span class="vf-corner bl"></span><span class="vf-corner br"></span>
-            <span class="vf-rec">REC</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="mono">
-    <span>© 2026 izzy · all rights reserved</span>
-    <span>made with love ✨</span>
-    <a href="#home">back to top ↑</a>
-  </footer>
-
-  <script>
-  (() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    const $ = (s, c = document) => c.querySelector(s);
-    const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
-    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const pad = (n, l = 2) => String(n).padStart(l, '0');
-
-    /* ── Loader ── */
-    const loader = $('#loader');
-    const finishLoad = () => {
-      if (loader.classList.contains('done')) return;
-      loader.classList.add('done');
-      document.body.classList.remove('loading');
-      setTimeout(() => $('.hero').classList.add('in'), 250);
-      setTimeout(() => loader.remove(), 1200);
-    };
-    if (reduce) { finishLoad(); }
-    else {
-      const lines = [
-        '> booting izzy.sys',
-        '> loading creator profile ........ <span class="ok">ok</span>',
-        '> mounting ugc_archive [09 files] . <span class="ok">ok</span>',
-        '> syncing brand campaigns [03] .... <span class="ok">ok</span>',
-        '> ready.'
-      ];
-      const linesEl = $('#loader-lines'), pctEl = $('#loader-pct'), barEl = $('#loader-bar');
-      const dur = 1500, t0 = performance.now();
-      let shown = 0;
-      const tick = (now) => {
-        const p = clamp((now - t0) / dur, 0, 1);
-        const e = 1 - Math.pow(1 - p, 3);
-        pctEl.textContent = Math.round(e * 100);
-        barEl.style.width = e * 100 + '%';
-        const want = Math.ceil(p * lines.length);
-        while (shown < want) linesEl.insertAdjacentHTML('beforeend', `<div>${lines[shown++]}</div>`);
-        if (p < 1) requestAnimationFrame(tick); else setTimeout(finishLoad, 250);
-      };
-      requestAnimationFrame(tick);
-      loader.addEventListener('click', finishLoad);
+  /* ── HUD video tile ──
+     Tries a local MP4 first (videos/top/<id>.mp4 for reels). If that file is missing,
+     falls back to the Instagram embed, cropped to just the 9:16 video. */
+  const HUD_CHROME = '<span class="scan"></span><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>';
+  function hud(el, { src, igId, label = '', right = '' }) {
+    el.insertAdjacentHTML('beforeend', HUD_CHROME +
+      `<div class="ov top"><span class="rec">${label}</span><span class="tc">00:00</span></div>` +
+      (right ? `<div class="ov bot"><span></span><span>${right}</span></div>` : '') + '<i class="bar"></i>');
+    const v = document.createElement('video');
+    Object.assign(v, { muted: true, loop: true, playsInline: true, preload: 'metadata' });
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+    v.src = src;
+    el.prepend(v);
+    const tc = el.querySelector('.tc'), bar = el.querySelector('.bar');
+    v.addEventListener('timeupdate', () => {
+      const t = v.currentTime; tc.textContent = `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+      if (v.duration) bar.style.width = (t / v.duration * 100) + '%';
+    });
+    v.addEventListener('error', () => { if (igId) { v.remove(); embed(el, igId); el.classList.add('is-embed'); } }, { once: true });
+    if (igId) {
+      const b = document.createElement('button'); b.className = 'snd'; b.setAttribute('aria-label', 'toggle sound'); b.textContent = '🔇';
+      b.onclick = e => { e.stopPropagation(); v.muted = !v.muted; b.textContent = v.muted ? '🔇' : '🔊'; if (!v.muted) $$('video').forEach(o => { if (o !== v) { o.muted = true; } }); $$('.snd').forEach(o => { if (o !== b) o.textContent = '🔇'; }); };
+      el.appendChild(b);
     }
+    io.observe(el);
+    el._v = v;
+    return v;
+  }
+  // IG's embed shows a 4:5 media box with the 9:16 reel pillarboxed in the middle.
+  // Scale the iframe so that pillar fills our 9:16 tile exactly, and hide the header/footer.
+  function embed(el, id) {
+    const box = document.createElement('div'); box.className = 'embed';
+    const f = document.createElement('iframe');
+    f.src = `https://www.instagram.com/reel/${id}/embed`; f.loading = 'lazy'; f.scrolling = 'no'; f.title = 'Instagram reel';
+    box.appendChild(f); el.prepend(box);
+    const fit = () => { const W = el.clientWidth, E = W / 0.5625 * 0.8; f.style.width = E + 'px'; f.style.height = (E * 1.25 + 400) + 'px'; f.style.left = -(E - W) / 2 + 'px'; f.style.top = '-54px'; };
+    fit(); new ResizeObserver(fit).observe(el);
+  }
+  // play videos only while on screen
+  const io = new IntersectionObserver(es => es.forEach(e => { const v = e.target._v; if (!v || !v.isConnected) return; e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }), { threshold: .25 });
 
-    /* ── Clock + timecode ── */
-    const clock = $('#clock'), tc = $('#timecode');
-    const tStart = performance.now();
-    setInterval(() => {
-      const d = new Date();
-      clock.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())} local`;
-    }, 1000);
-    const tcLoop = () => {
-      const ms = performance.now() - tStart;
-      const s = Math.floor(ms / 1000);
-      tc.textContent = `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}:${pad(Math.floor((ms % 1000) / 1000 * 24))}`;
-      requestAnimationFrame(tcLoop);
-    };
-    tcLoop();
+  /* hero monitor + work grid */
+  $$('#monitor .hud, #workgrid .hud').forEach(el => hud(el, { src: el.dataset.src, label: el.dataset.l }));
 
-    /* ── Text scramble ── */
-    const glyphs = '!<>-_\\/[]{}=+*^?#01ABCDEFXYZ';
-    const scramble = (el) => {
-      const final = el.dataset.text || (el.dataset.text = el.textContent);
-      if (reduce) return;
-      let frame = 0;
-      const total = 28;
-      const step = () => {
-        el.textContent = final.split('').map((c, i) => {
-          if (c === ' ') return ' ';
-          return frame / total > i / final.length + 0.15 ? c : glyphs[Math.floor(Math.random() * glyphs.length)];
-        }).join('');
-        if (frame++ < total) requestAnimationFrame(step); else el.textContent = final;
-      };
-      step();
-    };
+  /* reel tile: looping GIF, whole tile links to the reel on Instagram.
+     Falls back to the cropped IG embed if the GIF isn't there. */
+  function gifTile(el, r, { label = '', right = '' } = {}) {
+    el.insertAdjacentHTML('beforeend', HUD_CHROME +
+      `<div class="ov top"><span class="rec">${label}</span><span>IG ↗</span></div>` +
+      (right ? `<div class="ov bot"><span></span><span>${right}</span></div>` : '') +
+      `<span class="go-ig">Watch on Instagram ↗</span>`);
+    const a = document.createElement('a');
+    Object.assign(a, { className: 'gif', href: r.url, target: '_blank', rel: 'noopener' });
+    a.setAttribute('aria-label', `Watch ${r.brand} reel (${r.views} views) on Instagram`);
+    const img = new Image(); img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.src = `videos/top/${r.id}.gif`;
+    img.onerror = () => { a.replaceWith(); embed(el, r.id); el.classList.add('is-embed'); };
+    a.appendChild(img); el.prepend(a);
+  }
 
-    /* ── Count up ── */
-    const countUp = (el) => {
-      const target = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0);
-      if (reduce) { el.textContent = target.toFixed(dec); return; }
-      const t0 = performance.now(), dur = 1600;
-      const step = (now) => {
-        const p = clamp((now - t0) / dur, 0, 1), e = 1 - Math.pow(1 - p, 4);
-        el.textContent = (target * e).toFixed(dec);
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
+  /* top 3 */
+  $('#top3').innerHTML = TOP_REELS.slice(0, 3).map((r, i) => `
+    <div class="card rv" style="--d:${i * .15}s">
+      <div class="hud wipe" style="--d:${i * .15}s" data-i="${i}"><span class="rank">0${i + 1}</span></div>
+      <div class="cap"><b data-count="${r.n}" data-suf="K">0</b><a class="label" href="${r.url}" target="_blank" rel="noopener">${r.brand}<br/>@${r.acct} ↗</a></div>
+    </div>`).join('');
+  $$('#top3 .hud').forEach(el => { const r = TOP_REELS[el.dataset.i]; gifTile(el, r, { label: r.brand, right: r.views + ' views' }); });
 
-    /* ── Reveal observer ── */
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        if (!en.isIntersecting) return;
-        const el = en.target;
-        el.classList.add('in');
-        if (el.hasAttribute('data-scramble')) scramble(el);
-        if (el.hasAttribute('data-count')) countUp(el);
-        io.unobserve(el);
-      });
-    }, { threshold: 0.2, rootMargin: '0px 0px -5% 0px' });
-    $$('.stats .rv').forEach((el, i) => el.style.transitionDelay = i * 90 + 'ms');
-    $$('.rv, [data-scramble], [data-count]').forEach((el) => io.observe(el));
+  /* carousel: auto-advancing, autoplay muted */
+  const rest = TOP_REELS.slice(3);
+  const track = $('#track');
+  track.innerHTML = rest.map((r, i) => `<div class="slide"><div class="hud" data-i="${i}"></div><div class="meta"><span>${r.brand} <span class="label">@${r.acct}</span></span><b>${r.views}</b></div></div>`).join('');
+  $$('#track .hud').forEach(el => { const r = rest[el.dataset.i]; gifTile(el, r, { label: '#' + String(+el.dataset.i + 4).padStart(2, '0'), right: r.views }); });
+  const slides = $$('#track .slide'); let cur = 0, timer, paused = false;
+  const DUR = 4500;
+  function go(n) {
+    cur = (n + slides.length) % slides.length;
+    const max = track.scrollWidth - $('#car').clientWidth + parseFloat(getComputedStyle($('#car')).paddingLeft) * 2;
+    track.style.transform = `translateX(${-Math.min(slides[cur].offsetLeft - slides[0].offsetLeft, max)}px)`;
+    slides.forEach((s, i) => s.classList.toggle('active', i === cur));
+    $('#count').textContent = `${String(cur + 1).padStart(2, '0')} / ${slides.length}`;
+    const p = $('#prog'); p.style.transition = 'none'; p.style.transform = `scaleX(${cur / slides.length})`;
+    requestAnimationFrame(() => { p.style.transition = `transform ${DUR}ms linear`; p.style.transform = `scaleX(${(cur + 1) / slides.length})`; });
+    clearTimeout(timer); if (!paused && !reduce) timer = setTimeout(() => go(cur + 1), DUR);
+  }
+  $('#next').onclick = () => go(cur + 1); $('#prev').onclick = () => go(cur - 1);
+  $('#car').onmouseenter = () => { paused = true; clearTimeout(timer); };
+  $('#car').onmouseleave = () => { paused = false; go(cur + 1); };
+  go(0);
 
-    /* ── Hero dot grid canvas ── */
-    const canvas = $('#grid-canvas'), ctx = canvas.getContext('2d');
-    const hero = $('.hero');
-    let cw, ch, dpr, dots = [];
-    const mouse = { x: -9999, y: -9999, sx: -9999, sy: -9999 };
-    const sizeCanvas = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      cw = hero.offsetWidth; ch = hero.offsetHeight;
-      canvas.width = cw * dpr; canvas.height = ch * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      dots = [];
-      const gap = cw < 640 ? 26 : 32;
-      for (let y = gap / 2; y < ch; y += gap) for (let x = gap / 2; x < cw; x += gap) dots.push({ x, y });
-    };
-    let heroVisible = true;
-    new IntersectionObserver(([e]) => heroVisible = e.isIntersecting).observe(hero);
-    hero.addEventListener('pointermove', (e) => {
-      const r = hero.getBoundingClientRect();
-      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
-      $('#coords').textContent = `x:${pad(Math.round(mouse.x), 4)} y:${pad(Math.round(mouse.y), 4)}`;
-    });
-    hero.addEventListener('pointerleave', () => { mouse.x = mouse.y = -9999; });
-    const drawGrid = (t) => {
-      requestAnimationFrame(drawGrid);
-      if (!heroVisible) return;
-      mouse.sx = mouse.sx < -999 ? mouse.x : lerp(mouse.sx, mouse.x, 0.12);
-      mouse.sy = mouse.sy < -999 ? mouse.y : lerp(mouse.sy, mouse.y, 0.12);
-      ctx.clearRect(0, 0, cw, ch);
-      const R = 170, time = t * 0.001;
-      for (const d of dots) {
-        const dx = d.x - mouse.sx, dy = d.y - mouse.sy;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const wave = reduce ? 0 : Math.sin(d.x * 0.012 + d.y * 0.008 + time * 1.4) * 0.5 + 0.5;
-        let x = d.x, y = d.y, s = 1, a = 0.08 + wave * 0.1, lit = false;
-        if (dist < R) {
-          const f = 1 - dist / R;
-          x += (dx / (dist || 1)) * f * 18; y += (dy / (dist || 1)) * f * 18;
-          s = 1 + f * 1.8; a = 0.25 + f * 0.75; lit = true;
-        }
-        ctx.fillStyle = lit ? `rgba(198,255,61,${a})` : `rgba(255,255,255,${a})`;
-        ctx.fillRect(x - s / 2, y - s / 2, s, s);
-      }
-    };
-    sizeCanvas();
-    requestAnimationFrame(drawGrid);
+  /* campaigns (Tapnow added) */
+  const CMPS = [
+    ['Replit', '@izzercreates · AI app builder', '"Tech for whimsical girlies": a relatable take on building apps.', 'replit', '8M+'],
+    ['Manus', '@buildingwizzy · AI agent', '"Girl in tech" persona showing what the agent can build.', 'manus', '1M+'],
+    ['Tapnow', '@codewissa · AI creative OS', 'Newest campaign account, already around 100K views.', 'tapnow', '100K+', true],
+    ['Tonebird', '@candace.texts · AI reply assistant', 'Text-story account built around relatable texting moments.', 'tonebird', '50K+', false, true],
+  ];
+  $('#cmps').innerHTML = CMPS.map(([n, h, p, logo, v, isNew, full], i) => `
+    <div class="cmp rv">
+      <span class="label">0${i + 1}</span>
+      <div class="who"><span class="logo${full ? ' full' : ''}"><img src="pictures/brands/campaigns/${logo}.png" alt="${n} logo" /></span><h3>${n}${isNew ? '<span class="new">NEW</span>' : ''}<small>${h}</small></h3></div>
+      <p>${p}</p>
+      <div class="v">${v}</div>
+    </div>`).join('');
 
-    /* ── Hero title split hover (scramble each letter) ── */
-    $$('.hero-title .ch').forEach((ch, i) => {
-      ch.querySelector('i').style.transitionDelay = 0.08 * i + 's';
-    });
+  /* clients */
+  $('#brands').innerHTML = ['Replit', 'Manus', 'Tapnow', 'Kaze AI', 'Tonebird', 'Widgify', 'Brillic Media', 'Amor Fati', 'Alassari', 'Barrenbliss', 'BUD', 'Rosé All Day']
+    .map((b, i) => `<span class="rv" style="--d:${i * .05}s">${b}</span>`).join('');
 
-    /* ── Scroll-driven stuff ── */
-    const progress = $('#progress');
-    const parallax = $$('[data-speed]');
-    const marquee = $('#marquee');
-    const cmps = $$('.cmp');
-    const fan = $('#alassari'), fanCards = $$('.fan-card');
-    const hz = $('#work'), track = $('#hz-track'), hzBar = $('#hz-bar'), hzIdx = $('#hz-idx');
-    const works = $$('.work', track);
-    const navLinks = $$('.nav-links a');
-    const contactImg = $('#contact-img');
-    const bigType = $('#big-type');
-    const isDesktop = () => window.innerWidth > 960;
-    const isMobile = () => window.innerWidth <= 760;
+  /* ticker */
+  const tick = ['9M+ campaign views', '624K top reel', '26 reels over 100K', '80K TikTok', '17K Instagram', 'Replit · Manus · Tapnow · Tonebird', 'Open to collabs'];
+  $('#ticker').innerHTML = [...tick, ...tick, ...tick].map(t => `<span>${t}</span>`).join('');
 
-    // duplicate marquee content for loop
-    marquee.innerHTML += marquee.innerHTML;
-    $$('.marquee-item', marquee).slice(11).forEach((n) => n.setAttribute('aria-hidden', 'true'));
+  /* split headings into chars */
+  $$('.split').forEach(el => { let i = 0; el.innerHTML = el.textContent.split('').map(c => c === ' ' ? ' ' : `<span class="ch"><span style="--i:${i++}">${c}</span></span>`).join(''); });
 
-    // split big type into letters
-    $$('.w', bigType).forEach((w) => {
-      w.innerHTML = w.textContent.split('').map((c) => `<span class="l">${c}</span>`).join('');
-    });
-    const letters = $$('.l', bigType);
+  /* reveal on scroll */
+  const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } }), { threshold: .15, rootMargin: '0px 0px -8% 0px' });
+  $$('.rv, .wipe, .split, .line-draw, .hero-meta div').forEach(el => rio.observe(el));
 
-    let hzDist = 0, lastW = 0;
-    const layout = (force) => {
-      // mobile address bars fire height-only resizes; ignore them to avoid jumps
-      if (force !== true && window.innerWidth === lastW) return;
-      lastW = window.innerWidth;
-      sizeCanvas();
-      if (isMobile()) { hzDist = 0; hz.style.height = ''; return; }
-      hzDist = Math.max(0, track.scrollWidth - window.innerWidth);
-      hz.style.height = `${hzDist + window.innerHeight}px`;
-    };
+  /* count-up */
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; cio.unobserve(e.target);
+    const el = e.target, to = +el.dataset.count, suf = el.dataset.suf || '', t0 = performance.now(), D = 1600;
+    const step = t => { const p = Math.min((t - t0) / D, 1), ease = 1 - Math.pow(1 - p, 4); el.textContent = Math.round(to * ease) + suf; if (p < 1) requestAnimationFrame(step); };
+    reduce ? (el.textContent = to + suf) : requestAnimationFrame(step);
+  }), { threshold: .5 });
+  $$('[data-count]').forEach(el => cio.observe(el));
 
-    let lastY = window.scrollY, velocity = 0, mqX = 0;
-    const secProgress = (el) => {
-      const r = el.getBoundingClientRect();
-      return clamp(-r.top / (r.height - window.innerHeight), 0, 1);
-    };
+  /* intro words light up as you scroll */
+  const intro = $('#intro');
+  intro.innerHTML = intro.innerHTML.replace(/(<em>.*?<\/em>)|([^\s<]+)/g, (m) => `<span class="w">${m}</span>`);
+  const words = [...intro.querySelectorAll('.w')];
+  words.forEach((w, i) => setTimeout(() => w.classList.add('on'), 400 + i * 45));
 
-    const onFrame = () => {
-      const y = window.scrollY;
-      const vh = window.innerHeight;
-      velocity = lerp(velocity, y - lastY, 0.15);
-      lastY = y;
-
-      // progress bar
-      const max = document.documentElement.scrollHeight - vh;
-      progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
-
-      if (!reduce) {
-        // parallax
-        parallax.forEach((el) => {
-          const sp = isMobile() ? 0 : parseFloat(el.dataset.speed);
-          el.style.transform = sp ? `translate3d(0, ${y * sp}px, 0)` : '';
-        });
-
-        // marquee with velocity boost
-        mqX -= 0.6 + Math.abs(velocity) * 0.35;
-        const half = marquee.scrollWidth / 2;
-        if (-mqX >= half) mqX += half;
-        marquee.style.transform = `translate3d(${mqX}px,0,0) skewX(${clamp(-velocity * 0.15, -8, 8)}deg)`;
-
-        // stacking campaign cards: shrink + dim card when next one covers it
-        if (isDesktop()) {
-          cmps.forEach((c, i) => {
-            const next = cmps[i + 1];
-            if (!next) { c.style.transform = ''; c.style.filter = ''; return; }
-            const nr = next.getBoundingClientRect(), cr = c.getBoundingClientRect();
-            const p = clamp(1 - (nr.top - parseFloat(getComputedStyle(c).top)) / cr.height, 0, 1);
-            c.style.transform = `scale(${1 - p * 0.06})`;
-            c.style.filter = `brightness(${1 - p * 0.5})`;
-          });
-        } else cmps.forEach((c) => { c.style.transform = ''; c.style.filter = ''; });
-
-        // alassari fan
-        if (!isMobile()) {
-        const fp = secProgress(fan);
-        const e = 1 - Math.pow(1 - clamp(fp * 1.6, 0, 1), 3);
-        const stageW = fan.clientWidth;
-        const cardW = fanCards[0].offsetWidth;
-        const spread = Math.min((stageW - cardW - 40) / 4, cardW * 1.08);
-        fanCards.forEach((c, i) => {
-          const o = i - 2;
-          const x = o * spread * e;
-          const rot = o * 8 * (1 - e) + o * 2 * e;
-          const yy = Math.abs(o) * 30 * (1 - e) + Math.abs(o) * 14 * e;
-          const s = 0.86 + 0.14 * e - Math.abs(o) * 0.04 * (1 - e);
-          c.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${yy}px, 0) rotate(${rot}deg) scale(${s})`;
-          c.style.zIndex = 10 - Math.abs(o);
-        });
-        }
-
-        // contact image parallax
-        const cr = contactImg.parentElement.getBoundingClientRect();
-        contactImg.style.transform = `translate3d(0, ${(cr.top - vh / 2) * -0.08 - 30}px, 0)`;
-      }
-
-      // horizontal work track
-      let hp;
-      if (isMobile()) {
-        const sw = track.scrollWidth - track.clientWidth;
-        hp = sw > 0 ? track.scrollLeft / sw : 0;
-      } else {
-        hp = secProgress(hz);
-        track.style.transform = `translate3d(${-hp * hzDist}px,0,0)`;
-      }
-      hzBar.style.transform = `scaleX(${hp})`;
-      const idx = clamp(Math.round(hp * (works.length - 1)) + 1, 1, works.length);
-      hzIdx.textContent = pad(idx);
-
-      // big type fill
-      const br = bigType.getBoundingClientRect();
-      const bp = clamp((vh * 0.95 - br.top) / (vh * 0.55), 0, 1);
-      const on = Math.round(bp * letters.length);
-      letters.forEach((l, i) => l.classList.toggle('on', reduce || i < on));
-
-      // active nav
-      let current = null;
-      navLinks.forEach((a) => {
-        const s = $(a.getAttribute('href'));
-        if (s && s.getBoundingClientRect().top <= vh * 0.4) current = a;
-      });
-      navLinks.forEach((a) => a.classList.toggle('active', a === current));
-
-      requestAnimationFrame(onFrame);
-    };
-
-    window.addEventListener('resize', layout);
-    window.addEventListener('load', () => layout(true));
-    layout(true);
-    requestAnimationFrame(onFrame);
-
-    /* ── Videos: play when on screen ── */
-    const vio = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        const v = en.target;
-        if (en.isIntersecting && !reduce) v.play().catch(() => {});
-        else v.pause();
-      });
-    }, { threshold: 0.35 });
-    $$('video').forEach((v) => vio.observe(v));
-
-    /* ── Cursor + magnetic ── */
-    if (fine && !reduce) {
-      document.body.classList.add('has-cursor');
-      const cur = $('#cursor'), dot = $('#cursor-dot'), label = $('#cursor-label');
-      let mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my;
-      addEventListener('pointermove', (e) => {
-        mx = e.clientX; my = e.clientY;
-        const t = e.target.closest('[data-cursor], a, button');
-        cur.classList.toggle('hover', !!t);
-        label.textContent = t && t.dataset.cursor ? t.dataset.cursor : (t ? 'open' : '');
-      });
-      const loop = () => {
-        cx = lerp(cx, mx, 0.18); cy = lerp(cy, my, 0.18);
-        cur.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-        dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
-        requestAnimationFrame(loop);
-      };
-      loop();
-
-      $$('.magnetic').forEach((el) => {
-        el.addEventListener('pointermove', (e) => {
-          const r = el.getBoundingClientRect();
-          const x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2;
-          el.style.transform = `translate(${x * 0.25}px, ${y * 0.35}px)`;
-        });
-        el.addEventListener('pointerleave', () => {
-          el.style.transition = 'transform 0.5s var(--ease), background 0.3s, color 0.3s, border-color 0.3s';
-          el.style.transform = '';
-          setTimeout(() => el.style.transition = '', 500);
-        });
-      });
-
-      // 3D tilt on work cards
-      $$('.work').forEach((card) => {
-        card.addEventListener('pointermove', (e) => {
-          const r = card.getBoundingClientRect();
-          const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
-          card.style.transform = `perspective(900px) rotateY(${px * 8}deg) rotateX(${-py * 8}deg) translateY(-8px)`;
-        });
-        card.addEventListener('pointerleave', () => card.style.transform = '');
-      });
+  /* scroll-driven: progress bar, parallax, ticker speed */
+  let last = scrollY, tx = 0, vel = 0;
+  const tk = $('#ticker');
+  function frame() {
+    const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+    $('#progress').style.transform = `scaleX(${y / h})`;
+    vel = vel * .9 + (y - last) * .1; last = y;
+    if (!reduce) {
+      tx -= 0.6 + Math.abs(vel) * 0.4;
+      const half = tk.scrollWidth / 3; if (-tx > half) tx += half;
+      tk.style.transform = `translateX(${tx}px)`;
+      const m = $('#monitor').getBoundingClientRect(); $('#monitor').style.setProperty('--py', (m.top - innerHeight / 2) * -0.08 + 'px');
+      const w = $('#workgrid').getBoundingClientRect(); $('#workgrid').style.setProperty('--py', (w.top - innerHeight / 2) * 0.08 + 'px');
     }
+    requestAnimationFrame(frame);
+  }
+  frame();
 
-    /* ── Instagram embeds (cinematic) ── */
-    const igRow = $('#ig-row');
-    let igLoaded = false;
-    new IntersectionObserver(([e], obs) => {
-      if (!e.isIntersecting || igLoaded) return;
-      igLoaded = true; obs.disconnect();
-      const sc = document.createElement('script');
-      sc.async = true; sc.src = 'https://www.instagram.com/embed.js';
-      sc.onload = () => window.instgrm && window.instgrm.Embeds.process();
-      document.body.appendChild(sc);
-    }, { rootMargin: '800px 0px' }).observe(igRow);
-    $$('.ig-btn').forEach((b) => b.addEventListener('click', () => {
-      igRow.scrollBy({ left: +b.dataset.dir * (igRow.firstElementChild.offsetWidth + 20), behavior: 'smooth' });
-    }));
+  /* live clock */
+  const clk = $('#clock'); const tickClock = () => clk.textContent = new Date().toLocaleTimeString('en-GB') + ' LOCAL'; tickClock(); setInterval(tickClock, 1000);
 
-    /* ── Click to toggle video (touch-friendly) ── */
-    $$('[data-cursor="play"]').forEach((el) => {
-      el.addEventListener('click', () => {
-        const v = el.querySelector('video');
-        if (v) v.paused ? v.play() : v.pause();
-      });
-    });
-  })();
-  </script>
+  /* email scramble on hover */
+  const mail = $('#mail'), orig = mail.textContent, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@._';
+  mail.onmouseenter = () => { if (reduce) return; let f = 0; const id = setInterval(() => {
+    mail.textContent = orig.split('').map((c, i) => i < f / 1.5 || c === ' ' ? c : chars[Math.random() * chars.length | 0]).join('');
+    if (++f > orig.length * 1.5) { clearInterval(id); mail.textContent = orig; } }, 22); };
+})();
+</script>
 </body>
 </html>
