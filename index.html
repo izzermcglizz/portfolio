@@ -140,7 +140,7 @@
 
   /* scroll-driven horizontal reel strip: pinned while you scroll, reels slide sideways */
   .hs { position: relative; margin: 120px calc(50% - 50vw) 0; }
-  .hs-pin { position: sticky; top: 64px; height: calc(100vh - 64px); overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+  .hs-pin { position: sticky; top: 64px; height: calc(100vh - 64px); height: calc(100svh - 64px); overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
   .hs-in { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--pad); }
   .car-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
   .car-head h3 { font-size: clamp(28px, 3vw, 44px); font-weight: 600; letter-spacing: -0.04em; }
@@ -148,7 +148,7 @@
   .car-ctrl button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ink); font-size: 18px; transition: .3s var(--ease); }
   .car-ctrl button:hover { background: var(--ink); color: var(--bg); }
   .car-count { font-family: var(--mono); font-size: 12px; min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
-  .car-track { --slide-h: min(48vh, 460px); margin-top: 56px; display: flex; align-items: flex-end; gap: 22px; will-change: transform;
+  .car-track { --slide-h: min(48vh, 460px); margin-top: 56px; touch-action: pan-y; display: flex; align-items: flex-end; gap: 22px; will-change: transform;
     padding: 0 max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); width: max-content; }
   .slide { flex: 0 0 auto; width: calc(var(--slide-h) * 9 / 16); position: relative; transition: width .7s var(--ease), opacity .5s, filter .5s; }
   .slide .hud { aspect-ratio: 9/16; width: 100%; border-radius: 8px; transition: box-shadow .6s var(--ease); }
@@ -461,7 +461,42 @@ const TOP_REELS = [
   }
   $('#next').onclick = () => goTo(Math.round(curP * (slides.length - 1)) + 1);
   $('#prev').onclick = () => goTo(Math.round(curP * (slides.length - 1)) - 1);
-  measure(); addEventListener('resize', measure); addEventListener('load', measure);
+  // The strip's position is driven by the page's scroll position (1px of page scroll = 1px sideways),
+  // so sideways gestures just move the page scroll inside the pinned range.
+  // Trackpad: two-finger sideways swipe over the strip.
+  track.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;        // vertical scroll already works natively
+    e.preventDefault();                                           // also stops the browser's back/forward swipe here
+    scrollBy({ top: e.deltaMode === 1 ? e.deltaX * 16 : e.deltaX, behavior: "instant" });
+  }, { passive: false });
+
+  // Phone: sideways finger swipe, with a little momentum on release.
+  let tx0 = 0, ty0 = 0, tLast = 0, tTime = 0, tVel = 0, axis = null, moved = false, glide = 0;
+  track.addEventListener('touchstart', e => {
+    const t = e.touches[0]; tx0 = tLast = t.clientX; ty0 = t.clientY; tTime = performance.now();
+    axis = null; moved = false; tVel = 0; cancelAnimationFrame(glide);
+  }, { passive: true });
+  track.addEventListener('touchmove', e => {
+    const t = e.touches[0];
+    if (!axis) { const dx = Math.abs(t.clientX - tx0), dy = Math.abs(t.clientY - ty0); if (dx < 6 && dy < 6) return; axis = dx > dy ? 'x' : 'y'; }
+    if (axis !== 'x') return;                                     // let vertical swipes scroll the page normally
+    e.preventDefault(); moved = true;
+    const now = performance.now(), d = tLast - t.clientX;
+    tVel = d / Math.max(now - tTime, 1); tLast = t.clientX; tTime = now;
+    scrollBy({ top: d, behavior: "instant" });
+  }, { passive: false });
+  track.addEventListener('touchend', () => {
+    if (axis !== 'x' || reduce) return;
+    let v = tVel * 16;                                             // px per frame
+    const step = () => { if (Math.abs(v) < .5) return; scrollBy({ top: v, behavior: "instant" }); v *= .94; glide = requestAnimationFrame(step); };
+    glide = requestAnimationFrame(step);
+  });
+  // a swipe shouldn't count as a tap that opens Instagram
+  track.addEventListener('click', e => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+
+  let lastW = innerWidth;
+  measure(); addEventListener('load', measure);
+  addEventListener('resize', () => { if (innerWidth !== lastW) { lastW = innerWidth; measure(); } });   // ignore phone URL-bar height changes
   hsTick();
 
   /* campaigns (Tapnow added) */
