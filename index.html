@@ -138,22 +138,33 @@
   .top3 .cap a:hover { color: var(--acc); }
   .top3 .rank { position: absolute; z-index: 4; top: 40px; left: 28px; font-size: 96px; font-weight: 700; letter-spacing: -0.06em; color: #fff; mix-blend-mode: difference; line-height: 1; pointer-events: none; }
 
-  /* carousel */
-  .car-head { display: flex; justify-content: space-between; align-items: end; margin: 120px 0 28px; gap: 24px; }
+  /* scroll-driven horizontal reel strip: pinned while you scroll, reels slide sideways */
+  .hs { position: relative; margin: 120px calc(50% - 50vw) 0; }
+  .hs-pin { position: sticky; top: 64px; height: calc(100vh - 64px); overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+  .hs-in { width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 var(--pad); }
+  .car-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; }
   .car-head h3 { font-size: clamp(28px, 3vw, 44px); font-weight: 600; letter-spacing: -0.04em; }
   .car-ctrl { display: flex; align-items: center; gap: 16px; }
   .car-ctrl button { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ink); font-size: 18px; transition: .3s var(--ease); }
   .car-ctrl button:hover { background: var(--ink); color: var(--bg); }
-  .car-count { font-family: var(--mono); font-size: 12px; min-width: 64px; text-align: center; }
-  .car { overflow: hidden; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad); }
-  .car-track { display: flex; gap: 18px; transition: transform 1s var(--ease); }
-  .slide { flex: 0 0 clamp(220px, 21vw, 300px); }
-  .slide .hud { aspect-ratio: 9/16; transition: transform .6s var(--ease); }
-  .slide.active .hud { transform: scale(1.0); }
-  .slide:not(.active) .hud { transform: scale(.94); }
-  .slide .meta { display: flex; justify-content: space-between; padding-top: 12px; font-size: 15px; }
-  .slide .meta b { font-weight: 600; font-variant-numeric: tabular-nums; }
-  .car-prog { height: 2px; background: var(--line); margin-top: 28px; position: relative; overflow: hidden; }
+  .car-count { font-family: var(--mono); font-size: 12px; min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; }
+  .car-track { --slide-h: min(48vh, 460px); margin-top: 56px; display: flex; align-items: flex-end; gap: 22px; will-change: transform;
+    padding: 0 max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); width: max-content; }
+  .slide { flex: 0 0 auto; width: calc(var(--slide-h) * 9 / 16); position: relative; transition: width .7s var(--ease), opacity .5s, filter .5s; }
+  .slide .hud { aspect-ratio: 9/16; width: 100%; border-radius: 8px; transition: box-shadow .6s var(--ease); }
+  .slide .rank-bg { position: absolute; top: -0.62em; left: -4px; font-size: 64px; font-weight: 700; letter-spacing: -0.06em; line-height: 1; color: transparent; -webkit-text-stroke: 1px #c9c9c4; pointer-events: none; transition: -webkit-text-stroke-color .4s, transform .7s var(--ease); }
+  .slide .meta { display: flex; justify-content: space-between; align-items: end; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); margin-top: 14px; transition: border-color .4s; }
+  .slide .meta .num { font-size: 28px; font-weight: 600; letter-spacing: -0.045em; line-height: 1; font-variant-numeric: tabular-nums; transition: font-size .6s var(--ease), color .4s; white-space: nowrap; }
+  .slide .meta .who { text-align: right; font-size: 13px; line-height: 1.35; }
+  .slide .meta .who .label { display: block; font-size: 10px; }
+  /* hover: the hovered reel grows, the rest step back */
+  .car-track:hover .slide:not(:hover) { opacity: .4; filter: grayscale(.7); }
+  .slide:hover { width: calc(var(--slide-h) * 1.22 * 9 / 16); z-index: 2; }
+  .slide:hover .hud { box-shadow: 0 30px 60px -20px rgba(42,59,255,.45); }
+  .slide:hover .meta { border-color: var(--acc); }
+  .slide:hover .meta .num { font-size: 44px; color: var(--acc); }
+  .slide:hover .rank-bg { -webkit-text-stroke-color: var(--acc); transform: translateY(-10px); }
+  .car-prog { height: 2px; background: var(--line); position: relative; overflow: hidden; }
   .car-prog i { position: absolute; inset: 0; background: var(--ink); transform-origin: 0; transform: scaleX(0); }
 
   /* campaigns */
@@ -257,12 +268,16 @@
     </div>
     <div class="top3" id="top3"></div>
 
-    <div class="car-head">
-      <div><span class="label">(01.b) — Also hitting</span><h3 class="split" style="margin-top:10px">More reels over 100K</h3></div>
-      <div class="car-ctrl"><button id="prev" aria-label="previous">←</button><span class="car-count" id="count">01 / 11</span><button id="next" aria-label="next">→</button></div>
+    <div class="hs" id="hs">
+      <div class="hs-pin">
+        <div class="hs-in car-head">
+          <div><span class="label">(01.b) — Also hitting · keep scrolling →</span><h3 class="split" style="margin-top:10px">More reels over 100K</h3></div>
+          <div class="car-ctrl"><button id="prev" aria-label="previous reel">←</button><span class="car-count" id="count">01 / 11</span><button id="next" aria-label="next reel">→</button></div>
+        </div>
+        <div class="car-track" id="track"></div>
+        <div class="hs-in"><div class="car-prog"><i id="prog"></i></div></div>
+      </div>
     </div>
-    <div class="car" id="car"><div class="car-track" id="track"></div></div>
-    <div class="car-prog"><i id="prog"></i></div>
   </section>
 
   <section id="campaigns">
@@ -399,27 +414,55 @@ const TOP_REELS = [
     </div>`).join('');
   $$('#top3 .hud').forEach(el => { const r = TOP_REELS[el.dataset.i]; gifTile(el, r, { label: r.brand, right: r.views + ' views' }); });
 
-  /* carousel: auto-advancing, autoplay muted */
+  /* reel strip: pinned on screen, scrolling the page moves the reels sideways */
   const rest = TOP_REELS.slice(3);
   const track = $('#track');
-  track.innerHTML = rest.map((r, i) => `<div class="slide"><div class="hud" data-i="${i}"></div><div class="meta"><span>${r.brand} <span class="label">@${r.acct}</span></span><b>${r.views}</b></div></div>`).join('');
+  track.innerHTML = rest.map((r, i) => `
+    <div class="slide">
+      <span class="rank-bg">${String(i + 4).padStart(2, '0')}</span>
+      <div class="hud" data-i="${i}"></div>
+      <div class="meta"><b class="num" data-n="${r.n}">0K</b><span class="who">${r.brand}<span class="label">@${r.acct}</span></span></div>
+    </div>`).join('');
   $$('#track .hud').forEach(el => { const r = rest[el.dataset.i]; gifTile(el, r, { label: '#' + String(+el.dataset.i + 4).padStart(2, '0'), right: r.views }); });
-  const slides = $$('#track .slide'); let cur = 0, timer, paused = false;
-  const DUR = 4500;
-  function go(n) {
-    cur = (n + slides.length) % slides.length;
-    const max = track.scrollWidth - $('#car').clientWidth + parseFloat(getComputedStyle($('#car')).paddingLeft) * 2;
-    track.style.transform = `translateX(${-Math.min(slides[cur].offsetLeft - slides[0].offsetLeft, max)}px)`;
-    slides.forEach((s, i) => s.classList.toggle('active', i === cur));
-    $('#count').textContent = `${String(cur + 1).padStart(2, '0')} / ${slides.length}`;
-    const p = $('#prog'); p.style.transition = 'none'; p.style.transform = `scaleX(${cur / slides.length})`;
-    requestAnimationFrame(() => { p.style.transition = `transform ${DUR}ms linear`; p.style.transform = `scaleX(${(cur + 1) / slides.length})`; });
-    clearTimeout(timer); if (!paused && !reduce) timer = setTimeout(() => go(cur + 1), DUR);
+  const slides = $$('#track .slide');
+
+  // view counts tick up when a reel slides into view, and again on hover
+  function tickUp(el, D) {
+    const to = +el.dataset.n, t0 = performance.now();
+    cancelAnimationFrame(el._raf);
+    if (reduce) { el.textContent = to + 'K'; return; }
+    const step = t => { const p = Math.min((t - t0) / D, 1), e = 1 - Math.pow(1 - p, 4); el.textContent = Math.round(to * e) + 'K'; if (p < 1) el._raf = requestAnimationFrame(step); };
+    el._raf = requestAnimationFrame(step);
   }
-  $('#next').onclick = () => go(cur + 1); $('#prev').onclick = () => go(cur - 1);
-  $('#car').onmouseenter = () => { paused = true; clearTimeout(timer); };
-  $('#car').onmouseleave = () => { paused = false; go(cur + 1); };
-  go(0);
+  const sio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { tickUp(e.target.querySelector('.num'), 1400); sio.unobserve(e.target); } }), { threshold: .6 });
+  slides.forEach(s => { sio.observe(s); s.addEventListener('mouseenter', () => tickUp(s.querySelector('.num'), 800)); });
+
+  const hs = $('#hs'), pin = hs.firstElementChild, NAV = 64;
+  let shift = 0, x = 0, curP = 0;
+  function measure() {
+    shift = Math.max(0, track.offsetWidth - innerWidth + 80);   // +80 leaves room for a hovered (wider) last reel
+    hs.style.height = (pin.offsetHeight + shift) + 'px';
+  }
+  function range() { return hs.offsetHeight - pin.offsetHeight; }
+  function hsTick() {
+    const r = hs.getBoundingClientRect(), R = range();
+    curP = R > 0 ? Math.min(Math.max((NAV - r.top) / R, 0), 1) : 0;
+    const target = -curP * shift;
+    x = reduce ? target : x + (target - x) * .12;
+    track.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+    $('#prog').style.transform = `scaleX(${curP})`;
+    $('#count').textContent = `${String(Math.round(curP * (slides.length - 1)) + 1).padStart(2, '0')} / ${slides.length}`;
+    requestAnimationFrame(hsTick);
+  }
+  function goTo(i) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    const top = scrollY + hs.getBoundingClientRect().top - NAV + (i / (slides.length - 1)) * range();
+    scrollTo({ top, behavior: 'smooth' });
+  }
+  $('#next').onclick = () => goTo(Math.round(curP * (slides.length - 1)) + 1);
+  $('#prev').onclick = () => goTo(Math.round(curP * (slides.length - 1)) - 1);
+  measure(); addEventListener('resize', measure); addEventListener('load', measure);
+  hsTick();
 
   /* campaigns (Tapnow added) */
   const CMPS = [
